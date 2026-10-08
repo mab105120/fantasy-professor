@@ -1,0 +1,315 @@
+<!doctype html>
+<!--
+  TRADE REPORT TEMPLATE — trade-analyzer skill.
+  Copy this file's <head>/<style> verbatim into every trade report and build
+  the body from the components below. Everything in the body is PLACEHOLDER
+  content showing how each component is used: replace it all with real
+  analysis, and drop any section that doesn't apply to this trade (e.g.
+  "Packages" is only for proposal mode; "Verdict / Counter" only for
+  evaluating a specific offer). Don't invent new colours or components when
+  an existing one fits.
+-->
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Trade: Kittle for Evans</title>
+<style>
+:root{
+  --bg:#0d1117;--bg2:#11161f;--card:#161c26;--card2:#1c2330;--line:#29313f;
+  --ink:#e8ecf2;--mute:#8b96a8;--faint:#5c6778;
+  --accent:#7aa2ff;--accent-bg:rgba(122,162,255,.12);
+  --good:#4fd18b;--good-bg:rgba(79,209,139,.12);
+  --warn:#f2b64c;--warn-bg:rgba(242,182,76,.12);
+  --bad:#ff6b6b;--bad-bg:rgba(255,107,107,.12);
+  --give:#ff8f70;--get:#4fd18b;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html{color-scheme:dark}
+body{margin:0;background:radial-gradient(1200px 500px at 50% -200px,#1a2340 0%,var(--bg) 60%) no-repeat,var(--bg);color:var(--ink);
+  font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:980px;margin:0 auto;padding:32px 16px 72px}
+a{color:var(--accent)}
+b,strong{color:#fff;font-weight:650}
+
+/* header */
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700}
+h1{font-size:30px;line-height:1.2;margin:6px 0 8px;letter-spacing:-.01em}
+.meta{display:flex;flex-wrap:wrap;gap:8px;color:var(--mute);font-size:13px}
+.meta span{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+
+/* sticky section nav */
+nav.toc{position:sticky;top:0;z-index:5;margin:22px -16px 0;padding:10px 16px;background:rgba(13,17,23,.85);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.toc a{flex:none;font-size:13px;color:var(--mute);text-decoration:none;padding:4px 10px;border-radius:999px}
+nav.toc a:hover{background:var(--card2);color:var(--ink)}
+
+section{scroll-margin-top:60px}
+h2{font-size:19px;margin:40px 0 12px;display:flex;align-items:center;gap:10px}
+h2::before{content:"";width:4px;height:18px;border-radius:2px;background:var(--accent)}
+h3{font-size:15px;margin:0 0 8px}
+p{margin:8px 0}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin:12px 0}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+
+/* verdict banner */
+.verdict{display:flex;gap:18px;align-items:flex-start;border-radius:var(--radius);padding:20px;margin:24px 0 8px;border:1px solid}
+.verdict.accept{background:var(--good-bg);border-color:rgba(79,209,139,.35)}
+.verdict.decline{background:var(--bad-bg);border-color:rgba(255,107,107,.35)}
+.verdict.counter{background:var(--warn-bg);border-color:rgba(242,182,76,.35)}
+.verdict .badge{flex:none;font-weight:800;font-size:14px;letter-spacing:.08em;padding:8px 14px;border-radius:10px;color:#0d1117}
+.verdict.accept .badge{background:var(--good)}.verdict.decline .badge{background:var(--bad)}.verdict.counter .badge{background:var(--warn)}
+.verdict .call{font-size:17px;font-weight:600;margin:0 0 4px}
+.verdict .why{color:var(--mute);margin:0}
+@media (max-width:560px){.verdict{flex-direction:column}}
+
+/* KPI tiles */
+.kpi .label{font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+.kpi .val{font-size:26px;font-weight:750;font-variant-numeric:tabular-nums;margin:2px 0}
+.kpi .sub{font-size:13px;color:var(--mute)}
+.up{color:var(--good)}.down{color:var(--bad)}.flat{color:var(--mute)}
+
+/* give / get sides */
+.side{border-top:3px solid}
+.side.give{border-top-color:var(--give)}.side.get{border-top-color:var(--get)}
+.side-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.side-h .who{font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:800}
+.give .who{color:var(--give)}.get .who{color:var(--get)}
+.side-h .tot{font-size:13px;color:var(--mute)}
+.player{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.player:first-of-type{border-top:0}
+.pos{flex:none;width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:12px;font-weight:800;background:var(--card2);border:1px solid var(--line)}
+.pos.QB{color:#c9a0ff}.pos.RB{color:#4fd1c5}.pos.WR{color:#7aa2ff}.pos.TE{color:#f2b64c}.pos.DST{color:#a0aec0}
+.player .name{font-weight:650}
+.player .info{font-size:13px;color:var(--mute)}
+.player .nums{margin-left:auto;text-align:right;font-variant-numeric:tabular-nums;font-size:13px;color:var(--mute);white-space:nowrap}
+.player .nums b{display:block;font-size:16px}
+
+/* tags */
+.tag{display:inline-block;font-size:11px;font-weight:750;letter-spacing:.03em;padding:2px 7px;border-radius:6px;vertical-align:1px}
+.tag.ok{color:var(--good);background:var(--good-bg)}
+.tag.q{color:var(--warn);background:var(--warn-bg)}
+.tag.o{color:var(--bad);background:var(--bad-bg)}
+.tag.n{color:var(--accent);background:var(--accent-bg)}
+.tag.m{color:var(--mute);background:var(--card2)}
+
+/* value meter: set --give / --get widths as % of the larger side */
+.meter{margin:6px 0 2px}
+.meter .row{display:grid;grid-template-columns:90px 1fr 60px;gap:10px;align-items:center;margin:8px 0;font-size:13px}
+.meter .track{height:12px;background:var(--card2);border-radius:999px;overflow:hidden}
+.meter .fill{height:100%;border-radius:999px}
+.meter .fill.give{background:linear-gradient(90deg,#ff8f70,#ff6b6b)}
+.meter .fill.get{background:linear-gradient(90deg,#3fb67a,#4fd18b)}
+.meter .v{text-align:right;font-variant-numeric:tabular-nums;font-weight:650}
+
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--card)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{background:var(--bg2);color:var(--mute);font-weight:650;font-size:11px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody tr:hover{background:rgba(255,255,255,.02)}
+tr.chg td{background:var(--accent-bg)}
+
+/* lists, callouts */
+ul.clean{list-style:none;padding:0;margin:0}
+ul.clean li{padding:8px 0 8px 26px;position:relative;border-top:1px solid var(--line)}
+ul.clean li:first-child{border-top:0}
+ul.clean li::before{position:absolute;left:0;top:8px;font-weight:800}
+ul.pro li::before{content:"+";color:var(--good)}
+ul.con li::before{content:"−";color:var(--bad)}
+ul.risk li::before{content:"!";color:var(--warn)}
+ul.step li::before{content:"→";color:var(--accent)}
+.note{border-left:3px solid var(--accent);background:var(--accent-bg);padding:12px 14px;border-radius:0 10px 10px 0;margin:12px 0;font-size:14px}
+.note.warn{border-color:var(--warn);background:var(--warn-bg)}
+
+/* proposal packages */
+.pkg{position:relative}
+.pkg .rank{position:absolute;top:14px;right:16px;font-size:30px;font-weight:800;color:var(--faint)}
+.pkg .swap{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin:10px 0}
+.pkg .swap .arrow{color:var(--faint);font-size:20px}
+.pkg .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:750}
+.pkg .give .lbl{color:var(--give)}.pkg .get .lbl{color:var(--get)}
+.dots{display:inline-flex;gap:3px;vertical-align:middle}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--card2);border:1px solid var(--line)}
+.dots i.on{background:var(--accent);border-color:var(--accent)}
+
+details{margin-top:28px;color:var(--mute);font-size:13px}
+summary{cursor:pointer;color:var(--ink);font-weight:600}
+dl.gloss{display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;margin:12px 0}
+dl.gloss dt{font-weight:700;color:var(--ink)}dl.gloss dd{margin:0}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--faint);font-size:12px}
+</style>
+</head>
+<body><main>
+
+<!-- ===== HEADER ===== -->
+<div class="eyebrow">Trade evaluation · Week 3</div>
+<h1>Kittle → Imad for Mike Evans + Juwan Johnson</h1>
+<div class="meta">
+  <span>Built Fri 2026-09-25 15:30 CT</span>
+  <span>ESPN sync 15:00 CT</span>
+  <span>The Man Wolf 2-0 · 3rd</span>
+  <span>Partner: Imad (team 15) 1-1 · 6th</span>
+</div>
+
+<nav class="toc">
+  <a href="#verdict">Verdict</a><a href="#deal">The deal</a><a href="#players">Players</a>
+  <a href="#fit">Roster fit</a><a href="#partner">Partner</a><a href="#risks">Risks</a><a href="#next">Next steps</a>
+</nav>
+
+<!-- ===== VERDICT: class accept | decline | counter ===== -->
+<section id="verdict">
+<div class="verdict accept">
+  <div class="badge">ACCEPT</div>
+  <div>
+    <p class="call">Take it. You turn one aging TE into a WR2 and a playable TE, and fix the WR hole the wire couldn't.</p>
+    <p class="why">Confidence: <b>medium-high</b>. Consensus trade-value charts rate it close to even. The edge is roster fit, not raw value.</p>
+  </div>
+</div>
+
+<div class="grid g3">
+  <div class="card kpi"><div class="label">ROS value (FP chart)</div><div class="val up">+6.2</div><div class="sub">42.1 received vs 35.9 given</div></div>
+  <div class="card kpi"><div class="label">Starting lineup proj / wk</div><div class="val up">+3.4</div><div class="sub">118.9 → 122.3</div></div>
+  <div class="card kpi"><div class="label">Roster spots</div><div class="val down">−1</div><div class="sub">2-for-1: one cut needed</div></div>
+</div>
+</section>
+
+<!-- ===== THE DEAL ===== -->
+<section id="deal">
+<h2>The deal</h2>
+<div class="grid g2">
+  <div class="card side give">
+    <div class="side-h"><span class="who">You give</span><span class="tot">ROS value 35.9</span></div>
+    <div class="player">
+      <div class="pos TE">TE</div>
+      <div><div class="name">George Kittle <span class="tag ok">ACTIVE</span></div><div class="info">SF · bye 14 · consensus TE4 ROS</div></div>
+      <div class="nums"><b>12.1</b>avg pts</div>
+    </div>
+  </div>
+  <div class="card side get">
+    <div class="side-h"><span class="who">You get</span><span class="tot">ROS value 42.1</span></div>
+    <div class="player">
+      <div class="pos WR">WR</div>
+      <div><div class="name">Mike Evans <span class="tag ok">ACTIVE</span></div><div class="info">SF · bye 14 · consensus WR24 ROS</div></div>
+      <div class="nums"><b>13.4</b>avg pts</div>
+    </div>
+    <div class="player">
+      <div class="pos TE">TE</div>
+      <div><div class="name">Juwan Johnson <span class="tag q">Q</span></div><div class="info">NO · bye 11 · consensus TE14 ROS</div></div>
+      <div class="nums"><b>9.0</b>avg pts</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Value balance</h3>
+  <div class="meter">
+    <div class="row"><span>You give</span><div class="track"><div class="fill give" style="width:85%"></div></div><span class="v">35.9</span></div>
+    <div class="row"><span>You get</span><div class="track"><div class="fill get" style="width:100%"></div></div><span class="v">42.1</span></div>
+  </div>
+  <p style="color:var(--mute);font-size:13px;margin-top:8px">Bars are scaled to the larger side. Say which value source they use (e.g. FantasyPros ROS trade-value chart, Week N).</p>
+</div>
+</section>
+
+<!-- ===== PLAYER BY PLAYER ===== -->
+<section id="players">
+<h2>Player by player</h2>
+<div class="tw"><table>
+<thead><tr><th>Player</th><th>Status</th><th class="n">Avg</th><th class="n">ROS proj</th><th>Expert consensus</th><th>Our read</th></tr></thead>
+<tbody>
+<tr><td><b>Mike Evans</b><br><span class="info" style="color:var(--mute);font-size:13px">WR · SF</span></td><td><span class="tag ok">ACTIVE</span></td><td class="n">13.4</td><td class="n">12.8</td><td>WR24; steady WR2/3 (FantasyPros, PFF)</td><td><span class="tag ok">AGREE</span> 22% target share is stable. Age limits keeper value.</td></tr>
+<tr><td><b>Juwan Johnson</b><br><span style="color:var(--mute);font-size:13px">TE · NO</span></td><td><span class="tag q">Q</span> ankle</td><td class="n">9.0</td><td class="n">8.1</td><td>TE14; streamer tier</td><td><span class="tag n">DIVERGE ↑</span> 81% route rate is starter usage. Rated above consensus.</td></tr>
+<tr><td><b>George Kittle</b><br><span style="color:var(--mute);font-size:13px">TE · SF</span></td><td><span class="tag ok">ACTIVE</span></td><td class="n">12.1</td><td class="n">11.6</td><td>TE4; elite when healthy</td><td><span class="tag ok">AGREE</span> But the Achilles recovery adds downside risk.</td></tr>
+</tbody></table></div>
+</section>
+
+<!-- ===== ROSTER FIT: highlight changed rows with class="chg" ===== -->
+<section id="fit">
+<h2>Roster fit</h2>
+<div class="tw"><table>
+<thead><tr><th>Slot</th><th>Before</th><th>After</th><th class="n">Δ proj</th></tr></thead>
+<tbody>
+<tr class="chg"><td>WR2</td><td>Jameson Williams</td><td>Mike Evans</td><td class="n up">+2.1</td></tr>
+<tr class="chg"><td>TE</td><td>Harold Fannin Jr.</td><td>Juwan Johnson</td><td class="n up">+0.4</td></tr>
+<tr class="chg"><td>FLEX</td><td>George Kittle</td><td>Jameson Williams</td><td class="n down">−1.8</td></tr>
+<tr><td>RB</td><td>Derrick Henry</td><td>Derrick Henry</td><td class="n flat">—</td></tr>
+</tbody></table></div>
+<div class="grid g2">
+  <div class="card"><h3>Why it helps</h3><ul class="clean pro"><li>Fills the WR2 slot, the weakest in the starting lineup.</li><li>Johnson covers TE depth after trading away Kittle.</li></ul></div>
+  <div class="card"><h3>What it costs</h3><ul class="clean con"><li>Loses the one TE with a TE1 ceiling.</li><li>2-for-1 forces a cut (Pittman first; see cut order).</li></ul></div>
+</div>
+</section>
+
+<!-- ===== PARTNER CONTEXT (league-specific leverage) ===== -->
+<section id="partner">
+<h2>Why Imad might say yes</h2>
+<div class="card">
+<p>Imad is 1-1 and 6th, with a TE slot that has scored 4.2/wk (bottom 2 in the league). They are WR-deep: Evans is their WR4. Their transactions show 3 TE streaming adds in 3 weeks. They know the hole exists.</p>
+<div class="note">Leverage: they need a TE more than they need a 4th WR. Lead with that in the message.</div>
+</div>
+</section>
+
+<!-- ===== RISKS ===== -->
+<section id="risks">
+<h2>Risks &amp; exposure</h2>
+<div class="card"><ul class="clean risk">
+<li><b>Injury:</b> Johnson is Q (ankle), limited Wed/Thu. Confirm Friday's final designation before accepting.</li>
+<li><b>Bye weeks:</b> Evans and Henry share Week 14, the last regular-season week. Plan a replacement now.</li>
+<li><b>Keeper value:</b> Evans (32) has none. Kittle has little. This is a wash.</li>
+</ul></div>
+</section>
+
+<!-- ===== COUNTER (only when verdict = counter / or as fallback) ===== -->
+<!--
+<section id="counter">
+<h2>Counter-offer</h2>
+<div class="card"> ... what to ask for instead, and why they'd take it ... </div>
+</section>
+-->
+
+<!-- ===== PACKAGES (proposal mode only): rank by realism x help ===== -->
+<!--
+<section id="packages">
+<h2>Trade packages</h2>
+<div class="card pkg">
+  <div class="rank">#1</div>
+  <h3>Stafford + Worthy → Lamar n Order (team 7) for Matthew Golden</h3>
+  <div class="swap">
+    <div class="give"><div class="lbl">Give</div>Matthew Stafford (QB), Xavier Worthy (WR)</div>
+    <div class="arrow">⇄</div>
+    <div class="get"><div class="lbl">Get</div>Matthew Golden (WR)</div>
+  </div>
+  <p>Acceptance odds <span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+     &nbsp; Helps us <span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></p>
+  <p>Why they'd take it: ... &nbsp; Why it helps us: ...</p>
+</div>
+</section>
+-->
+
+<!-- ===== NEXT STEPS ===== -->
+<section id="next">
+<h2>Next steps</h2>
+<div class="card"><ul class="clean step">
+<li><b>Fri PM:</b> check Johnson's final injury designation. If he's Out, hold off and ask for a D/ST swap-in instead.</li>
+<li><b>If accepted:</b> cut Pittman (IR) first, then re-check the lineup for Week 4.</li>
+</ul></div>
+</section>
+
+<details>
+<summary>Glossary</summary>
+<dl class="gloss">
+<dt>ROS</dt><dd>Rest of season: value from now until the fantasy playoffs, not points already scored.</dd>
+<dt>Target share</dt><dd>The share of a team's pass attempts thrown to a player. It's the most stable predictor of a receiver's volume.</dd>
+<dt>Route rate</dt><dd>How often a player runs a pass route when his QB drops back. A high rate means he's a real part of the passing game.</dd>
+</dl>
+</details>
+
+<footer>Sources: ESPN Fantasy API (rosters, projections, designations) · FantasyPros ROS trade-value chart (Week 3) · PFF · team beat writers. Every recommended player was checked for current injury/legal status.</footer>
+</main></body></html>

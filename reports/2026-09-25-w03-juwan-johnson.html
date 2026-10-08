@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Juwan Johnson Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#E9EAEC; --card:#FFFFFF; --ink:#15181D; --ink-2:#3A4049; --muted:#6B727D;
+  --rule:#C7CAD0; --rule-hard:#15181D; --navy:#173A5C; --navy-soft:#E2E8EF;
+  --up:#0E7A5F; --up-soft:#DCEDE7; --down:#B23A33; --down-soft:#F3E0DE;
+  --flag:#B87814; --flag-soft:#F6E9D2; --chip:#DFE1E5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+    --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+    --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+    --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+  --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+  --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+  --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:"Barlow","Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.5;margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px 56px}
+a{color:var(--navy)}
+.mast{background:#0B0D11;color:#E9EBEF;padding:26px 16px 22px;border-bottom:4px solid var(--flag)}
+.mast-inner{max-width:928px;margin:0 auto;display:flex;flex-wrap:wrap;gap:14px 28px;align-items:flex-end;justify-content:space-between}
+.mast h1{font-family:"Oswald",Impact,sans-serif;font-weight:700;font-size:clamp(32px,6.6vw,52px);line-height:.94;margin:0;text-transform:uppercase}
+.mast h1 em{font-style:normal;color:var(--flag);display:block;font-size:.55em;margin-top:6px}
+.mast-meta{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:#9AA3B0;line-height:1.9}
+h2{font-family:"Oswald",sans-serif;font-weight:600;font-size:22px;letter-spacing:.02em;text-transform:uppercase;margin:40px 0 14px;padding-bottom:6px;border-bottom:2px solid var(--rule-hard)}
+h3{font-family:"Oswald",sans-serif;font-weight:500;font-size:19px;margin:0 0 6px}
+p{margin:0 0 12px;color:var(--ink-2)}
+strong{color:var(--ink)}
+.grid{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+@media(min-width:760px){.grid{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px 16px}
+.stat .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.stat .v{font-family:"Oswald",sans-serif;font-size:28px;font-weight:600;line-height:1.1;margin:4px 0}
+.stat .s{font-size:13px;color:var(--muted);line-height:1.35}
+.frame{margin-top:26px;background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:18px 22px}
+.frame p{font-size:15px;margin-bottom:6px}
+.frame ul{margin:6px 0 0;padding-left:20px;color:var(--ink-2);font-size:15px}
+.frame li{margin-bottom:4px}
+.status{background:var(--navy-soft);border-radius:8px;padding:14px 18px;margin-top:14px;font-size:15px}
+.status b{color:var(--navy)}
+.chip{font-family:"IBM Plex Mono",monospace;font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--chip);color:var(--ink-2);white-space:nowrap}
+.chip.up{background:var(--up-soft);color:var(--up)}
+.chip.down{background:var(--down-soft);color:var(--down)}
+.chip.flag{background:var(--flag-soft);color:var(--flag)}
+.why{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:20px 22px;margin-bottom:14px}
+.why p:last-child{margin-bottom:0}
+.def{border-left:3px solid var(--flag);background:var(--flag-soft);padding:8px 14px;border-radius:0 6px 6px 0;font-size:14.5px;margin:10px 0 14px}
+.def b{color:var(--flag)}
+.tscroll{overflow-x:auto;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--rule);border-radius:8px;overflow:hidden;font-size:14.5px}
+th{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;text-align:left;color:var(--muted);padding:9px 12px;border-bottom:2px solid var(--rule-hard);background:var(--navy-soft)}
+td{padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+td.num{font-family:"IBM Plex Mono",monospace;white-space:nowrap}
+td.who{color:var(--ink);font-weight:600;white-space:nowrap}
+tr.hl td{background:var(--flag-soft)}
+.cols{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:720px){.cols{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:16px 20px;border-top:5px solid var(--up)}
+.card.risk{border-top-color:var(--down)}
+.card ul{margin:0;padding-left:18px;font-size:15px;color:var(--ink-2)}
+.card li{margin-bottom:8px}
+.range{display:grid;gap:10px;grid-template-columns:1fr}
+@media(min-width:720px){.range{grid-template-columns:repeat(3,1fr)}}
+.range .stat .v{font-size:32px}
+.small{font-size:13px;color:var(--muted)}
+.sources{font-size:13.5px;color:var(--muted);columns:1}
+@media(min-width:680px){.sources{columns:2}}
+.sources li{margin-bottom:4px;break-inside:avoid}
+.foot{margin-top:40px;padding-top:14px;border-top:1px solid var(--rule);font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);letter-spacing:.04em}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-inner">
+    <h1>Juwan Johnson<em>TE · New Orleans Saints · Player Report</em></h1>
+    <div class="mast-meta">
+      The Man Wolf · D League (394766)<br>
+      Fri 2026-09-25 · ESPN sync 15:00 · Week 3 pre-kickoff<br>
+      Rostered by Imad (bench) · trade target
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="grid" style="margin-top:26px">
+    <div class="stat"><div class="k">League points / game</div><div class="v">12.5</div><div class="s">TE8 among all rostered TEs in D League (14.4, 10.6).</div></div>
+    <div class="stat"><div class="k">Route share (healthy)</div><div class="v">84%</div><div class="s">Week 1, the full-health sample. 59% in Week 2 while ill.</div></div>
+    <div class="stat"><div class="k">Target share</div><div class="v">13.1%</div><div class="s">11 of 84 Saints targets. Meaningful, but not elite TE volume.</div></div>
+    <div class="stat"><div class="k">Consensus rest of season</div><div class="v">TE11</div><div class="s">Yahoo (Boone) and Roto Street Journal agree. Week 3: TE9 (DK).</div></div>
+  </section>
+
+  <section class="frame">
+    <h3>The short version</h3>
+    <p><strong>Johnson is a low-end TE1 / high-end TE2, and I agree with the TE11 consensus.</strong> When healthy he plays nearly every passing down for the NFL's #2-ranked passing offense, and he caught 77 balls on 102 targets last year in this same scheme. That is a real, repeatable role. What caps him is <strong>target volume</strong>: about 13% of the team's targets, fourth in line behind Olave, Vele and the running backs. Add the <strong>return of rookie WR Jordyn Tyson around Weeks 6–7</strong> and <strong>Noah Fant</strong> still taking a share of snaps, and he looks like a ~10–11 point-per-game player, not a difference-maker.</p>
+    <p><strong>For The Man Wolf:</strong> he would be a modest upgrade over Fannin at TE, worth roughly 1–3 points a week. He also brings an awkward schedule: four tough matchups in a row (Weeks 3–6), then a much softer run that <strong>peaks in fantasy playoff Weeks 15–16 (@TB, vs ARI)</strong>. In the Kittle trade he is the add-on, not the reason to accept. Evans is the reason.</p>
+    <div class="status"><b>Status (checked live 2026-09-25):</b> Healthy. <strong>Not on the Saints' Friday Week 3 injury report</strong>. The illness that limited him in Week 2 has cleared. No legal or suspension issues found in current news. Age 30, signed through 2027 on a 3-year, $30M extension with $21.25M guaranteed, so his role is secure.</div>
+  </section>
+
+  <!-- ============ ROLE ============ -->
+  <h2>1 · Role and volume: how often he's on the field</h2>
+
+  <div class="def"><b>Snap share</b> is the percentage of the team's offensive plays a player is on the field for. <b>Route share</b> (route participation) is the percentage of pass plays on which he runs a pass route instead of blocking. For a pass-catcher, route share matters more, because you can't get targeted while blocking. A TE with a route share above about 75% is a true "every-down" receiving tight end.</div>
+
+  <div class="tscroll"><table>
+    <thead><tr><th>Week</th><th>Opp</th><th>Snaps</th><th>Routes</th><th>Tgt</th><th>Team tgt share</th><th>Rec-Yds-TD</th><th>YAC</th><th>League pts</th></tr></thead>
+    <tbody>
+      <tr><td class="who">W1</td><td>@ DET (L 30–31)</td><td class="num">76/90 · 84%</td><td class="num">53 · 84%</td><td class="num">7</td><td class="num">13.5%</td><td class="num">3-54-1</td><td class="num">4</td><td class="num">14.4</td></tr>
+      <tr><td class="who">W2</td><td>@ BAL (W 24–17)</td><td class="num">36/68 · 53%</td><td class="num">23 · 59%</td><td class="num">4</td><td class="num">12.5%</td><td class="num">4-66-0</td><td class="num">55</td><td class="num">10.6</td></tr>
+      <tr class="hl"><td class="who">Total</td><td></td><td class="num">112/158 · 71%</td><td class="num">76</td><td class="num">11</td><td class="num">13.1%</td><td class="num">7-120-1</td><td class="num">59</td><td class="num">25.0</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">Snaps and routes: DraftSharks (W1), Saints-beat snap report / FantasyPros (W2). Targets and team totals come from the ESPN box scores. Team target share = his targets ÷ all targets thrown to Saints receivers.</p>
+
+  <div class="why">
+    <h3>Week 1 is the real role; Week 2 was the illness</h3>
+    <p>Johnson missed Wednesday practice before Week 2 with an illness. That game his routes dropped from 84% to 59%, and Noah Fant (44% of snaps) and extra-lineman-as-TE Asim Richards (41%) absorbed the difference. Even so, Johnson <strong>out-targeted Fant 4–0</strong>. In the healthy Week 1 game he played 84% of snaps against Fant's 41% and ran 53 routes to Fant's 19. DraftSharks' read, which I share: the two <em>"are not as close as they seem."</em> Fant has 8 targets on 19 routes (a fluky rate that won't hold), and rookie Oscar Delp is now pushing Fant for the TE2 job.</p>
+    <p><strong>What to watch Sunday vs LV:</strong> if Johnson's route share is back above 75%, the Week 1 role is confirmed. If it stays near 60% while he's healthy, this is a real committee and his floor drops by about 2–3 points.</p>
+  </div>
+
+  <div class="def"><b>Target share</b> is the share of a team's pass attempts aimed at a player. For TEs, about 15% is solid TE2 volume, about 20% is TE1 volume, and 25%+ is elite (McBride territory). <b>First-read share</b> is how often the QB looks to him first on a play (13.6% for Johnson, per FantasyPros). It shows how the offense is designed, which is stickier than the raw target count.</div>
+
+  <p>At <strong>13.1%</strong> Johnson sits below the TE1 threshold. He's fourth in the Saints' pecking order: Olave (23 targets), Vele (16), and the RB group (Etienne 11, Kamara 6) all rank ahead of him. What keeps him fantasy-relevant is the <em>environment</em>. Tyler Shough threw <strong>56 times in Week 1</strong> (trailing Detroit) and 34 times in Week 2, in Kellen Moore's up-tempo offense. At roughly 45 passes a game, even a 13% share means 5–6 targets per week. In 2025, in the same scheme, he earned <strong>102 targets (6.0 per game)</strong>, one of only seven TEs to reach 100.</p>
+
+  <!-- ============ EFFICIENCY ============ -->
+  <h2>2 · Efficiency: what he does with the ball</h2>
+
+  <div class="def"><b>YPRR (yards per route run)</b> is receiving yards divided by routes run. It's the best single efficiency stat for receivers because it counts the snaps where he ran a route and wasn't targeted. Around 1.5 is average for a starting TE, 2.0+ is very good, and 2.5+ is elite. <b>TPRR (targets per route run)</b> measures how well a player earns the ball when he's out running routes. About 20% is good for a TE. <b>YAC</b> is yards after the catch.</div>
+
+  <div class="grid">
+    <div class="stat"><div class="k">YPRR, season</div><div class="v">1.58–1.69</div><div class="s">1.58 by my count (120 yds / 76 routes); 1.69 per FantasyPros. Around average.</div></div>
+    <div class="stat"><div class="k">TPRR</div><div class="v">14.5%</div><div class="s">11 targets / 76 routes. Below the ~20% good-TE mark.</div></div>
+    <div class="stat"><div class="k">Yards / target</div><div class="v">10.9</div><div class="s">Excellent, but carried by one 55-YAC game.</div></div>
+    <div class="stat"><div class="k">Red-zone targets</div><div class="v">4</div><div class="s">In two games. This is where his upside lives (see §4).</div></div>
+  </div>
+
+  <div class="why" style="margin-top:14px">
+    <h3>Treat the efficiency as regression-prone, especially the YAC</h3>
+    <p>The two weeks tell opposite stories. <strong>Week 1:</strong> 53 routes, 54 yards (1.02 YPRR), bailed out by a touchdown. <strong>Week 2:</strong> 23 routes, 66 yards (2.87 YPRR) on 4-of-4 catching, with <strong>55 of the 66 yards after the catch</strong>. YAC-driven yardage is the least repeatable kind. His 2025 baseline (77 catches, 889 yards, 11.5 yards per catch) is the better anchor. That's a reliable intermediate target, not an explosive one. Expect the season's 17.1 yards per catch to drift toward about 11–12.</p>
+    <p>FantasyPros adds a matchup-specific note: against <strong>zone coverage</strong> (defenses guarding areas rather than following individual receivers), Johnson's efficiency drops slightly to <strong>1.60 YPRR / 12% TPRR</strong>. Las Vegas plays zone 85.3% of the time, which is why the Primer calls him a "low-end TE1 this week," not a smash play.</p>
+  </div>
+
+  <!-- ============ SCORING ============ -->
+  <h2>3 · What that's worth in <em>our</em> scoring</h2>
+
+  <p>In D League a TE scores 1 point per catch, 0.1 per yard and 6 per TD, with no TE-premium bonus. A reliable 4–5 catches with ~50 yards is worth about 9–10 points before any touchdown. Johnson's 2025 line (77-889-3) converts to <strong>10.8 points per game</strong> here. Take away his one 2026 touchdown and he'd be averaging 9.5. The <strong>6-point TD (24% of his 25 points this season)</strong> is the swing factor.</p>
+
+  <div class="range">
+    <div class="stat" style="border-top:5px solid var(--down)"><div class="k">Floor week (~20%)</div><div class="v">4–6</div><div class="s">Fant or Delp take routes, or the game script turns run-heavy: 3 targets, 2-25-0.</div></div>
+    <div class="stat" style="border-top:5px solid var(--navy)"><div class="k">Median week</div><div class="v">~10</div><div class="s">5–6 targets, 4 catches, 45 yards, ~0.3 TD expected. His 2025 average: 10.8.</div></div>
+    <div class="stat" style="border-top:5px solid var(--up)"><div class="k">Ceiling week (~15%)</div><div class="v">18–22</div><div class="s">A shootout, 8 targets, 6-80-1. Needs a TD, and his red-zone role makes one plausible.</div></div>
+  </div>
+  <p class="small" style="margin-top:8px">Ranges are my judgment calls, built from his 2025 per-game baseline, the 2026 usage above and this league's scoring. They are not model output. The percentages are rough frequencies.</p>
+
+  <div class="why">
+    <h3>Compared with what the league offers at TE</h3>
+    <div class="tscroll"><table>
+      <thead><tr><th>TE</th><th>Team (league)</th><th>Pts/gm</th><th>ESPN ROS proj/gm</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="who">Juwan Johnson</td><td>Imad · bench</td><td class="num">12.5</td><td class="num">9.2</td><td>TE11 consensus rest of season</td></tr>
+        <tr><td class="who">George Kittle</td><td>Man Wolf · FLEX</td><td class="num">10.6</td><td class="num">12.3</td><td>Snap count lifting; TE5–6 consensus</td></tr>
+        <tr><td class="who">Harold Fannin Jr.</td><td>Man Wolf · TE</td><td class="num">7.3</td><td class="num">9.5</td><td>TE18 (RSJ); 20% target share in W2; age 22</td></tr>
+        <tr><td class="who">Pat Freiermuth</td><td>Free agent (21%)</td><td class="num">11.5</td><td class="num">8.2</td><td>Best waiver TE</td></tr>
+        <tr><td class="who">Darren Waller</td><td>Free agent (10%)</td><td class="num">11.6</td><td class="num">5.7</td><td>TD-inflated</td></tr>
+      </tbody>
+    </table></div>
+    <p><strong>Key context:</strong> in a 10-team league, the free-agent TE pool is decent. Freiermuth's ESPN projection sits only about 1 point per game below Johnson's. So Johnson's value <em>over replacement</em> (points above what you could pick up for free) is small, roughly 1–2 points a week. That's why he isn't a player to trade real value for. He is a good piece to <em>receive</em> as a sweetener.</p>
+  </div>
+
+  <!-- ============ MATCHUPS ============ -->
+  <h2>4 · Matchups, week by week</h2>
+
+  <div class="def"><b>How to read this:</b> the defensive rank is how many half-PPR fantasy points each defense allowed to TEs <em>over all of 2025</em> (1 = fewest allowed/toughest, 32 = most allowed/easiest; Eat Drink &amp; Sleep Football, final 2025). Two games of 2026 data is too small a sample to use. Defenses change between seasons, so treat this as a direction, not a forecast. Each row also shows who The Man Wolf plays that week in D League.</div>
+
+  <div class="tscroll"><table>
+    <thead><tr><th>Wk</th><th>Saints opponent</th><th>TE def rank ('25)</th><th>Read</th><th>Man Wolf plays</th></tr></thead>
+    <tbody>
+      <tr><td class="num">3</td><td>vs LV (NO −3, O/U 43.5)</td><td class="num">4</td><td><span class="chip down">Tough</span> zone-heavy, low total</td><td>ALI</td></tr>
+      <tr><td class="num">4</td><td>vs ATL · MNF</td><td class="num">3</td><td><span class="chip down">Tough</span> late kickoff limits your pivot options</td><td>Redemption</td></tr>
+      <tr><td class="num">5</td><td>vs MIN</td><td class="num">8</td><td><span class="chip down">Tough</span></td><td>Imad</td></tr>
+      <tr><td class="num">6</td><td>@ NYG</td><td class="num">5</td><td><span class="chip down">Tough</span> Tyson return window opens</td><td>Playoff Chase</td></tr>
+      <tr><td class="num">7</td><td>vs PIT</td><td class="num">24</td><td><span class="chip up">Good</span></td><td>Get Hooked</td></tr>
+      <tr class="hl"><td class="num">8</td><td colspan="3"><strong>BYE</strong> · same week as SF: Olave, Kamara, Evans (if acquired) and Johnson all off</td><td>Lamar n Order (1st)</td></tr>
+      <tr><td class="num">9</td><td>vs CLE</td><td class="num">15</td><td><span class="chip">Neutral</span></td><td>Bower Outage</td></tr>
+      <tr><td class="num">10</td><td>vs CAR</td><td class="num">21</td><td><span class="chip up">Good</span></td><td>Texas Two Step</td></tr>
+      <tr><td class="num">11</td><td>@ CHI</td><td class="num">13</td><td><span class="chip">Neutral</span></td><td>Steel Giants</td></tr>
+      <tr><td class="num">12</td><td>@ CIN</td><td class="num">32</td><td><span class="chip up">Best</span> most TE points allowed in 2025</td><td>ALI</td></tr>
+      <tr><td class="num">13</td><td>vs GB</td><td class="num">10</td><td><span class="chip flag">Below avg</span></td><td>Redemption</td></tr>
+      <tr><td class="num">14</td><td>@ CAR</td><td class="num">21</td><td><span class="chip up">Good</span></td><td>Imad</td></tr>
+      <tr class="hl"><td class="num">15</td><td>@ TB</td><td class="num">28</td><td><span class="chip up">Great</span></td><td>Playoffs, round 1</td></tr>
+      <tr class="hl"><td class="num">16</td><td>vs ARI</td><td class="num">31</td><td><span class="chip up">Great</span></td><td>Playoffs, semifinal</td></tr>
+      <tr class="hl"><td class="num">17</td><td>@ ATL</td><td class="num">3</td><td><span class="chip down">Tough</span></td><td>Final</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="why">
+    <h3>What the calendar means</h3>
+    <p><strong>Weeks 3–6 are his worst stretch.</strong> All four opponents held TEs to fewer than 9 half-PPR points a game in 2025. That's also exactly when Tyson is due back (a 2-month hamstring injury from Aug 17, IR-designated to return, so about Week 6–7). Expect his production to look ordinary through early October, and don't read too much into it.</p>
+    <p><strong>Weeks 7–16 flip the script.</strong> Six of the nine games are neutral or better, including CIN (#32) and back-to-back fantasy playoff games against TB (#28) and ARI (#31). If The Man Wolf makes the playoffs, those are the two weeks a TE matters most. This is why Johnson's value for us rises later in the year, and it runs opposite to Kittle, who SF is building up to peak late.</p>
+  </div>
+
+  <!-- ============ UPSIDE / RISK ============ -->
+  <h2>5 · Upside and risk</h2>
+  <div class="cols">
+    <div class="card">
+      <h3>Upside drivers</h3>
+      <ul>
+        <li><strong>Every-down role when healthy.</strong> 84% route share in Week 1, locked in by a $21M guaranteed contract and 2025's 100-target season with this QB and play-caller.</li>
+        <li><strong>Pass volume.</strong> Saints rank #2 in passing, with 90 attempts in two games. Game scripts where they're trailing (bad defense, shootouts) add more.</li>
+        <li><strong>Red-zone role.</strong> 4 red-zone targets in 2 games. Only 3 TDs last year means touchdowns are the obvious place for positive regression (a stat drifting back toward its normal level). Every TD is a 6-point swing, about 60% of a median week.</li>
+        <li><strong>Softer second half.</strong> CIN, TB and ARI all fall in weeks that matter.</li>
+      </ul>
+    </div>
+    <div class="card risk">
+      <h3>Risk drivers</h3>
+      <ul>
+        <li><strong>Jordyn Tyson (8th overall pick, WR) returns around Weeks 6–7.</strong> A first-round WR will take targets, most likely from the intermediate middle of the field where Johnson works. It hurts Olave's volume a little too.</li>
+        <li><strong>TE committee.</strong> Fant (44% of snaps in W2) and rookie Delp keep snaps in play, and Moore uses heavy sets with Richards as an extra TE.</li>
+        <li><strong>Efficiency will regress.</strong> 17.1 yards per catch and 55 YAC in Week 2 won't last. The baseline is about 11.5.</li>
+        <li><strong>TD dependence.</strong> Without the Week 1 TD he'd be averaging 9.5, basically replacement level.</li>
+        <li><strong>Concentration.</strong> With Olave and Kamara, that's three Saints for The Man Wolf, so a bad Shough day hits all three. Week 8 bye collides with SF.</li>
+        <li><strong>No keeper value.</strong> He's 30. Under our flat round-skip keeper cost, he's never worth a keeper slot.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ============ FIT ============ -->
+  <h2>6 · Fit with The Man Wolf and our strategy</h2>
+  <div class="why">
+    <p><strong>Strategy check (<code>strategy.md</code>):</strong> "TE: mid-tier is fine … not worth premium assets outside the top handful." Johnson is exactly that mid-tier TE, and in the proposed trade he costs us nothing extra: Evans alone outvalues Kittle on both trade charts (Yahoo 36 vs 22). The same doc says bench spots should go to "RB/WR handcuffs and high-ceiling young players … over a backup QB or a second TE." So <strong>we should not carry Johnson <em>and</em> Fannin long-term</strong>.</p>
+    <p><strong>Recommended usage if acquired:</strong></p>
+    <ul style="color:var(--ink-2);font-size:15px">
+      <li><strong>Week 3 (vs ALI):</strong> close to a coin flip with Fannin. ESPN projects Fannin 9.8 (vs CAR, a soft #21 matchup) against Johnson 9.2 (vs LV, #4). Consensus ranks Johnson TE9 and Fannin TE14. I lean Johnson on role (84% routes vs Fannin's 20% target share). The trade may not even clear before Sunday, so settle this in <code>/weekly-lineup</code>.</li>
+      <li><strong>Weeks 4–7:</strong> starting TE by default, with a low bar. Watch his route share and Tyson's activation.</li>
+      <li><strong>Week 8 (bye, vs 1st-place Lamar n Order):</strong> Fannin (CLE plays) covers TE. That's a reason to keep Fannin through Week 8. Afterward, Fannin becomes the cut candidate if we need the roster spot for RB/WR depth (Collins' IR return or a waiver RB). Or keep Fannin over Johnson if his 20% target share holds, since he's 22 and has cheap keeper optionality under our flat round-skip keeper cost.</li>
+      <li><strong>Weeks 15–16:</strong> lock him in. @TB and vs ARI are his two best playoff-window matchups.</li>
+    </ul>
+    <p><strong>League angle:</strong> Johnson is currently a bench piece for Imad, behind Kraft. Taking him doesn't strengthen Imad's lineup for our Week 5 or Week 14 meetings. It removes Imad's TE insurance, which makes Kittle more essential to Imad's lineup than to ours.</p>
+  </div>
+
+  <!-- ============ CONSENSUS ============ -->
+  <h2>7 · Expert consensus vs this read</h2>
+  <div class="tscroll"><table>
+    <thead><tr><th>Source</th><th>View</th></tr></thead>
+    <tbody>
+      <tr><td class="who">Yahoo · Justin Boone</td><td>Rest-of-season TE11, trade value 11 (Kittle 22, Fannin 10)</td></tr>
+      <tr><td class="who">Roto Street Journal</td><td>Rest-of-season TE11, value 856 (Kittle 1,793, Fannin 422)</td></tr>
+      <tr><td class="who">FantasyPros · Week 3 Primer</td><td>"Low-end TE1 production this week." 12.2% target share, 13.6% first-read share, 4 red-zone targets</td></tr>
+      <tr><td class="who">DraftSharks</td><td>Johnson clearly ahead of Fant in opportunity; "not as close as they seem"</td></tr>
+      <tr><td class="who">DK Network · Week 3</td><td>TE9 for Week 3 (Kittle TE5, Fannin TE14)</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>My read agrees with the consensus (TE11, about 10–11 PPR points per game)</strong>. I lean slightly more cautious for Weeks 3–6 (schedule plus Tyson) and slightly more positive for Weeks 12–16 (schedule). None of the sources above factors in the timing of Tyson's return. That's the biggest unknown, and I flag it as a judgment call, not hard evidence.</p>
+
+  <h2>Sources</h2>
+  <ul class="sources">
+    <li><a href="https://www.neworleanssaints.com/news/injury-report-las-vegas-raiders-vs-new-orleans-saints-2026-nfl-week-3-friday">Saints Friday W3 injury report</a></li>
+    <li><a href="https://www.draftsharks.com/fantasy-football-news/82645/juwan-johnson-noah-fant-not-as-close-as-they-seem">DraftSharks: Johnson vs Fant, W1 usage</a></li>
+    <li><a href="https://sports.yahoo.com/articles/snap-counts-saints-week-2-062007275.html">Yahoo: Saints W2 snap counts</a></li>
+    <li><a href="https://www.fantasypros.com/2026/09/the-primer-week-3-edition-2026-fantasy-football/4/">FantasyPros W3 Primer</a></li>
+    <li><a href="https://sports.yahoo.com/articles/saints-2025-review-juwan-johnson-135519729.html">Yahoo: Johnson's 2025 season</a></li>
+    <li><a href="https://www.neworleanssaints.com/news/juwan-johnson-tight-end-new-orleans-saints-roster-nfl-free-agency-2025-contract-extension">Saints: Johnson extension</a></li>
+    <li><a href="https://www.nfl.com/news/saints-rookie-wr-jordyn-tyson-hamstring-expected-to-miss-2-months">NFL.com: Tyson out ~2 months</a></li>
+    <li><a href="https://www.4for4.com/news/saints-place-jordyn-tyson-injured-reserve-designated-return">4for4: Tyson IR, designated to return</a></li>
+    <li><a href="https://www.rotowire.com/football/headlines/oscar-delp-news-held-to-just-one-catch-in-week-2-638775">RotoWire: Delp W2</a></li>
+    <li><a href="https://sports.yahoo.com/fantasy/article/2026-trade-value-charts--justin-boones-fantasy-football-tight-end-breakdown-for-week-3-142713660.html">Yahoo: Boone TE trade values W3</a></li>
+    <li><a href="https://www.rotostreetjournal.com/2026/09/22/2026-fantasy-football-week-3-trade-value-chart-tight-ends/">RSJ: TE trade value chart W3</a></li>
+    <li><a href="https://dknetwork.draftkings.com/2026/09/25/fantasy-football-te-rankings-week-3/">DK Network: W3 TE rankings</a></li>
+    <li><a href="https://eatdrinkandsleepfootball.com/fantasy/points-allowed/te-half-ppr.html">EDSFootball: 2025 TE points allowed</a></li>
+    <li>ESPN scoreboard/summary API: Saints W1–W2 box scores, 2026 schedule</li>
+    <li>League data: <code>data/teams.json</code>, <code>week_stats.json</code>, <code>free_agents.json</code>, <code>draft_results.json</code> (synced 2026-09-25)</li>
+  </ul>
+
+  <div class="foot">Fantasy Professor · generated 2026-09-25 · Week 2 stats complete, Week 3 not yet played · Juwan Johnson ESPN id 3929645</div>
+</main>
+</body>
+</html>

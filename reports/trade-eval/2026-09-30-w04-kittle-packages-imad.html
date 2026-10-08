@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Kittle Trade Packages</title>
+<style>
+:root{
+  --bg:#0d1117;--bg2:#11161f;--card:#161c26;--card2:#1c2330;--line:#29313f;
+  --ink:#e8ecf2;--mute:#8b96a8;--faint:#5c6778;
+  --accent:#7aa2ff;--accent-bg:rgba(122,162,255,.12);
+  --good:#4fd18b;--good-bg:rgba(79,209,139,.12);
+  --warn:#f2b64c;--warn-bg:rgba(242,182,76,.12);
+  --bad:#ff6b6b;--bad-bg:rgba(255,107,107,.12);
+  --give:#ff8f70;--get:#4fd18b;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html{color-scheme:dark}
+body{margin:0;background:radial-gradient(1200px 500px at 50% -200px,#1a2340 0%,var(--bg) 60%) no-repeat,var(--bg);color:var(--ink);
+  font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:980px;margin:0 auto;padding:32px 16px 72px}
+a{color:var(--accent)}
+b,strong{color:#fff;font-weight:650}
+
+/* header */
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700}
+h1{font-size:30px;line-height:1.2;margin:6px 0 8px;letter-spacing:-.01em}
+.meta{display:flex;flex-wrap:wrap;gap:8px;color:var(--mute);font-size:13px}
+.meta span{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+
+/* sticky section nav */
+nav.toc{position:sticky;top:0;z-index:5;margin:22px -16px 0;padding:10px 16px;background:rgba(13,17,23,.85);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.toc a{flex:none;font-size:13px;color:var(--mute);text-decoration:none;padding:4px 10px;border-radius:999px}
+nav.toc a:hover{background:var(--card2);color:var(--ink)}
+
+section{scroll-margin-top:60px}
+h2{font-size:19px;margin:40px 0 12px;display:flex;align-items:center;gap:10px}
+h2::before{content:"";width:4px;height:18px;border-radius:2px;background:var(--accent)}
+h3{font-size:15px;margin:0 0 8px}
+p{margin:8px 0}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin:12px 0}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+
+/* verdict banner */
+.verdict{display:flex;gap:18px;align-items:flex-start;border-radius:var(--radius);padding:20px;margin:24px 0 8px;border:1px solid}
+.verdict.accept{background:var(--good-bg);border-color:rgba(79,209,139,.35)}
+.verdict.decline{background:var(--bad-bg);border-color:rgba(255,107,107,.35)}
+.verdict.counter{background:var(--warn-bg);border-color:rgba(242,182,76,.35)}
+.verdict .badge{flex:none;font-weight:800;font-size:14px;letter-spacing:.08em;padding:8px 14px;border-radius:10px;color:#0d1117}
+.verdict.accept .badge{background:var(--good)}.verdict.decline .badge{background:var(--bad)}.verdict.counter .badge{background:var(--warn)}
+.verdict .call{font-size:17px;font-weight:600;margin:0 0 4px}
+.verdict .why{color:var(--mute);margin:0}
+@media (max-width:560px){.verdict{flex-direction:column}}
+
+/* KPI tiles */
+.kpi .label{font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+.kpi .val{font-size:26px;font-weight:750;font-variant-numeric:tabular-nums;margin:2px 0}
+.kpi .sub{font-size:13px;color:var(--mute)}
+.up{color:var(--good)}.down{color:var(--bad)}.flat{color:var(--mute)}
+
+/* give / get sides */
+.side{border-top:3px solid}
+.side.give{border-top-color:var(--give)}.side.get{border-top-color:var(--get)}
+.side-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.side-h .who{font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:800}
+.give .who{color:var(--give)}.get .who{color:var(--get)}
+.side-h .tot{font-size:13px;color:var(--mute)}
+.player{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.player:first-of-type{border-top:0}
+.pos{flex:none;width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:12px;font-weight:800;background:var(--card2);border:1px solid var(--line)}
+.pos.QB{color:#c9a0ff}.pos.RB{color:#4fd1c5}.pos.WR{color:#7aa2ff}.pos.TE{color:#f2b64c}.pos.DST{color:#a0aec0}
+.player .name{font-weight:650}
+.player .info{font-size:13px;color:var(--mute)}
+.player .nums{margin-left:auto;text-align:right;font-variant-numeric:tabular-nums;font-size:13px;color:var(--mute);white-space:nowrap}
+.player .nums b{display:block;font-size:16px}
+
+/* tags */
+.tag{display:inline-block;font-size:11px;font-weight:750;letter-spacing:.03em;padding:2px 7px;border-radius:6px;vertical-align:1px}
+.tag.ok{color:var(--good);background:var(--good-bg)}
+.tag.q{color:var(--warn);background:var(--warn-bg)}
+.tag.o{color:var(--bad);background:var(--bad-bg)}
+.tag.n{color:var(--accent);background:var(--accent-bg)}
+.tag.m{color:var(--mute);background:var(--card2)}
+
+/* value meter: set --give / --get widths as % of the larger side */
+.meter{margin:6px 0 2px}
+.meter .row{display:grid;grid-template-columns:90px 1fr 60px;gap:10px;align-items:center;margin:8px 0;font-size:13px}
+.meter .track{height:12px;background:var(--card2);border-radius:999px;overflow:hidden}
+.meter .fill{height:100%;border-radius:999px}
+.meter .fill.give{background:linear-gradient(90deg,#ff8f70,#ff6b6b)}
+.meter .fill.get{background:linear-gradient(90deg,#3fb67a,#4fd18b)}
+.meter .v{text-align:right;font-variant-numeric:tabular-nums;font-weight:650}
+
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--card)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{background:var(--bg2);color:var(--mute);font-weight:650;font-size:11px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody tr:hover{background:rgba(255,255,255,.02)}
+tr.chg td{background:var(--accent-bg)}
+
+/* lists, callouts */
+ul.clean{list-style:none;padding:0;margin:0}
+ul.clean li{padding:8px 0 8px 26px;position:relative;border-top:1px solid var(--line)}
+ul.clean li:first-child{border-top:0}
+ul.clean li::before{position:absolute;left:0;top:8px;font-weight:800}
+ul.pro li::before{content:"+";color:var(--good)}
+ul.con li::before{content:"−";color:var(--bad)}
+ul.risk li::before{content:"!";color:var(--warn)}
+ul.step li::before{content:"→";color:var(--accent)}
+.note{border-left:3px solid var(--accent);background:var(--accent-bg);padding:12px 14px;border-radius:0 10px 10px 0;margin:12px 0;font-size:14px}
+.note.warn{border-color:var(--warn);background:var(--warn-bg)}
+
+/* proposal packages */
+.pkg{position:relative}
+.pkg .rank{position:absolute;top:14px;right:16px;font-size:30px;font-weight:800;color:var(--faint)}
+.pkg .swap{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin:10px 0}
+.pkg .swap .arrow{color:var(--faint);font-size:20px}
+.pkg .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:750}
+.pkg .give .lbl{color:var(--give)}.pkg .get .lbl{color:var(--get)}
+.dots{display:inline-flex;gap:3px;vertical-align:middle}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--card2);border:1px solid var(--line)}
+.dots i.on{background:var(--accent);border-color:var(--accent)}
+
+details{margin-top:28px;color:var(--mute);font-size:13px}
+summary{cursor:pointer;color:var(--ink);font-weight:600}
+dl.gloss{display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;margin:12px 0}
+dl.gloss dt{font-weight:700;color:var(--ink)}dl.gloss dd{margin:0}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--faint);font-size:12px}
+</style>
+</head>
+<body><main>
+
+<div class="eyebrow">Trade targets · Week 4</div>
+<h1>Kittle → Imad: two packages that beat Evans</h1>
+<div class="meta">
+  <span>Built Wed 2026-09-30 CT</span>
+  <span>ESPN sync 09-29 late</span>
+  <span>The Man Wolf 3-0 · 2nd</span>
+  <span>Partner: Imad (team 15) 2-1 · 4th</span>
+</div>
+
+<nav class="toc">
+  <a href="#verdict">Call</a><a href="#packages">Packages</a><a href="#players">Players</a>
+  <a href="#fit">Roster fit</a><a href="#partner">Partner</a><a href="#risks">Risks</a><a href="#next">Next steps</a>
+</nav>
+
+<section id="verdict">
+<div class="verdict counter">
+  <div class="badge">PITCH</div>
+  <div>
+    <p class="call">Lead with Kittle + Pittman for Drake London. Fall back to Kittle for Rashee Rice + Quinshon Judkins. If Imad says no to both, keep Kittle.</p>
+    <p class="why">Confidence: <b>medium</b>. Both deals are close to even on market value and both help Imad's lineup. Kittle is now at full snaps, so we don't have to sell cheap.</p>
+  </div>
+</div>
+<div class="grid g3">
+  <div class="card kpi"><div class="label">#1 London: lineup / wk</div><div class="val up">+2.2</div><div class="sub">London 16.4 vs Kittle 14.2 in FLEX (ESPN)</div></div>
+  <div class="card kpi"><div class="label">#2 Rice+Judkins: lineup / wk</div><div class="val up">+0.7</div><div class="sub">plus an RB4 with keeper upside</div></div>
+  <div class="card kpi"><div class="label">TE cost of losing Kittle</div><div class="val flat">small</div><div class="sub">Fannin is FP TE9 vs Kittle TE5</div></div>
+</div>
+</section>
+
+<section id="packages">
+<h2>Trade packages</h2>
+
+<div class="card pkg">
+  <div class="rank">#1</div>
+  <h3>Kittle + Pittman → Drake London</h3>
+  <div class="swap">
+    <div class="give"><div class="lbl">Give</div>George Kittle (TE) <span class="tag ok">ACTIVE</span><br>Michael Pittman Jr. (WR) <span class="tag ok">ACTIVE</span></div>
+    <div class="arrow">⇄</div>
+    <div class="get"><div class="lbl">Get</div>Drake London (WR) <span class="tag ok">ACTIVE</span></div>
+  </div>
+  <p>Acceptance odds <span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+     &nbsp; Helps us <span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></p>
+  <div class="meter">
+    <div class="row"><span>You give</span><div class="track"><div class="fill give" style="width:100%"></div></div><span class="v">1614</span></div>
+    <div class="row"><span>You get</span><div class="track"><div class="fill get" style="width:98%"></div></div><span class="v">1581</span></div>
+  </div>
+  <p><b>Why it helps us:</b> London is FP ROS WR9 and gets a WR1 workload: 10 targets, 9-194 in Week 3 with Penix back. He replaces Kittle in FLEX for about +2.2 pts a week, and covers WR2 whenever Collins sits. The 2-for-1 also frees a bench spot for a D/ST streamer.</p>
+  <p><b>Why Imad would take it:</b> by RSJ's chart he wins slightly on value (1614 vs 1581). Kittle takes his TE slot (+4.2 over Juwan Johnson), and he's WR-deep enough (Watson, Rice, Evans, Robinson, Vele) to absorb losing London.</p>
+  <p style="color:var(--mute);font-size:13px">If he wants more: swap Pittman for Jameson Williams (RSJ 586, FP WR29). That's still worth it for us: J. Williams is our WR4 and London is a weekly starter.</p>
+</div>
+
+<div class="card pkg">
+  <div class="rank">#2</div>
+  <h3>Kittle → Rashee Rice + Quinshon Judkins</h3>
+  <div class="swap">
+    <div class="give"><div class="lbl">Give</div>George Kittle (TE) <span class="tag ok">ACTIVE</span></div>
+    <div class="arrow">⇄</div>
+    <div class="get"><div class="lbl">Get</div>Rashee Rice (WR) <span class="tag ok">ACTIVE</span><br>Quinshon Judkins (RB) <span class="tag ok">ACTIVE</span></div>
+  </div>
+  <p>Acceptance odds <span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+     &nbsp; Helps us <span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></p>
+  <div class="meter">
+    <div class="row"><span>You give</span><div class="track"><div class="fill give" style="width:91%"></div></div><span class="v">1360</span></div>
+    <div class="row"><span>You get</span><div class="track"><div class="fill get" style="width:100%"></div></div><span class="v">1492</span></div>
+  </div>
+  <p><b>Why it helps us:</b> Rice (FP ROS WR23) has 2 → 6 → 9 targets and is trending up. He replaces Kittle in FLEX (+0.7/wk). Judkins (FP RB24, 2nd year) adds RB depth, the lineup lever in <code>strategy.md</code>, and is a cheap potential keeper.</p>
+  <p><b>Why Imad would take it:</b> his lineup gets better (about +3.1/wk: Kittle over Johnson at TE, Evans in for Rice). Judkins is his RB4 behind Walker, Brown and Skattebo. The value is in line with his own earlier offer (Evans + Johnson = 1523 at today's values).</p>
+  <p style="color:var(--mute);font-size:13px">2-for-1: we cut Malik Washington (FP WR61, last in our cut order).</p>
+</div>
+
+<div class="note warn"><b>Considered and rejected:</b> Kittle → Cam Skattebo (RSJ 868 vs 1360: too far below market for a ~0-pt lineup change). Kittle → Chase Brown (RSJ 1736: Imad loses his RB2 and 1st-round pick, so it's not a fair ask). Mike Evans is off the table at your request (hip, age 33).</div>
+</section>
+
+<section id="players">
+<h2>Player by player</h2>
+<div class="tw"><table>
+<thead><tr><th>Player</th><th>Status</th><th class="n">Avg</th><th class="n">ESPN proj/g</th><th>Expert consensus</th><th>Our read</th></tr></thead>
+<tbody>
+<tr><td><b>George Kittle</b><br><span style="color:var(--mute);font-size:13px">TE · SF · bye 8</span></td><td><span class="tag ok">ACTIVE</span></td><td class="n">15.8</td><td class="n">14.2</td><td>FP ROS TE5; RSJ TE3 (1360)</td><td><span class="tag ok">AGREE</span> Full workload now: led SF skill players in W3 snaps, 6-82-2. The flat 46–48% snap concern from W1–2 is gone. This is his peak value.</td></tr>
+<tr><td><b>Michael Pittman Jr.</b><br><span style="color:var(--mute);font-size:13px">WR · PIT · bye 9</span></td><td><span class="tag ok">ACTIVE</span></td><td class="n">6.2</td><td class="n">10.1</td><td>FP ROS WR57; RSJ 254</td><td><span class="tag ok">AGREE</span> WR5/6 for us. 5 targets, 3.6 pts in W3. Good sweetener.</td></tr>
+<tr><td><b>Drake London</b><br><span style="color:var(--mute);font-size:13px">WR · ATL · bye 11</span></td><td><span class="tag ok">ACTIVE</span></td><td class="n">14.3</td><td class="n">16.4</td><td>FP ROS WR9 (range 7–12); RSJ WR7 (1581)</td><td><span class="tag ok">AGREE</span> Slow W1–2 without Penix; WR1 again with him (10 tgt, 194 yds). Age 25.</td></tr>
+<tr><td><b>Rashee Rice</b><br><span style="color:var(--mute);font-size:13px">WR · KC · bye 5</span></td><td><span class="tag ok">ACTIVE</span></td><td class="n">12.7</td><td class="n">14.9</td><td>FP ROS WR23; RSJ WR20 (938)</td><td><span class="tag ok">AGREE</span> Targets rising (2/6/9). NFL ruled in April: no 2026 suspension.</td></tr>
+<tr><td><b>Quinshon Judkins</b><br><span style="color:var(--mute);font-size:13px">RB · CLE · bye 11</span></td><td><span class="tag ok">ACTIVE</span></td><td class="n">8.9</td><td class="n">12.7</td><td>FP ROS RB24; RSJ RB25 (554)</td><td><span class="tag n">DIVERGE ↓</span> Lead back with Sampson on IR, but Sampson is eligible to return W6. Committee risk after that.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="fit">
+<h2>Roster fit</h2>
+<div class="tw"><table>
+<thead><tr><th>Slot</th><th>Now</th><th>After #1</th><th>After #2</th></tr></thead>
+<tbody>
+<tr><td>QB</td><td>Dak Prescott</td><td>Dak Prescott</td><td>Dak Prescott</td></tr>
+<tr><td>RB / RB</td><td>Henry / Barkley</td><td>Henry / Barkley</td><td>Henry / Barkley</td></tr>
+<tr><td>WR / WR</td><td>Olave / Collins (Q)</td><td>Olave / Collins</td><td>Olave / Collins</td></tr>
+<tr><td>TE</td><td>Fannin</td><td>Fannin</td><td>Fannin</td></tr>
+<tr class="chg"><td>FLEX</td><td>Kittle 14.2</td><td>London 16.4</td><td>Rice 14.9</td></tr>
+<tr><td>FLEX</td><td>Tuten</td><td>Tuten</td><td>Tuten</td></tr>
+<tr class="chg"><td>Bench change</td><td>—</td><td>−Pittman, +1 open spot</td><td>+Judkins, −M. Washington</td></tr>
+</tbody></table></div>
+<div class="grid g2">
+  <div class="card"><h3>Why it helps</h3><ul class="clean pro">
+    <li>Both deals add a starting WR, fixing the hole the waiver wire couldn't fill.</li>
+    <li>If Collins sits (hamstring, still Q), the new WR starts at WR2. We don't have to fall back on J. Williams.</li>
+    <li>Trading Kittle shrinks the Week 8 bye cluster (Olave, Collins, Kamara, Kittle all off that week).</li>
+  </ul></div>
+  <div class="card"><h3>What it costs</h3><ul class="clean con">
+    <li>No TE backup behind Fannin. A waiver TE would be the emergency fill.</li>
+    <li>Fannin is 22 and his 2-TD week may be a spike. If he fades, TE becomes a weak slot.</li>
+    <li>Kittle's upside in the fantasy playoffs goes to a probable playoff team.</li>
+  </ul></div>
+</div>
+</section>
+
+<section id="partner">
+<h2>Why Imad might say yes</h2>
+<div class="card">
+<p>Imad is 2-1 and 4th, a contender who wants to upgrade now. He's rostering two mid TEs (Johnson FP TE11, Kraft TE8, and he benched Kraft for Johnson). He's deep at WR (six rostered) and RB (five). He already offered Evans + Johnson for Kittle, so he values Kittle at about 1500 on RSJ's chart. Both packages sit near that number.</p>
+<div class="note">Pitch angle: "You're deep at WR and RB. Kittle is back to full snaps and fixes the one spot you're not solid at."</div>
+</div>
+</section>
+
+<section id="risks">
+<h2>Risks &amp; exposure</h2>
+<div class="card"><ul class="clean risk">
+<li><b>London:</b> ESPN lists him ACTIVE. One search result mentioned a "questionable vs Arizona" designation, but it isn't on a current Falcons injury report (likely a stale item). Re-check Wednesday's ATL report before sending.</li>
+<li><b>Rice:</b> no 2026 NFL discipline (league ruling, April). The off-field history is still there if new issues come up.</li>
+<li><b>Judkins:</b> Sampson can come back in Week 6 and turn it into a committee.</li>
+<li><b>Bye weeks:</b> London and Judkins share Week 11 with Fannin. Rice's bye is Week 5, when Collins might still be limited.</li>
+<li><b>Kittle:</b> Achilles recovery. He has held up so far, but that risk goes to Imad either way.</li>
+</ul></div>
+</section>
+
+<section id="next">
+<h2>Next steps</h2>
+<div class="card"><ul class="clean step">
+<li>Send #1 (Kittle + Pittman for London). If he counters, offer J. Williams in place of Pittman.</li>
+<li>If he says no, send #2 (Kittle for Rice + Judkins). Cut M. Washington if accepted.</li>
+<li>If he declines both: keep Kittle. At full snaps he's a TE1, and we're 3-0.</li>
+<li>Optional deep dive: <code>/player-eval London vs Rice</code> if you want to settle which WR you'd rather have.</li>
+</ul></div>
+</section>
+
+<details>
+<summary>Glossary</summary>
+<dl class="gloss">
+<dt>ROS</dt><dd>Rest of season: value from now on, not points already scored.</dd>
+<dt>FP ROS rank</dt><dd>FantasyPros' Expert Consensus Ranking: an average of many analysts' rest-of-season rankings.</dd>
+<dt>Trade value (RSJ)</dt><dd>Roto Street Journal's chart puts a number on each player so trade sides can be compared. Here, higher = more valuable.</dd>
+<dt>Targets</dt><dd>Passes thrown to a player. The best single predictor of a receiver's PPR output.</dd>
+<dt>Snap share</dt><dd>Share of the offense's plays a player is on the field for. It shows how big his role is.</dd>
+<dt>FLEX</dt><dd>A lineup slot that can hold an RB, WR or TE. We have two.</dd>
+<dt>Keeper</dt><dd>A player kept for next season. Here it costs a flat round-skip, so cheap young breakouts are nearly free to keep.</dd>
+</dl>
+</details>
+
+<footer>Sources: ESPN Fantasy API (rosters, projections, designations, 09-29 sync) · <a href="https://www.fantasypros.com/nfl/rankings/ros-ppr-wr.php">FantasyPros ROS PPR rankings (9/29)</a> · <a href="https://www.rotostreetjournal.com/2026/09/29/2026-fantasy-football-week-4-trade-value-chart/">Roto Street Journal Week 4 trade values</a> · <a href="https://www.nbcsports.com/fantasy/football/player-news/2026-09-27/george-kittle-catches-two-tds-in-week-3-win">NBC (Kittle W3)</a> · <a href="https://www.nbcsports.com/fantasy/football/player-news/2026-09-24/drake-london-welcomes-back-penix-with-9-194-line">NBC (London)</a> · <a href="https://www.profootballrumors.com/2026/04/chiefs-rashee-rice-will-not-face-nfl-suspension">PFR (Rice, no suspension)</a> · <a href="https://www.espn.com/nfl/story/_/id/49951024/browns-place-rb-sampson-injured-reserve-knee-injury">ESPN (Sampson IR)</a>. Every player shown was checked for injury and legal status.</footer>
+</main></body></html>

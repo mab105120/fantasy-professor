@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>D League Week 1 Debrief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#E9EAEC; --card:#FFFFFF; --ink:#15181D; --ink-2:#3A4049; --muted:#6B727D;
+  --rule:#C7CAD0; --rule-hard:#15181D; --navy:#173A5C; --navy-soft:#E2E8EF;
+  --up:#0E7A5F; --up-soft:#DCEDE7; --down:#B23A33; --down-soft:#F3E0DE;
+  --flag:#B87814; --flag-soft:#F6E9D2; --chip:#DFE1E5;
+  --bar:#173A5C; --track:#CDD2D9; --me:#B87814;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+    --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+    --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+    --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+    --bar:#7FB0E2; --track:#333943; --me:#E7AE4E;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+  --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+  --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+  --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+  --bar:#7FB0E2; --track:#333943; --me:#E7AE4E;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:"Barlow","Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.5;margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1020px;margin:0 auto;padding-inline:18px;padding-block:0 56px}
+img{max-width:100%}
+
+.mast{background:#0B0D11;color:#E9EBEF;padding:24px 18px 20px;border-bottom:4px solid var(--flag)}
+.mast-inner{max-width:984px;margin:0 auto;display:flex;flex-wrap:wrap;gap:14px 28px;align-items:flex-end;justify-content:space-between}
+.mast h1{font-family:"Oswald",Impact,sans-serif;font-weight:700;font-size:clamp(32px,6.6vw,52px);line-height:.94;margin:0;text-transform:uppercase;text-wrap:balance}
+.mast h1 em{font-style:normal;color:var(--flag);display:block}
+.mast-meta{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:#9AA3B0;text-align:right;line-height:1.85}
+.mast-meta b{color:#E9EBEF;font-weight:600}
+@media (max-width:620px){.mast-meta{text-align:left}}
+
+section{margin-block:40px 0}
+.head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--rule-hard);padding-bottom:7px}
+.head .tag{font-family:"Oswald",Impact,sans-serif;font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:3px 8px;background:var(--navy);color:var(--card)}
+.tag.up{background:var(--up)}.tag.down{background:var(--down)}.tag.flag{background:var(--flag)}
+.head h2{font-family:"Oswald",Impact,sans-serif;font-weight:600;font-size:clamp(21px,3.4vw,27px);text-transform:uppercase;margin:0;line-height:1.1}
+.head .note{font-size:13.5px;color:var(--muted);margin-left:auto;max-width:46ch;line-height:1.35}
+@media (max-width:760px){.head .note{margin-left:0}}
+.lede{font-size:16.5px;line-height:1.55;color:var(--ink-2);max-width:68ch;margin:16px 0 0}
+.lede b{color:var(--ink);font-weight:600}
+
+.repair{background:var(--down-soft);border:1px solid var(--rule);border-left:4px solid var(--down);padding:15px 18px;margin-top:22px;font-size:14.5px;line-height:1.5;color:var(--ink-2)}
+.repair b{color:var(--ink);font-weight:600}
+.repair code{font-family:"IBM Plex Mono",monospace;font-size:12.5px;background:var(--chip);padding:1px 5px}
+
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+.scroll{overflow-x:auto;border-bottom:1px solid var(--rule)}
+th{font-family:"Oswald",Impact,sans-serif;font-weight:500;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:right;padding:9px 8px;border-bottom:1px solid var(--rule);white-space:nowrap}
+th:first-child,td:first-child{text-align:left;padding-left:12px}
+td{padding:9px 8px;text-align:right;border-bottom:1px solid var(--rule);font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+td.tm{font-weight:600;min-width:150px;white-space:normal}
+td.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13px}
+tr.me td{background:var(--flag-soft)}
+tr.me td.tm::after{content:"YOU";font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.1em;background:var(--flag);color:#fff;padding:1px 4px;margin-left:7px;vertical-align:2px}
+.pos{color:var(--up)}.neg{color:var(--down)}
+.fix{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.08em;color:var(--flag);margin-left:5px}
+
+.eff{display:flex;flex-direction:column;gap:2px;margin-top:18px}
+.eff-row{display:grid;grid-template-columns:minmax(120px,158px) 1fr 108px;gap:12px;align-items:center;padding:7px 0}
+.eff-name{font-size:14.5px;font-weight:600;line-height:1.2}
+.eff-name small{display:block;font-weight:400;font-size:11.5px;color:var(--muted)}
+.eff-track{position:relative;height:22px;background:var(--track);border-radius:0 3px 3px 0}
+.eff-fill{position:absolute;inset:0 auto 0 0;background:var(--bar);border-radius:0 3px 3px 0;box-shadow:2px 0 0 var(--card)}
+.eff-row.me .eff-fill{background:var(--me)}
+.eff-marker{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);opacity:.75}
+.eff-val{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:14px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.eff-val small{display:block;font-size:10.5px;font-weight:400;color:var(--muted)}
+.eff-legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:14px;align-items:center}
+.eff-legend span{display:flex;align-items:center;gap:7px}
+.sw{width:16px;height:10px;background:var(--bar);flex:none}
+.sw.tr{background:var(--track)}
+.sw.mk{width:2px;height:16px;background:var(--ink)}
+@media (max-width:620px){.eff-row{grid-template-columns:1fr 92px;gap:6px 10px}.eff-track{grid-column:1/-1;order:3}}
+
+.rows{display:flex;flex-direction:column;border-bottom:1px solid var(--rule)}
+.row{display:grid;grid-template-columns:minmax(150px,1.2fr) minmax(180px,1.5fr) minmax(220px,2.2fr);gap:4px 18px;align-items:baseline;padding:13px 0 13px 12px;border-top:1px solid var(--rule);border-left:4px solid var(--rule)}
+.rows .row:first-child{border-top:none}
+.row.up{border-left-color:var(--up)}.row.down{border-left-color:var(--down)}.row.flag{border-left-color:var(--flag)}.row.navy{border-left-color:var(--navy)}
+.who{font-weight:600;font-size:17px;line-height:1.2}
+.who .sub{display:block;font-weight:400;font-size:12px;color:var(--muted);font-family:"IBM Plex Mono",monospace;letter-spacing:.04em;margin-top:2px}
+.line{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px;line-height:1.5;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.say{font-size:14.5px;color:var(--ink-2);line-height:1.45}
+.say b{color:var(--ink);font-weight:600}
+@media (max-width:760px){.row{grid-template-columns:1fr;padding-left:10px}}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:16px}
+.card{background:var(--card);border:1px solid var(--rule);border-top:3px solid var(--navy);padding:15px 16px}
+.card.hot{border-top-color:var(--up)}.card.cold{border-top-color:var(--down)}
+.card h3{font-family:"Oswald",Impact,sans-serif;font-weight:600;font-size:16px;text-transform:uppercase;letter-spacing:.04em;margin:0 0 2px;line-height:1.2}
+.card .rec{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.07em;color:var(--muted);margin:0 0 10px;text-transform:uppercase}
+.card p{margin:0 0 9px;font-size:14.5px;line-height:1.45;color:var(--ink-2)}
+.card p:last-child{margin-bottom:0}
+.card b{color:var(--ink);font-weight:600}
+.card .kv{display:flex;flex-wrap:wrap;gap:4px 14px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid var(--rule)}
+
+.deep{background:var(--card);border:1px solid var(--rule);border-top:4px solid var(--flag);padding:20px 22px;margin-top:16px}
+.deep h3{font-family:"Oswald",Impact,sans-serif;font-size:15px;text-transform:uppercase;letter-spacing:.1em;margin:22px 0 8px}
+.deep h3:first-child{margin-top:0}
+.deep p{font-size:15px;line-height:1.5;color:var(--ink-2);margin:0 0 10px;max-width:70ch}
+.deep p b{color:var(--ink);font-weight:600}
+.deep ul{margin:0;padding-left:19px;display:flex;flex-direction:column;gap:8px}
+.deep li{font-size:14.5px;line-height:1.45;color:var(--ink-2)}
+.deep li b{color:var(--ink);font-weight:600}
+
+.trade{background:var(--card);border:1px solid var(--rule);border-left:4px solid var(--navy);margin-top:14px;padding:16px 18px}
+.trade.top{border-left-color:var(--up)}
+.trade.moon{border-left-color:var(--flag)}
+.trade-hd{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin-bottom:12px}
+.trade-hd .n{font-family:"Oswald",Impact,sans-serif;font-size:12px;letter-spacing:.12em;background:var(--ink);color:var(--paper);padding:2px 8px}
+.trade.top .trade-hd .n{background:var(--up);color:#fff}
+.trade.moon .trade-hd .n{background:var(--flag);color:#fff}
+.trade-hd h3{font-family:"Oswald",Impact,sans-serif;font-weight:600;font-size:18px;text-transform:uppercase;margin:0;line-height:1.2}
+.trade-hd .with{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.07em;color:var(--muted);text-transform:uppercase;margin-left:auto}
+@media (max-width:700px){.trade-hd .with{margin-left:0;width:100%}}
+.swap{display:grid;grid-template-columns:1fr 30px 1fr;gap:10px;margin-bottom:13px}
+.swap .side{background:var(--paper);border:1px solid var(--rule);padding:10px 12px}
+.swap .side dt{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.swap .side p{margin:0 0 4px;font-size:14px;line-height:1.3;font-weight:600}
+.swap .side p:last-child{margin-bottom:0}
+.swap .side p span{display:block;font-weight:400;font-size:11.5px;color:var(--muted);font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.swap .arr{display:flex;align-items:center;justify-content:center;font-family:"Oswald",sans-serif;font-size:19px;color:var(--muted)}
+@media (max-width:560px){.swap{grid-template-columns:1fr}.swap .arr{transform:rotate(90deg);height:22px}}
+.trade dl.why{margin:0;display:grid;grid-template-columns:86px 1fr;gap:7px 14px;font-size:14.5px;line-height:1.45}
+.trade dl.why dt{font-family:"Oswald",Impact,sans-serif;font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+.trade dl.why dd{margin:0;color:var(--ink-2)}
+.trade dl.why dd b{color:var(--ink);font-weight:600}
+@media (max-width:560px){.trade dl.why{grid-template-columns:1fr;gap:2px 0}.trade dl.why dt{margin-top:8px}}
+.strat{background:var(--flag-soft);border:1px solid var(--rule);padding:15px 18px;margin-top:16px;font-size:14.5px;line-height:1.5;color:var(--ink-2)}
+.strat b{color:var(--ink);font-weight:600}
+
+.calm{background:var(--navy-soft);border:1px solid var(--rule);padding:18px 20px;margin-top:16px}
+.calm ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:11px}
+.calm li{font-size:15px;line-height:1.45}
+.calm li b{font-weight:600}
+
+footer{margin-top:48px;border-top:2px solid var(--rule-hard);padding-top:16px;font-size:13px;color:var(--muted);line-height:1.6}
+footer h4{font-family:"Oswald",Impact,sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin:0 0 6px;color:var(--ink-2)}
+footer code{font-family:"IBM Plex Mono",monospace;font-size:12px}
+a:focus-visible{outline:2px solid var(--flag);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<div class="mast">
+  <div class="mast-inner">
+    <h1>Week 1 Final<em>+ Week 2 Preview</em></h1>
+    <div class="mast-meta">
+      <b>D League</b> &middot; 394766 &middot; 2026<br>
+      Filed Tue 15 Sep &middot; <b>Week 1 complete</b><br>
+      Week 2 figures are projections only
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <p class="lede" style="margin-top:26px">Monday night changed two teams and one conclusion. <b>Imad did not score 81 — they scored 125</b>, because Kenneth Walker III put up 34.1 in Kansas City. The write-up you read last week called them the worst-managed roster in the league by thirty points; that was wrong, and the corrected number is below. Your own week is unchanged: <b>135.50, a win, and the best-managed lineup in the league at 99.6%.</b></p>
+
+  <div class="repair">
+    <b>One data repair, so you know what you're reading.</b> The refreshed export has ESPN's official results in <code>teams.json</code>, but the <code>week_stats.json</code> rows for the twelve Denver–Kansas City players were never updated — they still read <code>points: 0, game_played: 0</code>. That silently understated six teams' optimal lineups. I recovered the real values from <code>roster.total_points</code>, which matched <code>week_stats</code> exactly on all 151 already-played players and reproduces ESPN's official team totals to the cent. <b>Worth fixing in your exporter</b>: re-pulling week stats after a Monday game doesn't seem to refresh rows already written as unplayed.
+  </div>
+
+  <section>
+    <div class="head">
+      <span class="tag">Standings</span>
+      <h2>Week 1, Final</h2>
+      <p class="note">Now official — ESPN has written results into the export. Amber marks a score that changed after Monday night.</p>
+    </div>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>Team</th><th>Score</th><th>Opponent</th><th>Opp</th><th>Res</th><th>All-play</th><th>Waiver</th></tr></thead>
+      <tbody>
+        <tr><td class="tm">🥊ALI🥊</td><td class="mono">165.16</td><td>Steel Giants</td><td class="mono">142.56</td><td class="pos">W</td><td class="mono">9–0</td><td class="mono">#10</td></tr>
+        <tr><td class="tm">Get Hooked</td><td class="mono">150.12</td><td>Playoff Chase</td><td class="mono">90.52</td><td class="pos">W</td><td class="mono">8–1</td><td class="mono">#9</td></tr>
+        <tr><td class="tm">Team Jones</td><td class="mono">147.96</td><td>Imad</td><td class="mono">125.00</td><td class="pos">W</td><td class="mono">7–2</td><td class="mono">#8</td></tr>
+        <tr><td class="tm">Steel Giants</td><td class="mono">142.56</td><td>🥊ALI🥊</td><td class="mono">165.16</td><td class="neg">L</td><td class="mono">6–3</td><td class="mono">#5</td></tr>
+        <tr><td class="tm">Redemption team</td><td class="mono">141.96</td><td>Bower Outage</td><td class="mono">68.26</td><td class="pos">W</td><td class="mono">5–4</td><td class="mono">#7</td></tr>
+        <tr class="me"><td class="tm">The Man Wolf</td><td class="mono">135.50</td><td>Texas Two Step</td><td class="mono">125.96</td><td class="pos">W</td><td class="mono">4–5</td><td class="mono">#6</td></tr>
+        <tr><td class="tm">Texas Two Step</td><td class="mono">125.96</td><td>The Man Wolf</td><td class="mono">135.50</td><td class="neg">L</td><td class="mono">3–6</td><td class="mono">#4</td></tr>
+        <tr><td class="tm">Imad<span class="fix">+44.00</span></td><td class="mono">125.00</td><td>Team Jones</td><td class="mono">147.96</td><td class="neg">L</td><td class="mono">2–7</td><td class="mono">#3</td></tr>
+        <tr><td class="tm">Playoff Chase<span class="fix">+3.20</span></td><td class="mono">90.52</td><td>Get Hooked</td><td class="mono">150.12</td><td class="neg">L</td><td class="mono">1–8</td><td class="mono">#2</td></tr>
+        <tr><td class="tm">Bower Outage</td><td class="mono">68.26</td><td>Redemption team</td><td class="mono">141.96</td><td class="neg">L</td><td class="mono">0–9</td><td class="mono">#1</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="lede"><b>Waiver priority flipped to inverse standings.</b> Last week's order is void — Steel Giants no longer pick first, Bower Outage does, and ALI has fallen to last. You held at <b>#6</b>. Anything you want off waivers, five teams see first, and the three teams ahead of you with the biggest holes are exactly the ones most likely to want the same players.</p>
+    <p class="lede">Your 4–5 all-play stands. You beat a real opponent with the sixth-best score, which is a win worth banking and nothing more. The team with the genuine gap between record and quality is <b>Steel Giants at 0–1 with the fourth-best score</b> — they lost only because they drew the week's high scorer.</p>
+  </section>
+
+  <section>
+    <div class="head">
+      <span class="tag flag">Efficiency</span>
+      <h2>Lineup Efficiency</h2>
+      <p class="note">Points scored against the best legal lineup that roster could have started. Corrected for the Monday night game — three of these numbers moved.</p>
+    </div>
+
+    <div class="eff">
+      <div class="eff-row me">
+        <div class="eff-name">The Man Wolf<small>left 0.50 on the bench</small></div>
+        <div class="eff-track"><div class="eff-fill" style="width:67.3%"></div><div class="eff-marker" style="left:67.6%"></div></div>
+        <div class="eff-val">99.6%<small>135.50 / 136.00</small></div>
+      </div>
+      <div class="eff-row">
+        <div class="eff-name">Texas Two Step<small>left 5.70 — was 1.70 before Monday</small></div>
+        <div class="eff-track"><div class="eff-fill" style="width:62.6%"></div><div class="eff-marker" style="left:65.4%"></div></div>
+        <div class="eff-val">95.7%<small>125.96 / 131.66</small></div>
+      </div>
+      <div class="eff-row">
+        <div class="eff-name">Team Jones<small>left 17.10</small></div>
+        <div class="eff-track"><div class="eff-fill" style="width:73.5%"></div><div class="eff-marker" style="left:82.0%"></div></div>
+        <div class="eff-val">89.6%<small>147.96 / 165.06</small></div>
+      </div>
+      <div class="eff-row">
+        <div class="eff-name">Steel Giants<small>left 18.00</small></div>
+        <div class="eff-track"><div class="eff-fill" style="width:70.9%"></div><div class="eff-marker" style="left:79.8%"></div></div>
+        <div class="eff-val">88.8%<small>142.56 / 160.56</small></div>
+      </div>
+      <div class="eff-row">
+        <div class="eff-name">Redemption team<small>left 20.30</small></div>
+        <div class="eff-track"><div class="eff-fill" style="width:70.6%"></div><div class="eff-marker" style="left:80.6%"></div></div>
+        <div class="eff-val">87.5%<small>141.96 / 162.26</small></div>
+      </div>
+      <div class="eff-row">
+        <div class="eff-name">Get Hooked<small>left 24.82</small></div>
+        <div class="eff-track"><div class="eff-fill" style="width:74.6%"></div><div class="eff-marker" style="left:87.0%"></div></div>
+        <div class="eff-val">85.8%<small>150.12 / 174.94</small></div>
+      </div>
+      <div class="eff-row">
+        <div class="eff-name">Playoff Chase<small>left 18.70</small></div>
+        <div class="eff-track"><div class="eff-fill" style="width:45.0%"></div><div class="eff-marker" style="left:54.3%"></div></div>
+        <div class="eff-val">82.9%<small>90.52 / 109.22</small></div>
+      </div>
+      <div class="eff-row">
+        <div class="eff-name">🥊ALI🥊<small>left 36.04 — most in the league</small></div>
+        <div class="eff-track"><div class="eff-fill" style="width:82.1%"></div><div class="eff-marker" style="left:99.6%"></div></div>
+        <div class="eff-val">82.1%<small>165.16 / 201.20</small></div>
+      </div>
+      <div class="eff-row">
+        <div class="eff-name">Bower Outage<small>left 18.40</small></div>
+        <div class="eff-track"><div class="eff-fill" style="width:33.9%"></div><div class="eff-marker" style="left:43.1%"></div></div>
+        <div class="eff-val">78.8%<small>68.26 / 86.66</small></div>
+      </div>
+      <div class="eff-row">
+        <div class="eff-name">Imad<small>left 56.00 — was 74.30 before Monday</small></div>
+        <div class="eff-track"><div class="eff-fill" style="width:62.1%"></div><div class="eff-marker" style="left:90.0%"></div></div>
+        <div class="eff-val">69.1%<small>125.00 / 181.00</small></div>
+      </div>
+    </div>
+    <div class="eff-legend">
+      <span><i class="sw"></i>Points started</span>
+      <span><i class="sw tr"></i>Unused ceiling</span>
+      <span><i class="sw mk"></i>Optimal lineup</span>
+      <span>Scaled to the league's best optimal (201.20).</span>
+    </div>
+
+    <p class="lede"><b>You kept the top spot.</b> RJ Harvey turned out to have scored 8.1 on Monday, which is below Tyler Allgeier's 9.0 — so the one available swap didn't change, and your optimal held at 136.00. Nobody else finished within four points of perfect.</p>
+
+    <p class="lede"><b>Imad's correction is the headline.</b> They are still last in efficiency, but 69.1% is an ordinary bad week, not the catastrophe the provisional number implied. The avoidable loss is 56.00: Christian Watson's 32.7 sat behind Drake London's 5.5, Mike Evans (16.9) and Juwan Johnson (14.4) watched, and the Chargers D/ST posted a zero while the Seahawks D/ST sat for 14. What's changed is the ceiling — <b>a 181.00 optimal is the second-highest in the league.</b> That roster is good.</p>
+
+    <p class="lede">Texas Two Step moved the other way. Patrick Mahomes scored 21.7 on their bench while Jayden Daniels started for 17.7, which drops them from 98.7% to 95.7% and costs them the near-perfect week. And ALI remains the danger: <b>the most points scored and the worst absolute loss</b>, 36.04, with Jaxson Dart's 26.6 behind Justin Herbert's 13.3.</p>
+  </section>
+
+  <section>
+    <div class="head">
+      <span class="tag">Positional</span>
+      <h2>Where Each Team Scored</h2>
+      <p class="note">Week 1 starter points by slot, final. Green beats the league average, red trails it.</p>
+    </div>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>Team</th><th>QB</th><th>RB</th><th>WR</th><th>TE</th><th>Flex</th><th>D/ST</th><th>Total</th></tr></thead>
+      <tbody>
+        <tr><td class="tm">🥊ALI🥊</td><td class="mono neg">13.3</td><td class="mono pos">66.3</td><td class="mono pos">37.3</td><td class="mono pos">27.8</td><td class="mono neg">15.5</td><td class="mono neg">5.0</td><td class="mono">165.2</td></tr>
+        <tr><td class="tm">Get Hooked</td><td class="mono neg">9.8</td><td class="mono pos">51.1</td><td class="mono pos">44.1</td><td class="mono neg">10.3</td><td class="mono neg">15.8</td><td class="mono pos">19.0</td><td class="mono">150.1</td></tr>
+        <tr><td class="tm">Team Jones</td><td class="mono pos">25.0</td><td class="mono pos">43.4</td><td class="mono pos">31.8</td><td class="mono pos">24.5</td><td class="mono pos">21.3</td><td class="mono neg">2.0</td><td class="mono">148.0</td></tr>
+        <tr><td class="tm">Steel Giants</td><td class="mono pos">37.3</td><td class="mono pos">43.0</td><td class="mono neg">25.1</td><td class="mono neg">0.0</td><td class="mono pos">23.2</td><td class="mono pos">14.0</td><td class="mono">142.6</td></tr>
+        <tr><td class="tm">Redemption team</td><td class="mono pos">35.7</td><td class="mono neg">38.0</td><td class="mono neg">24.4</td><td class="mono pos">23.7</td><td class="mono pos">19.2</td><td class="mono neg">1.0</td><td class="mono">142.0</td></tr>
+        <tr class="me"><td class="tm">The Man Wolf</td><td class="mono neg">14.4</td><td class="mono pos">44.3</td><td class="mono pos">49.4</td><td class="mono neg">4.1</td><td class="mono neg">18.3</td><td class="mono neg">5.0</td><td class="mono">135.5</td></tr>
+        <tr><td class="tm">Texas Two Step</td><td class="mono neg">17.7</td><td class="mono neg">28.6</td><td class="mono pos">43.6</td><td class="mono neg">0.0</td><td class="mono pos">28.1</td><td class="mono pos">8.0</td><td class="mono">126.0</td></tr>
+        <tr><td class="tm">Imad</td><td class="mono pos">26.1</td><td class="mono pos">52.9</td><td class="mono neg">15.4</td><td class="mono neg">9.5</td><td class="mono pos">21.1</td><td class="mono neg">0.0</td><td class="mono">125.0</td></tr>
+        <tr><td class="tm">Playoff Chase</td><td class="mono pos">24.7</td><td class="mono neg">35.0</td><td class="mono neg">4.4</td><td class="mono neg">9.8</td><td class="mono neg">14.6</td><td class="mono neg">2.0</td><td class="mono">90.5</td></tr>
+        <tr><td class="tm">Bower Outage</td><td class="mono neg">14.2</td><td class="mono neg">23.3</td><td class="mono neg">19.5</td><td class="mono neg">0.0</td><td class="mono neg">12.3</td><td class="mono neg">-1.0</td><td class="mono">68.3</td></tr>
+        <tr><td class="tm" style="font-family:'Oswald';text-transform:uppercase;letter-spacing:.08em;font-size:12px">League avg</td><td class="mono">21.8</td><td class="mono">42.6</td><td class="mono">29.5</td><td class="mono">11.0</td><td class="mono">18.9</td><td class="mono">5.5</td><td class="mono">129.3</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="lede">Walker's 34.1 pushed Imad's running backs to 52.9 — second-best in the league — and flipped their profile entirely. <b>They are now WR-weak (−14.1) and RB-strong (+10.3)</b>, the mirror of how they read on Monday morning. Tight end remains the league's broken slot: three teams started a zero there, and the 11.0 average is the furthest below what managers spent to fill it.</p>
+  </section>
+
+  <section>
+    <div class="head">
+      <span class="tag up">Preview</span>
+      <h2>Week 2 Slate</h2>
+      <p class="note">Projections only — no Week 2 games have been played. These are ESPN's weekly projections summed over each team's currently-set lineup.</p>
+    </div>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>Matchup</th><th>Proj</th><th></th><th>Proj</th><th>Edge</th></tr></thead>
+      <tbody>
+        <tr class="me"><td class="tm">The Man Wolf</td><td class="mono">123.69</td><td style="text-align:center;color:var(--muted)">vs</td><td class="mono">118.99</td><td class="mono pos">You +4.7</td></tr>
+        <tr><td class="tm">Get Hooked</td><td class="mono">135.77</td><td style="text-align:center;color:var(--muted)">vs</td><td class="mono">128.55</td><td class="mono">Hooked +7.2</td></tr>
+        <tr><td class="tm">Texas Two Step</td><td class="mono">132.48</td><td style="text-align:center;color:var(--muted)">vs</td><td class="mono">127.33</td><td class="mono">Texas +5.2</td></tr>
+        <tr><td class="tm">Team Jones</td><td class="mono">121.60</td><td style="text-align:center;color:var(--muted)">vs</td><td class="mono">116.50</td><td class="mono">Jones +5.1</td></tr>
+        <tr><td class="tm">Imad</td><td class="mono">127.96</td><td style="text-align:center;color:var(--muted)">vs</td><td class="mono">91.85</td><td class="mono">Imad +36.1</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="lede"><b>You're a 4.7-point favourite over Steel Giants</b> — the closest matchup on the board, and better than last week's report implied when it flagged this as one of your two hardest games. Caleb Williams and D'Andre Swift won't repeat 37.3 and 32.4; the projections have Steel Giants at 118.99, ninth of ten.</p>
+    <p class="lede">Ignore the Week 2 power-ranking scores in your export. ESPN computes that metric from results so far, which means <b>right now it is just Week 1 strength wearing a Week 2 label</b> — a duplicate, not new information.</p>
+  </section>
+
+  <section>
+    <div class="head">
+      <span class="tag up">Scouting</span>
+      <h2>The Other Nine</h2>
+      <p class="note">Final Week 1 figures, current waiver priority, and the lever each manager is most likely to pull this week.</p>
+    </div>
+    <div class="cards">
+
+      <div class="card hot">
+        <h3>🥊ALI🥊</h3>
+        <p class="rec">1–0 · 165.16 · all-play 9–0 · waiver #10</p>
+        <div class="kv"><span>EFF 82.1%</span><span>CEILING 201.20</span><span>RB +23.7</span></div>
+        <p><b>Best roster, worst waiver position.</b> Gibbs (33.6) and Jeanty (32.7) lead the league's best backfield. But he's now picking last and has <b>three injured</b> — Zay Flowers, TreVeyon Henderson and Brian Thomas Jr.</p>
+        <p>Still starting Herbert (13.3) over Jaxson Dart (26.6). Also dropped Jalen Coker before Week 1; Coker scored 33.8 and <b>is still a free agent.</b> Fixing the QB slot costs him nothing and raises a 201-point ceiling.</p>
+      </div>
+
+      <div class="card hot">
+        <h3>Get Hooked</h3>
+        <p class="rec">1–0 · 150.12 · all-play 8–1 · waiver #9</p>
+        <div class="kv"><span>EFF 85.8%</span><span>WR +14.6</span><span>QB −12.0</span></div>
+        <p>Bijan (31.3), St. Brown (28.7), a 19-point Steelers defense, and the league's largest playable bench — <b>Monangai (20.4), Goff (16.4) and Hockenson (13.6) all sat.</b></p>
+        <p>Drake Maye's 9.8 is the one weak link and Goff is right behind him. Projected highest in Week 2 at 135.77. Four rostered backs, two of them benched: a seller at RB if you ask.</p>
+      </div>
+
+      <div class="card hot">
+        <h3>Team Jones</h3>
+        <p class="rec">1–0 · 147.96 · all-play 7–2 · waiver #8</p>
+        <div class="kv"><span>EFF 89.6%</span><span>TE +13.5</span><span>D/ST −3.5</span></div>
+        <p>Above average at five of six slots. Lamar (25.0), Montgomery (28.9), JSN (26.2), McBride (24.5). <b>The most balanced roster in the league.</b></p>
+        <p>Seven transactions already — the most active manager here. Carries <b>one quarterback</b> and seven receivers, with Golden (15.5), Diggs (15.5) and Worthy all benched. Structurally the easiest team to trade with.</p>
+      </div>
+
+      <div class="card">
+        <h3>Steel Giants</h3>
+        <p class="rec">0–1 · 142.56 · all-play 6–3 · waiver #5</p>
+        <div class="kv"><span>EFF 88.8%</span><span>QB +15.5</span><span>TE −11.0</span></div>
+        <p>Fourth-best score, beaten by the top one. Caleb Williams (37.3) and D'Andre Swift (32.4) off Chicago's 59-point game — <b>neither repeats.</b></p>
+        <p>Started Colston Loveland for a zero with Dalton Kincaid's 18.0 benched. Josh Jacobs and De'Zhaun Stribling hurt. <b>Your Week 2 opponent, projected 118.99 — ninth of ten.</b></p>
+      </div>
+
+      <div class="card">
+        <h3>Redemption team</h3>
+        <p class="rec">1–0 · 141.96 · all-play 5–4 · waiver #7</p>
+        <div class="kv"><span>EFF 87.5%</span><span>QB +13.9</span><span>WR −5.1</span></div>
+        <p>Josh Allen's 35.7 carried a modest week. Traded DeVonta Smith to ALI for Javonte Williams, who went for 24.2 — <b>the best move anyone has made.</b></p>
+        <p>Still rosters <b>exactly one quarterback</b>, seven receivers, and has Marvin Harrison Jr. (proj 194) and Travis Kelce (178) both benched. The most obvious trade partner on the board.</p>
+      </div>
+
+      <div class="card">
+        <h3>Texas Two Step</h3>
+        <p class="rec">0–1 · 125.96 · all-play 3–6 · waiver #4</p>
+        <div class="kv"><span>EFF 95.7%</span><span>WR +14.1</span><span>RB −14.0</span></div>
+        <p>Lost to you by 9.5, and Monday cost them the near-perfect week — <b>Mahomes scored 21.7 on their bench</b> behind Jayden Daniels' 17.7.</p>
+        <p>Rosters <b>one tight end, and it's Kyle Pitts, who caught nothing.</b> Seven running backs producing 28.6. Projected second-highest in Week 2 at 132.48. Has to trade; TE is the hole waivers can't fill.</p>
+      </div>
+
+      <div class="card">
+        <h3>Imad</h3>
+        <p class="rec">0–1 · 125.00 · all-play 2–7 · waiver #3</p>
+        <div class="kv"><span>EFF 69.1%</span><span>CEILING 181.00</span><span>RB +10.3</span></div>
+        <p><b>Revised upward, substantially.</b> Kenneth Walker III's 34.1 was the second-best RB week in the league and the biggest single overperformance versus projection (+19.4). A 181.00 optimal is second only to ALI.</p>
+        <p>The lineup card is still the problem — 56 points left, Watson's 32.7 the worst of it. Skattebo (228) and Judkins (227) sit on the bench. <b>Not a seller. Treat as a peer.</b></p>
+      </div>
+
+      <div class="card cold">
+        <h3>Playoff Chase</h3>
+        <p class="rec">0–1 · 90.52 · all-play 1–8 · waiver #2</p>
+        <div class="kv"><span>EFF 82.9%</span><span>WR −25.1</span><span>WAIVER #2</span></div>
+        <p>Monday gave them 3.2 more points and cost them a spot — <b>now last in all-play.</b> Jaylen Waddle managed 1.2. Ja'Marr Chase's 3.2 against a 19.9 projection is the league's worst return on a keeper.</p>
+        <p>Kyler Murray in concussion protocol. Receivers scored 4.4 total. Picks second on waivers, which is their fastest route out. <b>The most motivated trade partner in the league.</b></p>
+      </div>
+
+      <div class="card cold">
+        <h3>Bower Outage</h3>
+        <p class="rec">0–1 · 68.26 · all-play 0–9 · waiver #1</p>
+        <div class="kv"><span>EFF 78.8%</span><span>SIX INJURED</span><span>RB −19.3</span></div>
+        <p>Worst score, 0–9 all-play, and the injury list <b>grew to six</b>: Brock Bowers, A.J. Brown, Alec Pierce, Jordan Mason, Jordyn Tyson, Zach Charbonnet. Started Terrance Ferguson at tight end for a zero with Bowers benched.</p>
+        <p>Projected last in Week 2 at 91.85. But they now hold <b>waiver priority #1</b>, which is the one asset they have. Seven running backs producing 23.3.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <span class="tag flag">Your Team</span>
+      <h2>The Man Wolf</h2>
+      <p class="note">1–0. Sixth in scoring, first in lineup management, sixth on waivers, 4.7-point favourite this week.</p>
+    </div>
+
+    <div class="deep">
+      <h3>What Held Up After Monday</h3>
+      <p>Everything. RJ Harvey's 8.1 came in under Tyler Allgeier's 9.0, so your optimal stayed at 136.00 and <b>99.6% is confirmed, not provisional.</b> Derrick Henry's 35.3 against a 16.4 projection remains the second-biggest overperformance in the league. Olave (28.2) and Collins (21.2) gave you <b>49.4 from the two receiver slots, still the best in the league.</b></p>
+
+      <h3>The Two Problems, Unchanged</h3>
+      <ul>
+        <li><b>Tight end produced 4.1 and your backup produced 3.2.</b> Week 2 projections have Fannin at 10.2 and Kittle at 10.3 — functionally the same player, and you're spending two roster spots to get one below-average score.</li>
+        <li><b>Saquon Barkley scored 9.0 on a 17.7 projection.</b> No goal-line role while Hurts took three passing touchdowns and 46 rushing yards. He projects 16.9 this week against Tennessee. One more quiet game and this stops being noise.</li>
+      </ul>
+
+      <h3>Your Own Rule, Still Being Broken</h3>
+      <p>Your strategy says the bench should hold RB/WR handcuffs and high-ceiling youth <b>"over a second backup QB or extra TE."</b> You carry both. Stafford projects 302.4 on the season — more than Dak's 295.5 — and will start zero games. <b>That is two of seven bench spots returning nothing</b>, in a format where the running back waiver pool tops out at Braelon Allen.</p>
+
+      <h3>Do This Week</h3>
+      <ul>
+        <li><b>Set the Week 2 lineup as is.</b> Your projected 123.69 already reflects the best available arrangement; no bench player projects above a starter at the same slot.</li>
+        <li><b>Don't spend waiver priority #6.</b> Three teams ahead of you (Bower Outage, Playoff Chase, Imad) have larger holes and will take the top names. Mike Gesicki and Evan Engram are rostered in under 3% of leagues and should survive to a free add.</li>
+        <li><b>Work the trade board.</b> Two teams still carry one quarterback each, and you have a 302-point quarterback you cannot start.</li>
+        <li><b>Watch Barkley and the tight ends through Week 4</b> — your own checkpoint. If the TE pair is still producing single digits combined, the Bowers trade stops being opportunistic and becomes necessary.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <span class="tag flag">Trades</span>
+      <h2>Five Trades To Pursue</h2>
+      <p class="note">Re-checked against final Week 1 numbers. Two changed from last week — Imad is no longer a seller, and Kamara is now ruled out.</p>
+    </div>
+
+    <div class="strat">
+      <b>Strategy check.</b> Posture is unchanged: <b>win-now with opportunistic youth</b>, championship this season. Keeper cost is a flat round-skip by count, so age — not draft round — decides whether an acquisition is also a keeper. Two rules drive the list. <b>RB is the priority position</b>, because up to four of your nine starting slots can be running backs. And your bench rule bars a second backup QB and an extra TE — <b>the two things you're currently carrying.</b> Those spots are the budget. Your next checkpoint is Week 4; the sell-side pivot isn't live until Week 8.
+    </div>
+
+    <div class="trade top">
+      <div class="trade-hd"><span class="n">01</span><h3>Buy Brock Bowers</h3><span class="with">with Bower Outage</span></div>
+      <div class="swap">
+        <div class="side"><dt>You send</dt>
+          <p>George Kittle<span>TE · season proj 182.1 · age 33</span></p>
+          <p>Jordan Addison<span>WR · season proj 170.8</span></p></div>
+        <div class="arr">→</div>
+        <div class="side"><dt>You get</dt>
+          <p>Brock Bowers<span>TE · season proj 225.0 · age 23 · injured</span></p></div>
+      </div>
+      <dl class="why">
+        <dt>Why you</dt><dd>Tight end is your weakest slot (4.1) and Bowers is <b>the highest-projected tight end in the league</b> — a 43-point season upgrade on Kittle. He serves both halves of the strategy at once: he wins games now and at 23 he is the cheapest elite keeper available anywhere. You pay with the exact two assets your bench rule says shouldn't be there.</dd>
+        <dt>Why them</dt><dd><b>0–1, the league's worst score, and now six injured players.</b> They started a tight end for zero while Bowers sat hurt on their bench. Kittle fills that slot immediately; Addison is a startable receiver while A.J. Brown and Alec Pierce are out. They're projected last in Week 2 at 91.85 and need bodies who can play this Sunday.</dd>
+        <dt>Risk</dt><dd>They hold waiver priority #1, so they have a cheaper way to patch holes than trading. Move before they use it. Confirm Bowers' timeline first.</dd>
+      </dl>
+    </div>
+
+    <div class="trade top">
+      <div class="trade-hd"><span class="n">02</span><h3>Sell Stafford Into A One-QB Roster</h3><span class="with">with Redemption team</span></div>
+      <div class="swap">
+        <div class="side"><dt>You send</dt>
+          <p>Matthew Stafford<span>QB · season proj 302.4 · your QB2</span></p></div>
+        <div class="arr">→</div>
+        <div class="side"><dt>You get</dt>
+          <p>Marvin Harrison Jr.<span>WR · season proj 194.2 · benched</span></p></div>
+      </div>
+      <dl class="why">
+        <dt>Why you</dt><dd>Stafford is <b>a dead roster spot</b> in a one-QB league. Converting him into a young receiver projecting 194 turns waste into flex depth and a keeper option in one move.</dd>
+        <dt>Why them</dt><dd><b>They roster exactly one quarterback.</b> Josh Allen produced 35.7 of their 141.96 — one injury or bye ends their season over fourteen weeks. They also carry seven receivers and can start four, with Harrison benched behind Deebo Samuel and Jerry Jeudy. Real insurance, bought with surplus they can't use.</dd>
+        <dt>Timing</dt><dd>Harrison scored 4.3 in Week 1, which holds your price down. Ask before his first big game.</dd>
+      </dl>
+    </div>
+
+    <div class="trade">
+      <div class="trade-hd"><span class="n">03</span><h3>The Same Offer, Other Buyer</h3><span class="with">with Team Jones</span></div>
+      <div class="swap">
+        <div class="side"><dt>You send</dt>
+          <p>Matthew Stafford<span>QB · season proj 302.4</span></p></div>
+        <div class="arr">→</div>
+        <div class="side"><dt>You get</dt>
+          <p>Matthew Golden<span>WR · season proj 190.8 · benched</span></p>
+          <p style="font-weight:400;font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace">or Xavier Worthy, proj 173.4</p></div>
+      </div>
+      <dl class="why">
+        <dt>Why you</dt><dd>Same logic as 02, and <b>you can only execute one</b> — shop both and take the better return. Golden put up 15.5 from the bench.</dd>
+        <dt>Why them</dt><dd>Lamar Jackson is <b>their only quarterback</b> — the identical structural hole. And they are drowning in receivers: seven rostered, with Golden, Diggs and Worthy all benched in Week 1. Most active manager in the league at seven transactions, so they'll actually engage.</dd>
+        <dt>Leverage</dt><dd>Two contenders, one vulnerability, no other obvious QB2 on the wire. Tell each you're talking to the other.</dd>
+      </dl>
+    </div>
+
+    <div class="trade">
+      <div class="trade-hd"><span class="n">04</span><h3>Turn Unstartable Receivers Into A Bellcow</h3><span class="with">with Playoff Chase</span></div>
+      <div class="swap">
+        <div class="side"><dt>You send</dt>
+          <p>Michael Pittman Jr.<span>WR · season proj 197.1 · benched</span></p>
+          <p>Bhayshul Tuten<span>RB · season proj 204.9</span></p></div>
+        <div class="arr">→</div>
+        <div class="side"><dt>You get</dt>
+          <p>Jonathan Taylor<span>RB · season proj 315.6 · 25.1 in Week 1</span></p></div>
+      </div>
+      <dl class="why">
+        <dt>Why you</dt><dd>Your strategy names <b>running back as the priority position, early and often.</b> Taylor is a 315-point bellcow and a clear upgrade on Tuten's 204.9 in your flex. Pittman is your WR4 behind Olave and Collins and cannot crack the lineup.</dd>
+        <dt>Why them</dt><dd><b>Their receivers scored 4.4 points — worst positional output by any team in the league.</b> Chase managed 3.2, Waddle 1.2. They roster James Cook (proj 279.9) and Rico Dowdle (188) behind Taylor, so they can absorb the loss. Pittman starts for them immediately.</dd>
+        <dt>Changed</dt><dd>Last week this offer used Alvin Kamara. <b>He is now listed OUT</b> — sending him would read as dumping an injury. Tuten is the honest replacement and makes the deal fair rather than opportunistic.</dd>
+      </dl>
+    </div>
+
+    <div class="trade moon">
+      <div class="trade-hd"><span class="n">05</span><h3>Buy Low On Ja'Marr Chase</h3><span class="with">with Playoff Chase · long shot</span></div>
+      <div class="swap">
+        <div class="side"><dt>You send</dt>
+          <p>Saquon Barkley<span>RB · season proj 273.1 · your R1 pick</span></p>
+          <p>Michael Pittman Jr.<span>WR · season proj 197.1</span></p></div>
+        <div class="arr">→</div>
+        <div class="side"><dt>You get</dt>
+          <p>Ja'Marr Chase<span>WR · season proj 337.3 · highest in the league</span></p></div>
+      </div>
+      <dl class="why">
+        <dt>Why you</dt><dd>Chase has <b>the highest season projection of any player in this league</b> and just posted his worst plausible week. Your strategy says to target <b>"target-share/opportunity security over boom-bust upside"</b> — that is Chase exactly. Barkley meanwhile scored 9.0 with no goal-line role; in a format paying six for rushing scores and four for passing, a back who doesn't get the goal line is worth less here than his name suggests.</dd>
+        <dt>Why them</dt><dd><b>Last in all-play at 1–8</b>, worst receiving output in the league, Kyler Murray concussed, and their keeper returned 3.2 on a 19.9 projection. They're the most demoralized roster here. A first-round back plus a startable receiver for one disappointing player reads well to a manager who wants to feel busy.</dd>
+        <dt>Honest odds</dt><dd>Low — nobody sells a generational receiver in Week 2, and the downside is a no. <b>It conflicts with trade 04</b>; pick one target from this roster.</dd>
+      </dl>
+    </div>
+
+    <div class="calm" style="margin-top:22px">
+      <ol>
+        <li><b>Imad came off the sell list.</b> Last week I called them a seller who didn't know their team was fine. With Walker's 34.1 counted, their optimal is 181.00 — second in the league — and Skattebo (228) and Judkins (227) sit on their bench. Approach as a peer, not a mark.</li>
+        <li><b>Do not trade Derrick Henry.</b> He's 32 and a poor keeper, which will tempt you. Your posture is win-now, he is your RB1, and your own doc names RB depth as what wins this format.</li>
+        <li><b>Do not trade Harold Fannin.</b> Young, projects 189, and if trade 01 lands he becomes flexible surplus rather than dead weight.</li>
+        <li><b>Week 8 is when this inverts.</b> Below .500 and more than two games out of the sixth seed, and every offer above flips from buying to selling.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <span class="tag up">Free Agency</span>
+      <h2>Available In Your League</h2>
+      <p class="note">Verified unrostered across all ten rosters. The pool in this export is 600 deep — four times last week's view — so the bargains below are real, not artifacts of a truncated list.</p>
+    </div>
+    <div class="rows">
+
+      <div class="row up">
+        <div class="who">Jalen Coker<span class="sub">WR · CAR · 50.9% rostered</span></div>
+        <div class="line">Week 1: 33.8 pts<br>8 rec / 9 tgt, 138 yds, 2 TD<br>Season proj: 146.6</div>
+        <div class="say"><b>Still available, eight days later.</b> The best unrostered week of anyone, and ALI — who dropped him — now picks last. But Bower Outage, Playoff Chase and Imad all pick ahead of you and all need receivers. At priority #6 you are bidding fourth in line for him.</div>
+      </div>
+
+      <div class="row up">
+        <div class="who">Mike Gesicki<span class="sub">TE · CIN · 1.5% rostered</span></div>
+        <div class="line">Week 1: 18.8 pts · 5 rec / 7 tgt, 78 yds, 1 TD<br>Season proj: 96.5</div>
+        <div class="say">Would have been the second-best tight end score in the league. <b>Rostered in 1.5% of leagues</b>, so he'll almost certainly clear waivers and can be added outright without spending priority. Season projection is modest — this is a streaming fix, not a solution.</div>
+      </div>
+
+      <div class="row up">
+        <div class="who">Evan Engram<span class="sub">TE · DEN · 3.0% rostered</span></div>
+        <div class="line">Week 1: 14.3 pts<br>Season proj: 106.8</div>
+        <div class="say">New to the board with the deeper pool. <b>Higher season projection than Gesicki and nearly as unrostered.</b> Between the two, Engram is the better hold if you want a third tight end at all — though the honest answer is that you already have two.</div>
+      </div>
+
+      <div class="row flag">
+        <div class="who">Pat Freiermuth<span class="sub">TE · PIT · 14.6% rostered</span></div>
+        <div class="line">Week 1: 15.6 pts · Season proj: 136.3</div>
+        <div class="say">The best combination of Week 1 production and season projection at the position. <b>Projects below your Fannin (189) but above Kittle (182)</b> — relevant if trade 01 lands and you want a cheap TE2 back.</div>
+      </div>
+
+      <div class="row flag">
+        <div class="who">Bengals D/ST<span class="sub">D/ST · CIN · 2.1% rostered</span></div>
+        <div class="line">Week 1: 20.0 pts — highest D/ST score of the week<br>Chiefs D/ST also free: 14.0, proj 100.3</div>
+        <div class="say">Your Eagles defense scored 5.0 and projects 6.9 this week. <b>Seven of ten teams got 5 points or fewer from the slot</b>, and with no kicker this is a real starting decision. The cheapest upgrade on the board, and nobody will fight you for it.</div>
+      </div>
+
+      <div class="row flag">
+        <div class="who">Khalil Shakir<span class="sub">WR · BUF · 68.7% rostered</span></div>
+        <div class="line">Week 1: 9.0 pts<br>Season proj: 169.9 — <b>highest of any available WR</b></div>
+        <div class="say">Dropped by Team Jones. The highest season projection of any free agent at any skill position, on a roster that lost nobody. A boring add that will quietly outscore the exciting ones.</div>
+      </div>
+
+      <div class="row down">
+        <div class="who">The running back pool is still empty<span class="sub">read before planning around waivers</span></div>
+        <div class="line">Best available RB by Week 1 points: Devin Singletary, 13.8 (0.3% rostered)<br>Best by season projection: <b>Braelon Allen, 123.6</b><br>Bower Outage and Texas Two Step roster 7 RBs each</div>
+        <div class="say">Four times the pool and the answer didn't change. In a two-flex ten-team league, backs get hoarded and the wire never refills. <b>Kaelon Black is still available at 15.4%</b> after out-carrying Christian McCaffrey 14–10. This scarcity is what makes your six-deep backfield the most valuable currency you have.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <span class="tag down">Draft</span>
+      <h2>Draft Returns, Final</h2>
+      <p class="note">First two rounds against each player's own Week 1 projection. Keepers marked K. Walker's line has corrected.</p>
+    </div>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>Pick</th><th>Player</th><th>Drafted by</th><th>Week 1</th><th>Proj</th><th>Diff</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">11</td><td class="tm">Kenneth Walker III</td><td>Imad</td><td class="mono">34.1</td><td class="mono">14.7</td><td class="mono pos">+19.4</td></tr>
+        <tr class="me"><td class="mono">12</td><td class="tm">Derrick Henry</td><td>The Man Wolf</td><td class="mono">35.3</td><td class="mono">16.4</td><td class="mono pos">+18.9</td></tr>
+        <tr><td class="mono">7 K</td><td class="tm">Josh Allen</td><td>Redemption team</td><td class="mono">35.7</td><td class="mono">19.3</td><td class="mono pos">+16.3</td></tr>
+        <tr><td class="mono">15 K</td><td class="tm">Ashton Jeanty</td><td>🥊ALI🥊</td><td class="mono">32.7</td><td class="mono">17.9</td><td class="mono pos">+14.8</td></tr>
+        <tr><td class="mono">23 K</td><td class="tm">Justin Jefferson</td><td>Texas Two Step</td><td class="mono">31.2</td><td class="mono">17.1</td><td class="mono pos">+14.1</td></tr>
+        <tr><td class="mono">4 K</td><td class="tm">Bijan Robinson</td><td>Get Hooked</td><td class="mono">31.3</td><td class="mono">18.9</td><td class="mono pos">+12.4</td></tr>
+        <tr><td class="mono">5 K</td><td class="tm">Jahmyr Gibbs</td><td>🥊ALI🥊</td><td class="mono">33.6</td><td class="mono">22.4</td><td class="mono pos">+11.2</td></tr>
+        <tr><td class="mono">19 K</td><td class="tm">Ja'Marr Chase</td><td>Playoff Chase</td><td class="mono">3.2</td><td class="mono">19.9</td><td class="mono neg">−16.8</td></tr>
+        <tr><td class="mono">13 K</td><td class="tm">Omarion Hampton</td><td>Texas Two Step</td><td class="mono">8.3</td><td class="mono">17.6</td><td class="mono neg">−9.3</td></tr>
+        <tr><td class="mono">10 K</td><td class="tm">George Pickens</td><td>Steel Giants</td><td class="mono">5.8</td><td class="mono">14.7</td><td class="mono neg">−8.9</td></tr>
+        <tr class="me"><td class="mono">2</td><td class="tm">Saquon Barkley</td><td>The Man Wolf</td><td class="mono">9.0</td><td class="mono">17.7</td><td class="mono neg">−8.7</td></tr>
+        <tr><td class="mono">3 K</td><td class="tm">Puka Nacua</td><td>Texas Two Step</td><td class="mono">12.4</td><td class="mono">21.1</td><td class="mono neg">−8.7</td></tr>
+        <tr><td class="mono">6</td><td class="tm">Brock Bowers</td><td>Bower Outage</td><td class="mono">0.0</td><td class="mono">—</td><td class="mono neg">INJ</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="lede">Walker moves from the worst return in the top 25 to <b>the best</b> — a 34-point swing on one corrected row, and the clearest argument for repairing the data rather than publishing around it. <b>Texas Two Step still owns three of the six worst returns</b>, all keepers: Nacua, Hampton and Pitts.</p>
+  </section>
+
+  <section>
+    <div class="head">
+      <span class="tag">Restraint</span>
+      <h2>Don't Overreact</h2>
+      <p class="note">Four conclusions this data does not support, one of them mine from last week.</p>
+    </div>
+    <div class="calm">
+      <ol>
+        <li><b>Imad is not a doormat, and last week's report said otherwise.</b> 52.2% efficiency and an 81-point week were artifacts of a stale export. The real figures are 69.1% and 125.00, with the league's second-best ceiling. If you acted on the old read, revise.</li>
+        <li><b>You are not a top-half team because you're 1–0.</b> Sixth in scoring, 4–5 all-play. The win is banked; nothing about the roster is proven.</li>
+        <li><b>Your tight ends are not broken — but they are redundant.</b> Fannin and Kittle project 10.2 and 10.3 this week. One 7.3-point pair is noise; carrying both to get one below-average score is the actual problem, and it's a trade problem, not a waiver problem.</li>
+        <li><b>Week 2 projections are not results.</b> Every Week 2 row in your export is a projection against a lineup that can still change, and the Week 2 power-ranking scores are just Week 1 strength relabelled. Nothing in that section is evidence yet.</li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>
+    <h4>Method &amp; Caveats</h4>
+    Computed from the export synced 15 September (league 394766, 2026). Week 1 results are now official in <code>teams.json</code>; reconstruction from the nine non-bench slots matched ESPN's totals exactly for eight of ten teams. The two that didn't were Imad and Playoff Chase, whose Denver–Kansas City players were still written as unplayed.<br><br>
+    <b>Repair applied:</b> twelve Week 1 rows in <code>week_stats.json</code> carried <code>points: 0, game_played: 0</code> after Monday night. Values were recovered from <code>roster.total_points</code> in <code>teams.json</code>, which agreed with <code>week_stats</code> on all 151 already-played players (zero mismatches) and reproduces both official team totals exactly — Imad +44.00 (Walker 34.1, Rice 9.9) and Playoff Chase +3.20 (Waddle 1.2, Broncos D/ST 2.0). Six teams' optimal lineups were understated before the repair; Texas Two Step's efficiency moved most, from 98.7% to 95.7%. <b>The patch was applied to a working copy only — your files are untouched.</b><br><br>
+    Optimal lineups are the highest-scoring legal arrangement under your slot rules, excluding IR. All-play is the record against every opponent that week. Week 2 figures throughout are ESPN projections against currently-set lineups; no Week 2 games have been played. Week 2 power-ranking scores in the export are computed from Week 1 results only and carry no new information. Free-agent availability verified against all ten rosters — zero overlap, 600-player pool. Keeper cost rules remain outside the export, so no keeper-value advice is offered beyond age.
+  </footer>
+
+</div>
+</body>
+</html>

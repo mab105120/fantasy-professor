@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 2 Matchup Report — The Man Wolf vs Steel Giants</title>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f5f5f3;
+    --surface: #ffffff;
+    --surface-2: #f0efec;
+    --border: #e3e2de;
+    --text: #0b0b0b;
+    --text-2: #52514e;
+    --text-3: #8a8985;
+    --wolf: #2a78d6;      /* series 1 — The Man Wolf */
+    --wolf-soft: #cde2fb;
+    --giant: #eb6834;     /* series 2 — Steel Giants */
+    --giant-soft: #fbd9cb;
+    --good: #008300;
+    --warn: #c98500;
+    --bad: #e34948;
+    --shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.05);
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #121211; --surface: #1a1a19; --surface-2: #242423; --border: #2f2f2d;
+      --text: #ffffff; --text-2: #c3c2b7; --text-3: #8d8c85;
+      --wolf: #3987e5; --wolf-soft: #1c3a62; --giant: #d95926; --giant-soft: #4a2a1a;
+      --good: #3fbf3f; --warn: #e0a021; --bad: #e66767;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #242423; --border: #2f2f2d;
+    --text: #ffffff; --text-2: #c3c2b7; --text-3: #8d8c85;
+    --wolf: #3987e5; --wolf-soft: #1c3a62; --giant: #d95926; --giant-soft: #4a2a1a;
+    --good: #3fbf3f; --warn: #e0a021; --bad: #e66767;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px; line-height: 1.55;
+  }
+  a { color: var(--wolf); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* nav */
+  nav {
+    position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--surface) 88%, transparent);
+    backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
+  }
+  nav .inner { max-width: 1040px; margin: 0 auto; padding: 0 16px; display: flex; align-items: center; gap: 4px; overflow-x: auto; height: 56px; }
+  nav .brand { font-weight: 700; margin-right: 12px; white-space: nowrap; }
+  nav a { color: var(--text-2); font-size: 14px; padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
+  nav a:hover { background: var(--surface-2); text-decoration: none; color: var(--text); }
+
+  main { max-width: 1040px; margin: 0 auto; padding: 24px 16px 80px; }
+  header.hero { padding: 28px 0 8px; }
+  .eyebrow { color: var(--text-3); font-size: 13px; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
+  h1 { font-size: clamp(28px, 4vw, 40px); margin: 6px 0 4px; line-height: 1.15; letter-spacing: -.01em; }
+  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -.01em; }
+  h3 { font-size: 16px; margin: 18px 0 8px; }
+  .sub { color: var(--text-2); margin: 0; }
+  section { margin-top: 36px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
+  .grid { display: grid; gap: 16px; }
+  .g2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .g3 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  p { margin: 8px 0; }
+  ul { padding-left: 20px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  .muted { color: var(--text-2); }
+  .small { font-size: 13px; }
+  .pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--surface-2); color: var(--text-2); vertical-align: middle; }
+  .pill.wolf { background: var(--wolf-soft); color: var(--text); }
+  .pill.giant { background: var(--giant-soft); color: var(--text); }
+  .pill.good { color: var(--good); }
+  .pill.warn { color: var(--warn); }
+  .pill.bad { color: var(--bad); }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+  .dot.wolf { background: var(--wolf); } .dot.giant { background: var(--giant); }
+  .term { border-bottom: 1px dotted var(--text-3); cursor: help; }
+
+  /* scoreboard */
+  .score { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; text-align: center; }
+  .score .team { padding: 12px; }
+  .score .name { font-weight: 700; font-size: 18px; }
+  .score .rec { color: var(--text-2); font-size: 13px; }
+  .score .num { font-size: 48px; font-weight: 700; line-height: 1.05; letter-spacing: -.02em; margin: 6px 0 0; }
+  .score .lbl { font-size: 12px; color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; }
+  .score .vs { color: var(--text-3); font-weight: 600; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 16px; }
+  .tile { background: var(--surface-2); border-radius: 10px; padding: 12px 14px; }
+  .tile .l { font-size: 12px; color: var(--text-2); }
+  .tile .v { font-size: 22px; font-weight: 600; margin-top: 2px; }
+  .tile .d { font-size: 12px; color: var(--text-3); }
+
+  /* lineup table */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; font-size: 12px; color: var(--text-3); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; padding: 8px 8px; border-bottom: 1px solid var(--border); }
+  td { padding: 9px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .slot { font-weight: 600; color: var(--text-2); font-size: 12px; }
+  .chg { background: color-mix(in srgb, var(--wolf-soft) 45%, var(--surface)); }
+  .tablewrap { overflow-x: auto; }
+
+  /* bar chart */
+  .bars { display: grid; grid-template-columns: 86px 1fr; row-gap: 10px; column-gap: 12px; align-items: center; }
+  .bars .lab { font-size: 13px; color: var(--text-2); text-align: right; }
+  .bars .pair { display: grid; gap: 2px; }
+  .bar { position: relative; height: 12px; border-radius: 0 4px 4px 0; }
+  .bar.wolf { background: var(--wolf); } .bar.giant { background: var(--giant); }
+  .bar .val { position: absolute; left: calc(100% + 6px); top: -3px; font-size: 12px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .bar.locked { background-image: repeating-linear-gradient(135deg, transparent 0 4px, rgba(255,255,255,.35) 4px 6px); }
+  .legend { display: flex; gap: 18px; font-size: 13px; color: var(--text-2); margin: 4px 0 14px; flex-wrap: wrap; }
+  .track { position: relative; height: 12px; background: var(--surface-2); border-radius: 6px; overflow: hidden; }
+  .track .fill { height: 100%; border-radius: 6px; }
+
+  .decision { border-left: 4px solid var(--wolf); padding-left: 14px; margin: 14px 0; }
+  .decision .call { font-weight: 700; }
+  .callout { background: var(--surface-2); border-radius: 10px; padding: 12px 14px; margin: 12px 0; }
+  .callout.warn { border-left: 4px solid var(--warn); }
+  .callout.good { border-left: 4px solid var(--good); }
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; margin: 0; }
+  dt { font-weight: 600; } dd { margin: 0; color: var(--text-2); }
+  footer { margin-top: 48px; color: var(--text-3); font-size: 13px; }
+  @media (max-width: 640px) {
+    .score { grid-template-columns: 1fr; }
+    .score .vs { display: none; }
+    .bars { grid-template-columns: 64px 1fr; }
+    dl { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<nav><div class="inner">
+  <span class="brand">🐺 Week 2</span>
+  <a href="#call">The call</a>
+  <a href="#scoreboard">Scoreboard</a>
+  <a href="#lineup">Lineup</a>
+  <a href="#slots">Slot by slot</a>
+  <a href="#opponent">Opponent</a>
+  <a href="#watch">Watch list</a>
+  <a href="#stakes">Stakes</a>
+  <a href="#glossary">Glossary</a>
+</div></nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">D League · Week 2 · Sept 17–21, 2026</div>
+  <h1>The Man Wolf vs Steel Giants</h1>
+  <p class="sub">Matchup report built Sat Sept 19, 22:00 CT from an ESPN sync at 21:04 CT plus live injury/consensus checks. Thursday's game is in the books; everything else below is projection until Sunday kicks.</p>
+</header>
+
+<!-- ============ THE CALL ============ -->
+<section id="call">
+  <div class="card">
+    <h2>The call</h2>
+    <p><strong>You're a slight underdog on paper — about 7 points — and the swing is in your hands, not theirs.</strong> ESPN projects Steel Giants at ~121 with a locked lineup they can't improve; your recommended lineup projects at ~114, and that number already bakes in Jameson Williams' quiet 5.3 from Thursday night. The three lineup decisions below recover ~5 of those 7 points. The rest is variance, and you have the two best running backs in the game.</p>
+    <div class="callout good"><strong>Their mistake is your cushion.</strong> Steel Giants left Dalton Kincaid on the bench Thursday; he scored 22.5. Kincaid is locked there, and Colston Loveland (proj 11.4) is locked in at their TE. That's ~11 points they can no longer get to.</div>
+    <div class="grid g3" style="margin-top:14px">
+      <div class="tile"><div class="l">Decision 1</div><div class="v">Start Olave</div><div class="d">over Worthy, if active (early window)</div></div>
+      <div class="tile"><div class="l">Decision 2</div><div class="v">Keep Dak</div><div class="d">over Stafford — better matchup, consensus agrees</div></div>
+      <div class="tile"><div class="l">Decision 3</div><div class="v">Kittle + Tuten in flex</div><div class="d">Harvey (Q) and Kamara stay benched</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCOREBOARD ============ -->
+<section id="scoreboard">
+  <div class="card">
+    <h2>Scoreboard &amp; projection tally</h2>
+    <div class="score">
+      <div class="team">
+        <div class="name"><span class="dot wolf"></span>The Man Wolf</div>
+        <div class="rec">1–0 · 5th · 135.5 PF · waiver #5</div>
+        <div class="num">114.1</div>
+        <div class="lbl">Projected (recommended lineup)</div>
+        <div class="small muted">5.3 banked (J. Williams, Thu) · 108.8 to play</div>
+      </div>
+      <div class="vs">VS</div>
+      <div class="team">
+        <div class="name"><span class="dot giant"></span>Steel Giants</div>
+        <div class="rec">0–1 · 6th · 142.6 PF · waiver #10</div>
+        <div class="num">121.0</div>
+        <div class="lbl">Projected (their lineup, locked at TE)</div>
+        <div class="small muted">0.0 banked · 22.5 stranded on bench (Kincaid)</div>
+      </div>
+    </div>
+    <div class="tiles">
+      <div class="tile"><div class="l">Gap, recommended lineup</div><div class="v">−6.9</div><div class="d">ESPN projections; typical weekly error is ±25–30 pts per team, so this is a coin flip leaning their way</div></div>
+      <div class="tile"><div class="l">Gap, current lineup as set</div><div class="v">−11.8</div><div class="d">Worthy at WR instead of Olave</div></div>
+      <div class="tile"><div class="l">If Olave is inactive</div><div class="v">−11.8</div><div class="d">Worthy plays SNF, so you can still swap after 11:30 CT inactives</div></div>
+      <div class="tile"><div class="l">Week 1 scores</div><div class="v">135.5 · 142.6</div><div class="d">You beat Texas Two Step; they lost to ALI's 165</div></div>
+    </div>
+    <p class="small muted" style="margin-top:12px">Why "projection error ±25–30": ESPN's weekly projection is a median expectation per player. Summed across nine starters, actual team scores land within ~25 points of projection roughly two-thirds of the time. Last week both teams beat projection by 13–24 points. A 7-point projected gap is real but small — it's about a 58/42 matchup, not a lock either way.</p>
+  </div>
+</section>
+
+<!-- ============ LINEUP ============ -->
+<section id="lineup">
+  <div class="card">
+    <h2>Recommended lineup</h2>
+    <p class="muted small">Highlighted rows change from what's currently set. Status verified live Sat evening — see notes. Proj = ESPN Week 2 projection in this league's scoring (PPR, 4-pt pass TD).</p>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Slot</th><th>Player</th><th>Game</th><th>Status</th><th class="num">Proj</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="slot">QB</td><td>Dak Prescott</td><td>DAL vs WSH</td><td><span class="pill good">Active</span></td><td class="num">20.0</td><td>WSH was 31st vs fantasy QBs in 2025; Dak went 23.3 / 22.7 vs them last year.</td></tr>
+        <tr><td class="slot">RB</td><td>Saquon Barkley</td><td>PHI vs TEN</td><td><span class="pill good">Active</span></td><td class="num">17.6</td><td>9.0 in W1 (proj 17.7). Bounce-back spot at home.</td></tr>
+        <tr><td class="slot">RB</td><td>Derrick Henry</td><td>BAL vs NO</td><td><span class="pill good">Active</span></td><td class="num">17.6</td><td>35.3 in W1, RB2 overall. Same game as Olave/Kamara.</td></tr>
+        <tr class="chg"><td class="slot">WR</td><td>Chris Olave</td><td>NO at BAL</td><td><span class="pill warn">Questionable</span></td><td class="num">15.9</td><td><strong>Swap in for Worthy.</strong> Hamstring; left Thu practice as a precaution, limited Thu/Fri, beat reporter (Underhill) says not significant; trending to play. 13 targets / 28.2 in W1. Early window — confirm at 11:30 CT inactives.</td></tr>
+        <tr><td class="slot">WR</td><td>Jameson Williams</td><td>DET vs BUF (Thu)</td><td><span class="pill">Locked</span></td><td class="num">5.3 ✓</td><td>Final. Detroit's passing game ran through others; nothing to do here.</td></tr>
+        <tr><td class="slot">TE</td><td>Harold Fannin Jr.</td><td>CLE vs TB</td><td><span class="pill good">Active</span></td><td class="num">10.0</td><td>Consensus split. 13.6% target share in W1 is the worry; 72-catch rookie year is the case. Roughly a wash with Kittle — see below.</td></tr>
+        <tr><td class="slot">FLEX</td><td>Bhayshul Tuten</td><td>JAX at DEN</td><td><span class="pill good">Active</span></td><td class="num">10.1</td><td>49% snaps, led JAX backfield in carries W1; DEN gave up the 2nd-most RB points in W1. Consensus: RB2/flex.</td></tr>
+        <tr><td class="slot">FLEX</td><td>George Kittle</td><td>SF vs MIA</td><td><span class="pill good">Cleared</span></td><td class="num">10.5</td><td>Off the injury report after a full Friday practice. 30 of 65 snaps in W1 on a snap count; expected to rise, and backup TE Tonges is on IR.</td></tr>
+        <tr><td class="slot">D/ST</td><td>Eagles D/ST</td><td>PHI vs TEN</td><td><span class="pill good">—</span></td><td class="num">7.1</td><td>Home vs a Titans offense; fine. No stream on the wire clearly better.</td></tr>
+        <tr><td colspan="4" style="text-align:right;font-weight:600">Total</td><td class="num" style="font-weight:600">114.1</td><td></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>Bench</h3>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Player</th><th>Game</th><th>Status</th><th class="num">Proj</th><th>Why benched</th></tr></thead>
+      <tbody>
+        <tr><td>Xavier Worthy (WR)</td><td>KC vs IND (SNF)</td><td><span class="pill good">Active</span></td><td class="num">11.0</td><td><strong>Your Olave fallback.</strong> Led KC in target share (22%) but 3–18 in W1; consensus has him WR50s, a low-floor flex. Ranked below Olave; ranked above nothing else on the roster that is healthy.</td></tr>
+        <tr><td>Matthew Stafford (QB)</td><td>LAR vs NYG</td><td><span class="pill good">Active</span></td><td class="num">18.2</td><td>4.1 in W1; NYG's Cover-2 troubled him last year. Dak is the better play by matchup and projection. Trade chip, per the roster review.</td></tr>
+        <tr><td>RJ Harvey (RB)</td><td>DEN vs JAX</td><td><span class="pill warn">Questionable</span></td><td class="num">10.0</td><td>Hamstring; DNP Wed → limited Thu/Fri, game-time decision. Committee with Dobbins even if active. Do not flex a Q committee back over Kittle/Tuten.</td></tr>
+        <tr><td>Malik Washington (WR)</td><td>MIA at SF</td><td><span class="pill good">Active</span></td><td class="num">7.5</td><td>Volume is real (8 tgt, 98% snaps) but the Willis offense caps it. Depth/keeper hold.</td></tr>
+        <tr><td>Tyler Allgeier (RB)</td><td>ARI vs SEA</td><td><span class="pill good">Active</span></td><td class="num">7.1</td><td>Depth. Weakest hold once J. Love takes ARI's backfield.</td></tr>
+        <tr><td>Alvin Kamara (RB)</td><td>NO at BAL</td><td><span class="pill good">Active</span></td><td class="num">5.4</td><td>First game back from the MCL sprain; NO easing him in. <strong>Watch his usage</strong> — the ≥30% snaps + 4 targets test from the roster review decides whether he's a flex piece going forward.</td></tr>
+        <tr><td>Tank Bigsby (RB)</td><td>PHI vs TEN</td><td><span class="pill good">Active</span></td><td class="num">3.4</td><td>Barkley handcuff. Only matters if Barkley misses time.</td></tr>
+        <tr><td>Nico Collins (WR) — IR</td><td>—</td><td><span class="pill bad">Out</span></td><td class="num">—</td><td>Grade-1 hamstring, ~2 games. Target return W4.</td></tr>
+        <tr><td>Michael Pittman Jr. (WR) — IR</td><td>—</td><td><span class="pill bad">Out</span></td><td class="num">—</td><td>Foot, no timeline.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>The three decisions, argued</h3>
+    <div class="decision">
+      <div class="call">1. Olave over Worthy — start Olave if he's active. <span class="pill">+4.9 proj</span></div>
+      <p>Olave is a <span class="term" title="Target share = the fraction of a team's pass attempts thrown to one player">target-share</span> monster (13 targets in W1) in a full-PPR league, which is exactly the profile this roster is built around. The injury is the only question, and every reputable read on it (Saints' official report, NBC, FantasyPros, NewOrleans.Football's beat reporter) says precautionary and trending toward playing. The sequencing makes this low-risk: NO–BAL is an early game, KC–IND is Sunday night. If Olave is on the inactive list at 11:30 CT, drop Worthy back in — you lose nothing. If Olave is active but you'd rather not carry the hamstring risk, that's a judgment call I'd make the other way: a limited Olave still commands targets; Worthy is a deep-ball dice roll (3 catches on a team-high target share last week).</p>
+      <p class="small muted">Consensus check: Olave is a WR2 in every major W2 ranking when active; Worthy sits WR50–55 (RotoBaller) and is a CBS "sit". This recommendation agrees with consensus.</p>
+    </div>
+    <div class="decision">
+      <div class="call">2. Dak over Stafford — keep Dak. <span class="pill">+1.8 proj</span></div>
+      <p>Both are start-worthy this week (SI, RotoBaller, CBS all say start both), so the question is which matchup is softer. Washington allowed the 5th-most passing yards per game last season and ranked 31st against fantasy QBs; Dak put up 23.3 and 22.7 against them in two 2025 meetings. Stafford's 4.1 in W1 was a dud, and the Giants just held Dallas down with the Cover-2 looks that gave Stafford his worst efficiency last year. Small edge, Dak. Agrees with consensus.</p>
+    </div>
+    <div class="decision">
+      <div class="call">3. Flex — Tuten and Kittle; Fannin at TE. <span class="pill">Harvey stays out</span></div>
+      <p>Four players project within half a point of each other (Kittle 10.5, Tuten 10.1, Harvey 10.0, Fannin 10.0), so this is about floor and availability. Harvey is a game-time decision in a committee — the only one of the four who can hand you a zero. Kittle was cleared Friday and his snap count should climb against a Miami defense that leaks to tight ends; Tuten leads the JAX backfield in a matchup Kenneth Walker just exposed. Fannin's usage dip (4th on CLE in targets) is real and the consensus is genuinely split on him, but the alternative at TE is Kittle, who's already in the flex — so Fannin at TE, Kittle at flex is the same lineup either way. The only true alternative is Malik Washington (7.5) or Kamara (5.4), and neither beats a healthy Kittle or Tuten.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLOT BY SLOT ============ -->
+<section id="slots">
+  <div class="card">
+    <h2>Slot by slot: where the 7 points live</h2>
+    <p class="muted small">ESPN Week 2 projections for each team's starting slot, recommended Man Wolf lineup vs Steel Giants' set lineup. Hatched bars are locked (game played). The two bars in each row are one scale, so length is comparable across the whole chart.</p>
+    <div class="legend"><span><span class="dot wolf"></span>The Man Wolf</span><span><span class="dot giant"></span>Steel Giants</span><span class="small">Bar = 1px per 0.16 pts (24 pts = full width)</span></div>
+    <div class="bars">
+      <div class="lab">QB</div><div class="pair"><div class="bar wolf" style="width:83%"><span class="val">Dak 20.0</span></div><div class="bar giant" style="width:81%"><span class="val">C. Williams 19.4</span></div></div>
+      <div class="lab">RB1</div><div class="pair"><div class="bar wolf" style="width:73%"><span class="val">Barkley 17.6</span></div><div class="bar giant" style="width:71%"><span class="val">Achane 17.1</span></div></div>
+      <div class="lab">RB2</div><div class="pair"><div class="bar wolf" style="width:73%"><span class="val">Henry 17.6</span></div><div class="bar giant" style="width:56%"><span class="val">Swift 13.5</span></div></div>
+      <div class="lab">WR1</div><div class="pair"><div class="bar wolf" style="width:66%"><span class="val">Olave 15.9 (Q)</span></div><div class="bar giant" style="width:62%"><span class="val">Nabers 14.9</span></div></div>
+      <div class="lab">WR2</div><div class="pair"><div class="bar wolf locked" style="width:22%"><span class="val">J. Williams 5.3 ✓</span></div><div class="bar giant" style="width:62%"><span class="val">Pickens 14.8</span></div></div>
+      <div class="lab">TE</div><div class="pair"><div class="bar wolf" style="width:42%"><span class="val">Fannin 10.0</span></div><div class="bar giant" style="width:48%"><span class="val">Loveland 11.4</span></div></div>
+      <div class="lab">FLEX</div><div class="pair"><div class="bar wolf" style="width:42%"><span class="val">Tuten 10.1</span></div><div class="bar giant" style="width:51%"><span class="val">P. Washington 12.2</span></div></div>
+      <div class="lab">FLEX</div><div class="pair"><div class="bar wolf" style="width:44%"><span class="val">Kittle 10.5</span></div><div class="bar giant" style="width:47%"><span class="val">Warren 11.4</span></div></div>
+      <div class="lab">D/ST</div><div class="pair"><div class="bar wolf" style="width:30%"><span class="val">Eagles 7.1</span></div><div class="bar giant" style="width:26%"><span class="val">Texans 6.3</span></div></div>
+    </div>
+    <h3>Reading it</h3>
+    <ul>
+      <li><strong>The whole deficit is WR2.</strong> Jameson Williams' 5.3 vs Pickens' 14.8 projection is a 9.5-point hole, and it's already final. Every other slot is within ~2 points, and you lead at QB, both RBs, WR1 and D/ST.</li>
+      <li><strong>Your edge is concentrated at running back</strong> — Henry vs Swift is +4. Swift's 32.4 in W1 came on 2 TDs; his projection reverting to 13.5 is ESPN telling you that was a spike week.</li>
+      <li><strong>Their edge is spread thin</strong> across TE and both flexes (+1.4, +2.1, +0.9). Those are the slots where one big play flips the game either way.</li>
+      <li>If Olave sits and Worthy plays (11.0), WR1 becomes −3.9 instead of +1.0 — that's the −11.8 scenario in the scoreboard.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ OPPONENT ============ -->
+<section id="opponent">
+  <div class="card">
+    <h2>Scouting Steel Giants</h2>
+    <div class="grid g2">
+      <div>
+        <h3>Who they are</h3>
+        <ul>
+          <li><strong>Better than 0–1.</strong> 142.56 was the 2nd-highest score in the league in W1; they ran into ALI's 165. Power score 20.2 (7th) vs your 21.5 (5th) after W1 — near-identical teams by ESPN's strength metric (a two-game rolling average that ignores wins and losses).</li>
+          <li><strong>QB-rich, TE-rich, thin at WR3/RB3.</strong> Caleb Williams (37.3 in W1) starts with Bo Nix (18.5 proj) idle on the bench. Kincaid and Loveland at TE. After Nabers/Pickens/P. Washington the receivers are Wicks and Addison — the same Addison you dropped and they claimed.</li>
+          <li><strong>Josh Jacobs is dead weight.</strong> Still on the Commissioner's Exempt List (legal matter, not injury). He does not help them this week.</li>
+          <li><strong>Waiver priority #10.</strong> They're last in line — they burned priority early (Wicks, Addison, Woody Marks). No help arrives for them before Sunday.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>What they did this week</h3>
+        <ul>
+          <li><strong>Benched Kincaid for Loveland</strong> and watched Kincaid post 22.5 Thursday. That is the single biggest fact of this matchup: an 11-point projected TE edge for them turned into a stranded score.</li>
+          <li><strong>Tried to buy Olave from you Friday</strong> (P. Washington + Wicks + a throw-in). You declined. They know your WR room is thin and they want Olave — remember that for the W11 rematch and for any future negotiation with them; they are a motivated WR buyer.</li>
+          <li>Set lineup total projects 121.0 — about 11 below what it would be with Kincaid.</li>
+        </ul>
+        <h3>Where their score comes from</h3>
+        <p class="small muted">Caleb Williams + Swift + Loveland + Addison are all in the Bears–Vikings game. Achane (MIA) and your Kittle are in the same game at SF. P. Washington and Warren are the mid-tier fill.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WATCH LIST ============ -->
+<section id="watch">
+  <div class="card">
+    <h2>Sunday watch list</h2>
+    <p class="muted small">Times in CT. Inactives are posted 90 minutes before each kickoff.</p>
+    <div class="grid g2">
+      <div>
+        <h3>Before the early window (by ~11:30 CT)</h3>
+        <ul>
+          <li><strong>Olave active?</strong> Yes → he starts at WR. No → Worthy back in (his game is SNF, so the slot stays open).</li>
+          <li><strong>Kittle</strong> is cleared; no action. If SF surprises with a scratch, Malik Washington is the only healthy alternative on the bench.</li>
+        </ul>
+        <h3>Games where both teams have skin</h3>
+        <dl>
+          <dt>NO at BAL</dt><dd><span class="dot wolf"></span>Henry, Olave, Kamara (bench). Their side: none. Every point in this game is yours.</dd>
+          <dt>JAX at DEN</dt><dd><span class="dot wolf"></span>Tuten, Harvey (bench) · <span class="dot giant"></span>P. Washington, plus Nix and JAX D/ST on their bench. A JAX shootout helps you (Tuten) and them (P. Washington) about equally.</dd>
+          <dt>MIA at SF</dt><dd><span class="dot wolf"></span>Kittle, M. Washington (bench) · <span class="dot giant"></span>Achane. Achane is their RB1 — a 49ers blowout that turns MIA pass-heavy actually helps Achane's receiving floor.</dd>
+          <dt>PHI vs TEN</dt><dd><span class="dot wolf"></span>Barkley, Eagles D/ST, Bigsby (bench) · <span class="dot giant"></span>Wicks (bench). Yours to win.</dd>
+          <dt>CHI vs MIN</dt><dd><span class="dot giant"></span>C. Williams, Swift, Loveland (+ Addison, bench). Their engine. A Vikings defensive game is your best rooting interest all weekend.</dd>
+        </dl>
+      </div>
+      <div>
+        <h3>Usage to log for next week (not this week's result)</h3>
+        <ul>
+          <li><strong>Kamara:</strong> snap % and targets. ≥30% snaps and 4+ targets = the RB4-with-a-path thesis holds; Miller-like usage = weakest hold on the roster.</li>
+          <li><strong>Fannin:</strong> target share. A second week under 15% and Kittle becomes the TE, Fannin a trade/drop candidate once Collins returns and a bench spot is needed (~W4).</li>
+          <li><strong>Worthy:</strong> whether the 22% target share converts. If it does, he's your WR2 until Collins is back; if it doesn't, the Golden/Burden/Waddle trade sequence from the roster review moves up the calendar.</li>
+          <li><strong>Harvey:</strong> if he plays, the Dobbins split. If he sits, note whether Dobbins or Coleman got the work — it tells you whether Harvey is worth the roster spot.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STAKES ============ -->
+<section id="stakes">
+  <div class="card">
+    <h2>Stakes</h2>
+    <div class="grid g2">
+      <div>
+        <h3>Standings after Week 1</h3>
+        <div class="tablewrap">
+        <table>
+          <thead><tr><th>#</th><th>Team</th><th>Rec</th><th class="num">PF</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>🥊ALI🥊</td><td>1–0</td><td class="num">165.2</td></tr>
+            <tr><td>2</td><td>Get Hooked</td><td>1–0</td><td class="num">150.1</td></tr>
+            <tr><td>3</td><td>Lamar n Order</td><td>1–0</td><td class="num">148.0</td></tr>
+            <tr><td>4</td><td>Redemption team</td><td>1–0</td><td class="num">142.0</td></tr>
+            <tr class="chg"><td>5</td><td><span class="dot wolf"></span>The Man Wolf</td><td>1–0</td><td class="num">135.5</td></tr>
+            <tr><td>6</td><td><span class="dot giant"></span>Steel Giants</td><td>0–1</td><td class="num">142.6</td></tr>
+            <tr><td>7</td><td>Texas Two Step</td><td>0–1</td><td class="num">126.0</td></tr>
+            <tr><td>8</td><td>Imad</td><td>0–1</td><td class="num">125.0</td></tr>
+            <tr><td>9</td><td>Playoff Chase</td><td>0–1</td><td class="num">90.5</td></tr>
+            <tr><td>10</td><td>Bower Outage</td><td>0–1</td><td class="num">68.3</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      <div>
+        <h3>Why this one matters more than a normal Week 2</h3>
+        <ul>
+          <li><strong>It's a six-team playoff race and Steel Giants are a direct rival for a seed.</strong> They score like a top-4 team. A win puts you 2–0 and them 0–2 with a head-to-head tiebreak in your pocket; a loss flips both of you to 1–1 with them holding the tiebreak and the higher points-for.</li>
+          <li><strong>Points-for is the tiebreaker</strong>, and you're 5th of 10 in it with the lowest total among the 1–0 teams. Running your best lineup every week is how you avoid losing a seed on points in December — this is the "no exceptions" rule in <code>strategy.md</code>.</li>
+          <li><strong>Next week: ALI</strong> (165 in W1, top of the table). The Collins-less WR room will be tested two weeks running; the Olave/Worthy/Fannin usage you log this week is the input to the W3 lineup.</li>
+          <li><strong>Rematch: Week 11</strong>, the last week before the trade-deadline checkpoint.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section id="glossary">
+  <div class="card">
+    <h2>Glossary</h2>
+    <dl>
+      <dt>Projection (proj)</dt><dd>ESPN's median expected fantasy points for the week under this league's scoring. A median means the player beats it about as often as not; team totals are usually within ~25 points of the sum.</dd>
+      <dt>Target share</dt><dd>The fraction of a team's pass attempts thrown to one player. In PPR, targets are the most stable predictor of week-to-week scoring because each catch is a point before any yardage.</dd>
+      <dt>Snap %</dt><dd>Share of the team's offensive plays a player was on the field for. Opportunity precedes production; a rising snap count (Kittle) is the leading indicator.</dd>
+      <dt>Committee</dt><dd>A backfield where carries are split among 2–3 backs (DEN: Harvey/Dobbins/Coleman). Committee backs have low floors because the game script picks who gets the work.</dd>
+      <dt>Locked</dt><dd>A player whose game has kicked off can't be moved. Jameson Williams (Thu) and both teams' Thursday players are final; Kincaid's 22.5 is locked on their bench.</dd>
+      <dt>Power score</dt><dd>ESPN's team-strength metric, a two-game rolling average of scoring that ignores win/loss — used to spot teams stronger or weaker than their record.</dd>
+      <dt>Points-for (PF)</dt><dd>Season total scored. The playoff tiebreaker after record in this league.</dd>
+      <dt>Q / Questionable</dt><dd>Official NFL designation meaning uncertain to play. Inactives are announced 90 minutes before kickoff — that's when a Q resolves.</dd>
+    </dl>
+  </div>
+</section>
+
+<footer>
+  <p>Data: ESPN league 394766 sync 2026-09-19 21:04 CT (<code>teams.json</code>, <code>week_stats.json</code> W2 in progress, <code>power_rankings.json</code>, <code>transactions.json</code>). Live status checks Sat 22:00 CT: Saints/Broncos/49ers official injury reports via NBC Sports, CBS Sports, RotoWire, FantasyPros; consensus from FantasyPros, CBS (Dave Richard), SI, RotoBaller, NFL.com, Yahoo. Projections are inputs, not results — re-read after Sunday's inactives.</p>
+  <p>Fantasy Professor · The Man Wolf brain trust · Mo decides.</p>
+</footer>
+</main>
+</body>
+</html>

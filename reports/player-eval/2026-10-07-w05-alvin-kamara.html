@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alvin Kamara Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#E9EAEC; --card:#FFFFFF; --ink:#15181D; --ink-2:#3A4049; --muted:#6B727D;
+  --rule:#C7CAD0; --rule-hard:#15181D; --navy:#173A5C; --navy-soft:#E2E8EF;
+  --up:#0E7A5F; --up-soft:#DCEDE7; --down:#B23A33; --down-soft:#F3E0DE;
+  --flag:#B87814; --flag-soft:#F6E9D2; --chip:#DFE1E5;
+  --a:#2F5E9E; --a-soft:#E0E8F4; --b:#8A4FA0; --b-soft:#EEE3F2;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+    --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+    --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+    --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+    --a:#8DB6EC; --a-soft:#18243A; --b:#CFA0E0; --b-soft:#2A1C31;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+  --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+  --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+  --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+  --a:#8DB6EC; --a-soft:#18243A; --b:#CFA0E0; --b-soft:#2A1C31;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:"Barlow","Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.5;margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px 56px}
+a{color:var(--navy)}
+.mast{background:#0B0D11;color:#E9EBEF;padding:26px 16px 22px;border-bottom:4px solid var(--flag)}
+.mast-inner{max-width:928px;margin:0 auto;display:flex;flex-wrap:wrap;gap:14px 28px;align-items:flex-end;justify-content:space-between}
+.mast h1{font-family:"Oswald",Impact,sans-serif;font-weight:700;font-size:clamp(32px,6.6vw,52px);line-height:.94;margin:0;text-transform:uppercase}
+.mast h1 em{font-style:normal;color:var(--flag);display:block;font-size:.55em;margin-top:6px}
+.mast-meta{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:#9AA3B0;line-height:1.9}
+h2{font-family:"Oswald",sans-serif;font-weight:600;font-size:22px;letter-spacing:.02em;text-transform:uppercase;margin:40px 0 14px;padding-bottom:6px;border-bottom:2px solid var(--rule-hard)}
+h3{font-family:"Oswald",sans-serif;font-weight:500;font-size:19px;margin:0 0 6px}
+p{margin:0 0 12px;color:var(--ink-2)}
+strong{color:var(--ink)}
+/* KPI grid */
+.grid{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+@media(min-width:760px){.grid{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px 16px}
+.stat .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.stat .v{font-family:"Oswald",sans-serif;font-size:28px;font-weight:600;line-height:1.1;margin:4px 0}
+.stat .s{font-size:13px;color:var(--muted);line-height:1.35}
+/* frames, status, definitions */
+.frame{margin-top:26px;background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:18px 22px}
+.frame p{font-size:15px;margin-bottom:6px}
+.frame ul{margin:6px 0 0;padding-left:20px;color:var(--ink-2);font-size:15px}
+.status{background:var(--navy-soft);border-radius:8px;padding:14px 18px;margin-top:14px;font-size:15px}
+.status b{color:var(--navy)}
+.why{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:20px 22px;margin-bottom:14px}
+.why p:last-child{margin-bottom:0}
+.def{border-left:3px solid var(--flag);background:var(--flag-soft);padding:8px 14px;border-radius:0 6px 6px 0;font-size:14.5px;margin:10px 0 14px}
+.def b{color:var(--flag)}
+.small{font-size:13px;color:var(--muted)}
+/* chips / tags */
+.chip{font-family:"IBM Plex Mono",monospace;font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--chip);color:var(--ink-2);white-space:nowrap}
+.chip.up{background:var(--up-soft);color:var(--up)}
+.chip.down{background:var(--down-soft);color:var(--down)}
+.chip.flag{background:var(--flag-soft);color:var(--flag)}
+/* status tags: ACTIVE / Q / D / O / IR / SUSP / UNCONFIRMED */
+.tag{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.06em;padding:2px 7px;border-radius:4px;background:var(--up-soft);color:var(--up);white-space:nowrap}
+.tag.q{background:var(--flag-soft);color:var(--flag)}
+.tag.o{background:var(--down-soft);color:var(--down)}
+/* consensus verdict tags */
+.agree{color:var(--up);font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600}
+.diverge{color:var(--flag);font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600}
+/* tables */
+.tscroll{overflow-x:auto;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--rule);border-radius:8px;overflow:hidden;font-size:14.5px}
+th{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;text-align:left;color:var(--muted);padding:9px 12px;border-bottom:2px solid var(--rule-hard);background:var(--navy-soft)}
+td{padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+td.num{font-family:"IBM Plex Mono",monospace;white-space:nowrap}
+td.who{color:var(--ink);font-weight:600;white-space:nowrap}
+tr.hl td{background:var(--flag-soft)}
+/* upside / risk */
+.cols{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:720px){.cols{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:16px 20px;border-top:5px solid var(--up)}
+.card.risk{border-top-color:var(--down)}
+.card ul{margin:0;padding-left:18px;font-size:15px;color:var(--ink-2)}
+.card li{margin-bottom:8px}
+/* scoring ranges */
+.range{display:grid;gap:10px;grid-template-columns:1fr}
+@media(min-width:720px){.range{grid-template-columns:repeat(3,1fr)}}
+.range .stat .v{font-size:32px}
+/* this-week note */
+.week{background:var(--card);border:1px solid var(--rule);border-left:6px solid var(--navy);border-radius:8px;padding:14px 18px;font-size:15px}
+/* ===== COMPARE MODE ===== */
+.verdict{margin-top:26px;background:var(--card);border:1px solid var(--rule);border-left:8px solid var(--up);border-radius:8px;padding:18px 22px}
+.verdict .lbl{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.verdict .call{font-family:"Oswald",sans-serif;font-size:30px;font-weight:600;line-height:1.1;margin:4px 0 8px}
+.pcards{display:grid;gap:14px;grid-template-columns:1fr;margin-top:18px}
+@media(min-width:680px){.pcards{grid-template-columns:1fr 1fr}}
+.pcard{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:16px 20px;border-top:5px solid var(--a)}
+.pcard.b{border-top-color:var(--b)}
+.pcard .name{font-family:"Oswald",sans-serif;font-size:26px;font-weight:600;line-height:1.05;margin:0 0 4px}
+.pcard .meta{font-size:14px;color:var(--muted);margin-bottom:8px}
+th.a,td.a{border-top:3px solid var(--a)} th.b,td.b{border-top:3px solid var(--b)}
+th.a{color:var(--a)} th.b{color:var(--b)}
+.win-a,.win-b,.push{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.05em;white-space:nowrap;padding:2px 8px;border-radius:4px}
+.win-a{background:var(--a-soft);color:var(--a)}
+.win-b{background:var(--b-soft);color:var(--b)}
+.push{background:var(--chip);color:var(--muted)}
+/* multi mode divider */
+.player-head{margin-top:48px;padding:14px 18px;background:#0B0D11;color:#E9EBEF;border-radius:8px;border-left:6px solid var(--flag);font-family:"Oswald",sans-serif;font-size:26px;text-transform:uppercase}
+.sources{font-size:13.5px;color:var(--muted);columns:1}
+@media(min-width:680px){.sources{columns:2}}
+.sources li{margin-bottom:4px;break-inside:avoid}
+.foot{margin-top:40px;padding-top:14px;border-top:1px solid var(--rule);font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);letter-spacing:.04em}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-inner">
+    <h1>Alvin Kamara<em>RB · NO · Player Report</em></h1>
+    <div class="mast-meta">
+      The Man Wolf · D League (394766)<br>
+      Wed 2026-10-07 · ESPN sync 2026-10-07 · Week 5 pre-kickoff<br>
+      Rostered by The Man Wolf (bench) · drafted R16 #152, dropped 09-18, re-added 09-19
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="grid" style="margin-top:26px">
+    <div class="stat"><div class="k">League points / game</div><div class="v">11.7</div><div class="s">3 games played (8.8 counting the W1 inactive). RB31 of 50 rostered on the 4-week average.</div></div>
+    <div class="stat"><div class="k">Carry share</div><div class="v">34%</div><div class="s">25 of NO's 74 RB/QB carries in his 3 games. 37% in W4, his first game without Etienne.</div></div>
+    <div class="stat"><div class="k">Target share</div><div class="v">11.8%</div><div class="s">14 of 119. Swings from 1 to 7 targets a game.</div></div>
+    <div class="stat"><div class="k">Consensus ROS</div><div class="v">RB33–36</div><div class="s">FantasyPros RB36, Yahoo RB33. ESPN RB25 this week.</div></div>
+  </section>
+
+  <section class="frame">
+    <h3>The short version</h3>
+    <p><strong>RB3 / bench depth. His window is W5–7 as New Orleans's lead back, with Travis Etienne Jr. on IR. After that he fades.</strong>
+    Etienne (hamstring) went on IR Oct 1. With the Saints' W8 bye, W9 is his earliest return. Even so, Kamara's W4 "lead role" was 7 of 19 carries, shared with Kendre Miller (6) and CJ Donaldson (3).
+    His 22.8-point game came mostly from 2 TDs. Without TDs he's averaging 7.7 pts/gm on 3.0 yds/carry. He's 31, and analysts note his efficiency declining.</p>
+    <p><strong>For The Man Wolf:</strong> keep him as RB depth while Barkley is out; he's our fourth healthy RB behind Henry, Tuten and Harvey. Treat him as a <em>sell-or-cut candidate once Barkley is back</em>:
+    he's on bye in W8, Etienne returns W9, and his playoff schedule (TB, ARI, ATL) is among the toughest for RBs.</p>
+    <div class="status"><b>Status (checked live 2026-10-07):</b> ACTIVE on ESPN. Not on New Orleans's W5 injury list (ESPN game feed: only Fant and four defenders are listed). Wednesday practice report not yet out, so re-check Friday.
+    History: MCL sprain on Aug 18; inactive W1 ("not quite ready," per Saints coverage), healthy since. One low-quality site mentions him exiting a Monday night game, but I found no current reputable report of that. UNCONFIRMED; ignore unless the injury report lists him.
+    No legal or suspension issues found.</div>
+  </section>
+
+  <h2>1 · Role and volume</h2>
+  <div class="def"><b>Carry share</b> is the percentage of a team's rushing attempts a back gets. A true lead back is usually 55%+; 30–40% is a committee.
+  <b>Target share</b> is the same idea for pass targets; for a PPR back, 10%+ is a meaningful receiving role.</div>
+  <div class="tscroll"><table>
+    <thead><tr><th>Wk</th><th>Opp</th><th>Carries / team</th><th>Rush</th><th>Tgt / team</th><th>Rec</th><th>TD</th><th>League pts</th></tr></thead>
+    <tbody>
+      <tr><td class="who">W1</td><td>@ DET (L 30–31)</td><td colspan="5"><span class="tag o">INACTIVE</span> knee (MCL) · Etienne 9 car + 9 tgt, Miller 9 car</td><td class="num">0.0</td></tr>
+      <tr><td class="who">W2</td><td>@ BAL (W 24–17)</td><td class="num">9/27</td><td class="num">15 yds</td><td class="num">6/32</td><td class="num">5-7</td><td class="num">0</td><td class="num">7.2</td></tr>
+      <tr><td class="who">W3</td><td>vs LV (L 27–35)</td><td class="num">9/28</td><td class="num">36 yds</td><td class="num">1/40</td><td class="num">1-5</td><td class="num">0</td><td class="num">5.1</td></tr>
+      <tr><td class="who">W4</td><td>vs ATL (L 24–45) · no Etienne</td><td class="num">7/19</td><td class="num">23 yds</td><td class="num">7/47</td><td class="num">5-35</td><td class="num">2 rush</td><td class="num">22.8</td></tr>
+      <tr class="hl"><td class="who">Total</td><td>3 games</td><td class="num">25/74 (34%)</td><td class="num">74 yds</td><td class="num">14/119 (12%)</td><td class="num">11-47</td><td class="num">2</td><td class="num">35.1</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">Carries, targets and lines: ESPN game summaries (box scores); team carry totals include QB runs. Points: <code>data/week_stats.json</code>.</p>
+  <div class="why"><h3>Lead back in name, committee back in practice</h3>
+  <p>CBS and NBC both describe Kamara as the starter with Etienne out, with Miller and Donaldson mixing in, and W4 matches: Kamara got the goal-line work (2 TDs) and 7 targets, but only 7 of 19 carries.
+  New Orleans has trailed a lot and throws 45 times a game, which caps everyone's rushing volume but keeps a receiving back involved.
+  What to watch: whether his carry share climbs above 40% now that the Saints have a full week to plan without Etienne. And note that Kendre Miller was just dropped in our league (Redemption, 10-07) and is a free agent.</p></div>
+
+  <h2>2 · Efficiency</h2>
+  <div class="grid">
+    <div class="stat"><div class="k">Yards / carry</div><div class="v">3.0</div><div class="s">74 on 25. Low for a lead back, though only 25 carries.</div></div>
+    <div class="stat"><div class="k">Yards / target</div><div class="v">3.4</div><div class="s">47 yds on 14 targets: short dump-offs.</div></div>
+    <div class="stat"><div class="k">TD share of pts</div><div class="v">34%</div><div class="s">12 of 35.1 pts from 2 TDs, both in one game.</div></div>
+    <div class="stat"><div class="k">Pts / gm without TDs</div><div class="v">7.7</div><div class="s">About the same as the best free-agent RB.</div></div>
+  </div>
+  <div class="def"><b>Regression</b> means an unusually high or low number drifting back toward normal as more games are played.</div>
+  <div class="why" style="margin-top:14px"><h3>The production rests on TDs and volume, not efficiency</h3>
+  <p>3.0 yards per carry over 25 carries is a small sample, but it matches analysts' observation that the 31-year-old's efficiency is "on the wane."
+  His TDs came from goal-line work, which is real value while Etienne is out, but two in one game shouldn't be treated as a weekly rate. A realistic baseline for W5–7 is 9–12 pts/gm (judgment call):
+  10–12 carries, 4–5 targets, and a TD roughly every other game.</p></div>
+
+  <h2>3 · What it's worth in our scoring</h2>
+  <div class="range">
+    <div class="stat" style="border-top:5px solid var(--down)"><div class="k">Floor week (~30%)</div><div class="v">4–6</div><div class="s">Committee split, 1–2 targets, no TD (like W3).</div></div>
+    <div class="stat" style="border-top:5px solid var(--navy)"><div class="k">Median week</div><div class="v">~9–10</div><div class="s">Lead share of a thin rushing attack, 4–5 catches.</div></div>
+    <div class="stat" style="border-top:5px solid var(--up)"><div class="k">Ceiling week (~15%)</div><div class="v">20+</div><div class="s">Goal-line TDs (like W4).</div></div>
+  </div>
+  <p class="small" style="margin-top:8px">Ranges are judgment calls from 3 games, NO's game scripts and league scoring (PPR, 0.1/yd, 6-pt TD), not model output. They apply to W5–7; expect lower once Etienne returns.</p>
+  <div class="tscroll"><table>
+    <thead><tr><th>Player</th><th>Team (league)</th><th>Pts/gm</th><th>ESPN proj/gm</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr class="hl"><td class="who">Alvin Kamara</td><td>Man Wolf (BE)</td><td class="num">11.7 (played)</td><td class="num">8.7 ROS · 11.2 W5</td><td>RB31 of 50 rostered (4-gm avg)</td></tr>
+      <tr><td class="who">RJ Harvey</td><td>Man Wolf (FLEX)</td><td class="num">12.7 (healthy)</td><td class="num">11.4</td><td>Ahead of him for FLEX</td></tr>
+      <tr><td class="who">Isaiah Davis</td><td>Free agent (5%)</td><td class="num">0.0</td><td class="num">7.8</td><td>Best FA RB by projection</td></tr>
+      <tr><td class="who">Kendre Miller</td><td>Free agent (12%)</td><td class="num">4.9</td><td class="num">3.2</td><td>NO committee partner</td></tr>
+      <tr><td class="who">Travis Etienne Jr.</td><td>Redemption team <span class="tag o">IR</span></td><td class="num">10.3</td><td class="num">12.3</td><td>Earliest return W9</td></tr>
+    </tbody>
+  </table></div>
+  <p>Over the rest of the season, ESPN projects him at 8.7/gm, barely above the best free-agent RB (7.8). His edge over replacement is concentrated in the W5–7 window.
+  In a 10-team league the waiver floor is high, so a free agent covers most of what he provides after W8.</p>
+
+  <h2>4 · Matchups, week by week</h2>
+  <div class="def"><b>How to read this:</b> rank of fantasy points allowed per game to RBs (1 = most generous), computed from <code>week_stats.json</code> for league-rostered RBs only, Weeks 1–4 of 2026,
+  league PPR scoring. Four weeks is a small, noisy sample; ranks within ~5 of each other are effectively equal.</div>
+  <div class="tscroll"><table>
+    <thead><tr><th>Wk</th><th>NFL opponent</th><th>RB rank</th><th>Read</th><th>Man Wolf plays</th></tr></thead>
+    <tbody>
+      <tr><td class="num">5</td><td>vs MIN (MIN −1.5, O/U 42.5)</td><td class="num">27</td><td><span class="chip down">Tough</span></td><td>Imad</td></tr>
+      <tr><td class="num">6</td><td>@ NYG</td><td class="num">16</td><td><span class="chip">Neutral</span></td><td>Chaseing a win</td></tr>
+      <tr><td class="num">7</td><td>vs PIT</td><td class="num">12</td><td><span class="chip">Neutral</span></td><td>Get Hooked</td></tr>
+      <tr class="hl"><td class="num">8</td><td colspan="3"><strong>BYE</strong> · Collins, Olave and Kittle also off (our W8 bye crunch)</td><td>Lamar n Order</td></tr>
+      <tr><td class="num">9</td><td>vs CLE · <strong>Etienne eligible</strong></td><td class="num">23</td><td><span class="chip down">Tough</span></td><td>Bower Outage</td></tr>
+      <tr><td class="num">10</td><td>vs CAR</td><td class="num">5</td><td><span class="chip up">Good</span></td><td>Texas Two Step</td></tr>
+      <tr><td class="num">11</td><td>@ CHI</td><td class="num">24</td><td><span class="chip down">Tough</span></td><td>Steel Giants</td></tr>
+      <tr><td class="num">12</td><td>@ CIN</td><td class="num">18</td><td><span class="chip">Neutral</span></td><td>ALI</td></tr>
+      <tr><td class="num">13</td><td>vs GB</td><td class="num">6</td><td><span class="chip up">Good</span></td><td>Redemption team</td></tr>
+      <tr><td class="num">14</td><td>@ CAR</td><td class="num">5</td><td><span class="chip up">Good</span></td><td>Imad</td></tr>
+      <tr class="hl"><td class="num">15</td><td>@ TB</td><td class="num">29</td><td><span class="chip down">Tough</span></td><td>Playoffs R1</td></tr>
+      <tr class="hl"><td class="num">16</td><td>vs ARI</td><td class="num">28</td><td><span class="chip down">Tough</span></td><td>Playoffs R2</td></tr>
+      <tr class="hl"><td class="num">17</td><td>@ ATL</td><td class="num">25</td><td><span class="chip down">Tough</span></td><td>Final</td></tr>
+    </tbody>
+  </table></div>
+  <div class="why"><h3>What the calendar means</h3>
+  <p>The best part of his window (W6 NYG, W7 PIT) is neutral. W5 against MIN is tough, and one start/sit source lists him at RB30 against the #1 run defense.
+  The good matchups (CAR, GB) come after Etienne is back. Every playoff week is a bottom-8 RB matchup. That's the main reason not to plan on him for December.</p></div>
+
+  <h2>5 · Upside and risk</h2>
+  <div class="cols">
+    <div class="card"><h3>Upside drivers</h3><ul>
+      <li>Goal-line and lead role for W5–7 with Etienne on IR</li>
+      <li>Receiving role in a pass-heavy, trailing offense (45 att/gm)</li>
+      <li>Trade value spiked after the 22.8-pt week (Yahoo PPR 19), so there's a window to sell</li></ul></div>
+    <div class="card risk"><h3>Risk drivers</h3><ul>
+      <li>Age 31, 3.0 yds/carry, MCL sprain this preseason</li>
+      <li>Committee even as the "lead" (7 of 19 carries in W4)</li>
+      <li>W8 bye, then Etienne returns W9</li>
+      <li>Playoff schedule: TB, ARI, ATL, all bottom-8 for RB points</li>
+      <li>No keeper value (age; strategy favors youth)</li></ul></div>
+  </div>
+
+  <h2>6 · Fit with The Man Wolf and our strategy</h2>
+  <div class="why"><p><strong>Strategy check:</strong> "RB depth is the lever" keeps him rostered while Barkley is out. The keeper logic (prefer youth for bench spots) and the win-now playoff focus both argue for moving him once that need passes.</p>
+  <ul style="color:var(--ink-2);font-size:15px">
+    <li>Current role: RB4 behind Henry, Tuten and Harvey. He starts only if one of them is out, or in W10 (Harvey and Barkley both on bye; NO plays CAR, a good matchup).</li>
+    <li>He's last on the bench cut order (Eagles D/ST → M. Washington → Stafford → J. Williams → Kamara). Once Barkley returns, consider moving him up it, or trading him.</li>
+    <li>League angle: <strong>Redemption team</strong> owns Etienne (IR) and just dropped Kendre Miller, so they're short on RBs and might value Kamara during this window. Worth a <code>/trade-analyzer</code> look as a 2-for-1 sweetener or a depth piece before W8.</li>
+  </ul></div>
+
+  <h2>7 · Expert consensus vs our read</h2>
+  <div class="tscroll"><table>
+    <thead><tr><th>Source</th><th>Rank / value</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td class="who">FantasyPros ROS ECR</td><td class="num">RB36</td><td>Expert consensus ranking</td></tr>
+      <tr><td class="who">Yahoo ROS</td><td class="num">RB33</td><td>Half-PPR</td></tr>
+      <tr><td class="who">Yahoo · Boone W5 trade value</td><td class="num">PPR 19 (std 17)</td><td>About the same as Harvey's 18</td></tr>
+      <tr><td class="who">CBS · Richard W5 trade chart</td><td class="num">PPR 7</td><td>Much lower</td></tr>
+      <tr><td class="who">ESPN W5 rankings</td><td class="num">RB25</td><td></td></tr>
+      <tr><td class="who">RotoBaller W5 start/sit</td><td class="num">Start, with warning</td><td>RB30 vs #1 run D; "efficiency on the wane"</td></tr>
+      <tr><td class="who">ESPN projection (league data)</td><td class="num">8.7/gm ROS</td><td>Near replacement level</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>Agreement:</strong> tight on rank (RB33–36 for the rest of the season), wide on trade value (CBS 7 vs Yahoo 19). The spread reflects disagreement over how much the Etienne window is worth.
+  <strong>Our read:</strong> <span class="agree">AGREE</span> on an RB3 tier for W5–7. <span class="diverge">DIVERGE ↓</span> for the playoffs: Etienne's return plus TB/ARI/ATL make him close to replacement level in December.
+  That's a judgment call based on the schedule and his committee usage.</p>
+
+  <h2>8 · This week</h2>
+  <div class="week"><strong>W5 vs MIN</strong> · MIN −1.5, O/U 42.5 (Sun 1:00 ET) · <span class="tag">ACTIVE</span> · ESPN RB25, RotoBaller RB30 vs #1 run D · lean <strong>bench</strong>.
+  Harvey and J. Williams are the better FLEX plays this week (see the W5 lineup report). Keep Kamara as the first RB in if anyone ahead of him is ruled out. Confirm in <code>/weekly-lineup</code>.</div>
+
+  <h2>Sources</h2>
+  <ul class="sources">
+    <li><a href="https://www.cbssports.com/nfl/news/travis-etienne-ir-saints-alvin-kamara-2026/">CBS: Etienne to IR, Kamara's larger role</a></li>
+    <li><a href="https://www.nbcsports.com/fantasy/football/player-news/2026-10-01/saints-place-travis-etienne-hamstring-on-ir">NBC: Saints place Etienne (hamstring) on IR, 10-01</a></li>
+    <li><a href="https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/saints-put-travis-etienne-on-injured-reserve">PFT: Etienne IR, W9 earliest return</a></li>
+    <li><a href="https://www.cbssports.com/fantasy/football/news/saints-alvin-kamara-not-expected-to-play-week-1/">CBS: Kamara not expected to play W1 (MCL)</a></li>
+    <li><a href="https://www.fox8live.com/2026/09/12/alvin-kamara-cam-jordan-inactive-saints-season-opener-detroit/">FOX 8: Kamara inactive for opener</a></li>
+    <li><a href="https://sports.yahoo.com/fantasy/article/2026-trade-value-charts--justin-boones-fantasy-football-running-back-breakdown-for-week-5-143148724.html">Yahoo: Boone W5 RB trade values</a></li>
+    <li><a href="https://www.cbssports.com/fantasy/football/news/dave-richards-2026-week-5-trade-chart/">CBS: Richard W5 trade chart</a></li>
+    <li><a href="https://www.fantasypros.com/nfl/players/alvin-kamara.php">FantasyPros: Kamara ROS ECR</a></li>
+    <li><a href="https://www.rotoballer.com/start-sit-chart-week-5-fantasy-football-matchups-for-all-games-2026/1959820">RotoBaller: W5 start/sit chart</a></li>
+    <li><a href="https://www.espn.com/fantasy/football/story/_/id/49803708/fantasy-football-superflex-rankings-2026-qb-rb-wr-te">ESPN: W5 rankings (RB25)</a></li>
+    <li>ESPN site API: NO 2026 schedule, W1–4 box scores, W5 odds and injury list (DraftKings)</li>
+    <li>League data: <code>teams.json</code>, <code>week_stats.json</code>, <code>free_agents.json</code>, <code>draft_results.json</code>, <code>transactions.json</code> (synced 2026-10-07)</li>
+  </ul>
+
+  <div class="foot">Fantasy Professor · player-eval · generated 2026-10-07 · read-only run, not logged in history.md · W1–4 final; W5 not started</div>
+</main>
+</body>
+</html>

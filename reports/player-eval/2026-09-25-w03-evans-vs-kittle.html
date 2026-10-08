@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evans vs Kittle Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#E9EAEC; --card:#FFFFFF; --ink:#15181D; --ink-2:#3A4049; --muted:#6B727D;
+  --rule:#C7CAD0; --rule-hard:#15181D; --navy:#173A5C; --navy-soft:#E2E8EF;
+  --up:#0E7A5F; --up-soft:#DCEDE7; --down:#B23A33; --down-soft:#F3E0DE;
+  --flag:#B87814; --flag-soft:#F6E9D2; --chip:#DFE1E5;
+  --a:#2F5E9E; --a-soft:#E0E8F4; --b:#8A4FA0; --b-soft:#EEE3F2;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+    --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+    --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+    --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+    --a:#8DB6EC; --a-soft:#18243A; --b:#CFA0E0; --b-soft:#2A1C31;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+  --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+  --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+  --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+  --a:#8DB6EC; --a-soft:#18243A; --b:#CFA0E0; --b-soft:#2A1C31;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:"Barlow","Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.5;margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px 56px}
+a{color:var(--navy)}
+.mast{background:#0B0D11;color:#E9EBEF;padding:26px 16px 22px;border-bottom:4px solid var(--flag)}
+.mast-inner{max-width:928px;margin:0 auto;display:flex;flex-wrap:wrap;gap:14px 28px;align-items:flex-end;justify-content:space-between}
+.mast h1{font-family:"Oswald",Impact,sans-serif;font-weight:700;font-size:clamp(32px,6.6vw,52px);line-height:.94;margin:0;text-transform:uppercase}
+.mast h1 em{font-style:normal;color:var(--flag);display:block;font-size:.55em;margin-top:6px}
+.mast-meta{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:#9AA3B0;line-height:1.9}
+h2{font-family:"Oswald",sans-serif;font-weight:600;font-size:22px;letter-spacing:.02em;text-transform:uppercase;margin:40px 0 14px;padding-bottom:6px;border-bottom:2px solid var(--rule-hard)}
+h3{font-family:"Oswald",sans-serif;font-weight:500;font-size:19px;margin:0 0 6px}
+p{margin:0 0 12px;color:var(--ink-2)}
+strong{color:var(--ink)}
+/* KPI grid */
+.grid{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+@media(min-width:760px){.grid{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px 16px}
+.stat .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.stat .v{font-family:"Oswald",sans-serif;font-size:28px;font-weight:600;line-height:1.1;margin:4px 0}
+.stat .s{font-size:13px;color:var(--muted);line-height:1.35}
+/* frames, status, definitions */
+.frame{margin-top:26px;background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:18px 22px}
+.frame p{font-size:15px;margin-bottom:6px}
+.frame ul{margin:6px 0 0;padding-left:20px;color:var(--ink-2);font-size:15px}
+.status{background:var(--navy-soft);border-radius:8px;padding:14px 18px;margin-top:14px;font-size:15px}
+.status b{color:var(--navy)}
+.why{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:20px 22px;margin-bottom:14px}
+.why p:last-child{margin-bottom:0}
+.def{border-left:3px solid var(--flag);background:var(--flag-soft);padding:8px 14px;border-radius:0 6px 6px 0;font-size:14.5px;margin:10px 0 14px}
+.def b{color:var(--flag)}
+.small{font-size:13px;color:var(--muted)}
+/* chips / tags */
+.chip{font-family:"IBM Plex Mono",monospace;font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--chip);color:var(--ink-2);white-space:nowrap}
+.chip.up{background:var(--up-soft);color:var(--up)}
+.chip.down{background:var(--down-soft);color:var(--down)}
+.chip.flag{background:var(--flag-soft);color:var(--flag)}
+/* status tags: ACTIVE / Q / D / O / IR / SUSP / UNCONFIRMED */
+.tag{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.06em;padding:2px 7px;border-radius:4px;background:var(--up-soft);color:var(--up);white-space:nowrap}
+.tag.q{background:var(--flag-soft);color:var(--flag)}
+.tag.o{background:var(--down-soft);color:var(--down)}
+/* consensus verdict tags */
+.agree{color:var(--up);font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600}
+.diverge{color:var(--flag);font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600}
+/* tables */
+.tscroll{overflow-x:auto;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--rule);border-radius:8px;overflow:hidden;font-size:14.5px}
+th{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;text-align:left;color:var(--muted);padding:9px 12px;border-bottom:2px solid var(--rule-hard);background:var(--navy-soft)}
+td{padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+td.num{font-family:"IBM Plex Mono",monospace;white-space:nowrap}
+td.who{color:var(--ink);font-weight:600;white-space:nowrap}
+tr.hl td{background:var(--flag-soft)}
+/* upside / risk */
+.cols{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:720px){.cols{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:16px 20px;border-top:5px solid var(--up)}
+.card.risk{border-top-color:var(--down)}
+.card ul{margin:0;padding-left:18px;font-size:15px;color:var(--ink-2)}
+.card li{margin-bottom:8px}
+/* scoring ranges */
+.range{display:grid;gap:10px;grid-template-columns:1fr}
+@media(min-width:720px){.range{grid-template-columns:repeat(3,1fr)}}
+.range .stat .v{font-size:32px}
+/* this-week note */
+.week{background:var(--card);border:1px solid var(--rule);border-left:6px solid var(--navy);border-radius:8px;padding:14px 18px;font-size:15px}
+/* ===== COMPARE MODE ===== */
+.verdict{margin-top:26px;background:var(--card);border:1px solid var(--rule);border-left:8px solid var(--up);border-radius:8px;padding:18px 22px}
+.verdict .lbl{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.verdict .call{font-family:"Oswald",sans-serif;font-size:30px;font-weight:600;line-height:1.1;margin:4px 0 8px}
+.pcards{display:grid;gap:14px;grid-template-columns:1fr;margin-top:18px}
+@media(min-width:680px){.pcards{grid-template-columns:1fr 1fr}}
+.pcard{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:16px 20px;border-top:5px solid var(--a)}
+.pcard.b{border-top-color:var(--b)}
+.pcard .name{font-family:"Oswald",sans-serif;font-size:26px;font-weight:600;line-height:1.05;margin:0 0 4px}
+.pcard .meta{font-size:14px;color:var(--muted);margin-bottom:8px}
+th.a,td.a{border-top:3px solid var(--a)} th.b,td.b{border-top:3px solid var(--b)}
+th.a{color:var(--a)} th.b{color:var(--b)}
+.win-a,.win-b,.push{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.05em;white-space:nowrap;padding:2px 8px;border-radius:4px}
+.win-a{background:var(--a-soft);color:var(--a)}
+.win-b{background:var(--b-soft);color:var(--b)}
+.push{background:var(--chip);color:var(--muted)}
+/* multi mode divider */
+.player-head{margin-top:48px;padding:14px 18px;background:#0B0D11;color:#E9EBEF;border-radius:8px;border-left:6px solid var(--flag);font-family:"Oswald",sans-serif;font-size:26px;text-transform:uppercase}
+.sources{font-size:13.5px;color:var(--muted);columns:1}
+@media(min-width:680px){.sources{columns:2}}
+.sources li{margin-bottom:4px;break-inside:avoid}
+.foot{margin-top:40px;padding-top:14px;border-top:1px solid var(--rule);font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);letter-spacing:.04em}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-inner">
+    <h1>Evans vs Kittle<em>Hold Kittle or trade him for Evans · 49ers WR vs 49ers TE</em></h1>
+    <div class="mast-meta">
+      The Man Wolf · D League (394766)<br>
+      Fri 2026-09-25 · ESPN sync 16:36 · Week 3 in progress (SF plays Sun)<br>
+      Kittle: The Man Wolf (FLEX) · Evans: Imad (FLEX)
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="verdict" style="border-left-color:var(--b)">
+    <div class="lbl">Decision · trade target (keep Kittle vs acquire Evans) · confidence medium-low</div>
+    <div class="call">Kittle over Evans, for our lineup</div>
+    <p>Straight up, Kittle is worth about <strong>+1 pt/week</strong> more in The Man Wolf's lineup. The reason isn't that he's the better player. Keeping him keeps Fannin out of our TE slot, and Evans would only replace a ~11-pt FLEX. <strong>Consensus:</strong> <span class="diverge">DIVERGES</span>. The market prices Evans well above Kittle (FantasyPros ROS overall #45 vs #99, Boone 36 vs 22). We go against it because of league-specific context: our TE fallback is Fannin, not a waiver TE. This is a judgment call, and the margin is within weekly noise.</p>
+  </section>
+
+  <section class="pcards">
+    <div class="pcard"><div class="name">Mike Evans</div><div class="meta">WR · SF · Imad (R7 #70) · age 33 · <span class="tag q">Q · hip</span></div><p>Mid-WR2 / flex · FP ROS <strong>WR24</strong> · 12.65 league pts/gm (2 gms, W2 exited injured) · ESPN ROS 12.80/gm</p></div>
+    <div class="pcard b"><div class="name">George Kittle</div><div class="meta">TE · SF · The Man Wolf (R9 #89) · <span class="tag">ACTIVE</span></div><p>Low-end TE1, rising · FP ROS <strong>TE9</strong> · 10.6 league pts/gm (snap-capped) · ESPN ROS 12.27/gm (TE4 of 22 rostered)</p></div>
+  </section>
+
+  <section class="frame">
+    <h3>The short version</h3>
+    <p><strong>By market value, Evans is the better asset. Kittle is the better piece for this roster.</strong> Both play in the same offense, face the same opponents, and share the same Week 8 bye, so the schedule barely separates them. What separates them is the lineup slot each one fills for us. Evans would slot into FLEX, where our alternatives (J. Williams, Tuten, Worthy) project about 11 pts, so he adds about +1.6/gm. Kittle plays TE for us, where our alternative is Fannin (9.5), so he adds about +2.8/gm. Net: holding Kittle ≈ +1.1 pts/week on ESPN rest-of-season projections.</p>
+    <p><strong>For The Man Wolf:</strong> this doesn't overturn the pending Kittle → Evans + Juwan Johnson trade on its own, but it changes <em>why</em> you'd take it. The deal is <strong>not</strong> a weekly-points upgrade (Johnson projects the same as Fannin, so the TE hole stays). What it buys is depth (a 4th startable WR while Collins and Pittman are banged up, plus a second TE) and market surplus. If maximising weekly starting points is the goal, holding Kittle is defensible.</p>
+    <div class="status"><b>Status (checked live 2026-09-25):</b> <strong>Evans: QUESTIONABLE (hip)</strong>. Hurt in W2 and didn't return. DNP Wed, DNP Thu, <strong>limited Fri</strong>. Rapoport: "does not seem to be major," good chance he plays. Shanahan said the hip will "have to be managed." No legal or suspension issues. Signed with SF this offseason and is a starting outside WR. <strong>Kittle: ACTIVE</strong>, not on SF's final W3 injury report. Achilles torn Jan 2026 (wild card), full practice since W2, managed snap count (46% W1, 48% W2). No legal issues, SF's TE1. <strong>Teammate note:</strong> WR Demarcus Robinson (ankle) is <strong>OUT</strong> W3, so more WR snaps are available.</div>
+  </section>
+
+  <h2>Scorecard</h2>
+  <div class="tscroll"><table>
+    <thead><tr><th>Dimension</th><th class="a">Mike Evans</th><th class="b">George Kittle</th><th>Edge</th></tr></thead>
+    <tbody>
+      <tr><td class="who">Status / durability</td><td>Q (hip), age 33; missed 12 games 2024–25 (hamstring, collarbone) + camp quad</td><td>Active, off report; 9 months post-Achilles; played 11 games in 2025</td><td><span class="win-b">KITTLE</span></td></tr>
+      <tr><td class="who">Role</td><td>Starting outside WR; 75% snaps W1 (healthy)</td><td>TE1 but snap-capped: 46% / 48%; Farrell took 54% in W2</td><td><span class="win-a">EVANS</span></td></tr>
+      <tr><td class="who">Volume</td><td>10 tgt · 17.9% of SF targets (20.6% healthy W1)</td><td>9 tgt · 16.1% of SF targets, on ~70% of Evans' snaps</td><td><span class="push">PUSH</span></td></tr>
+      <tr><td class="who">Efficiency</td><td>10.3 yds/tgt, 90% catch rate, low YAC</td><td>10.2 yds/tgt, 0.16 tgt/snap, 51% of yards after catch</td><td><span class="push">PUSH</span></td></tr>
+      <tr><td class="who">TD equity</td><td>1 TD (24% of pts); 2025: 3 TD in 8 gms</td><td>1 TD (28% of pts); 2025: 7 TD in 11 gms</td><td><span class="win-b">KITTLE</span></td></tr>
+      <tr><td class="who">Value in our scoring</td><td>ESPN ROS 12.80/gm; 2025 baseline 10.6/gm (injury-hit)</td><td>ESPN ROS 12.27/gm; 2025 baseline 14.7/gm</td><td><span class="push">PUSH</span></td></tr>
+      <tr><td class="who">Value over replacement (our lineup)</td><td>+1.6/gm over our FLEX filler (J. Williams 11.16)</td><td>+2.8/gm over our TE fallback (Fannin 9.48)</td><td><span class="win-b">KITTLE</span></td></tr>
+      <tr><td class="who">Schedule ROS (W3–14)</td><td>Avg WR-D rank 16.2 (higher = softer)</td><td>Avg TE-D rank 14.7</td><td><span class="push">PUSH</span></td></tr>
+      <tr><td class="who">Playoff weeks 15–17</td><td>LAC 9 · KC 11 · PHI 5 (tough)</td><td>LAC 6 · KC 7 · PHI 1 (very tough)</td><td><span class="win-a">EVANS</span></td></tr>
+      <tr><td class="who">Teammate / depth risk</td><td>Deebo, CMC, Kittle all compete for a low-volume pass game; Stribling back ~W12–13 (WR4)</td><td>Farrell eats blocking snaps while the count is managed; same target competition</td><td><span class="push">PUSH</span></td></tr>
+      <tr><td class="who">Expert consensus</td><td>FP ROS WR24 (#45 ovr); Boone 36; RSJ 2111</td><td>FP ROS TE9 (#99 ovr); Boone 22; RSJ 1793</td><td><span class="win-a">EVANS</span></td></tr>
+      <tr><td class="who">Strategy / keeper fit</td><td>"WR volume over ceiling" ✓; no keeper value (33)</td><td>"Mid-tier TE is fine" → don't pay for him, but don't sell him for less either; no keeper value</td><td><span class="win-a">EVANS</span></td></tr>
+      <tr><td class="who">This week (vs ARI)</td><td>FP WR15 · FLEX #29 · but Q with a late (4:05 ET) kickoff</td><td>FP TE7 · ARI allowed 2nd-most TE pts in 2025</td><td><span class="push">PUSH</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">Evans wins more rows, but rows aren't weighted equally. Value over replacement in <em>our</em> lineup is the one that decides a trade, and Kittle takes it.</p>
+
+  <h2>1 · Role and volume</h2>
+  <div class="def"><b>Snap share</b> is the percentage of the offense's plays a player is on the field for. It's the ceiling on everything else: you can't get targets on the sideline. <b>Target share</b> is the percentage of the team's pass attempts thrown to him. Around 20% is a WR2/WR1 role; around 15% is solid for a TE. <b>Targets per snap</b> shows how often he's thrown to when he's out there, which is a good read on a player whose snaps are capped.</div>
+  <div class="tscroll"><table>
+    <thead><tr><th>Week</th><th>Game</th><th>SF att</th><th class="a">Evans snaps</th><th class="a">Evans tgt (share)</th><th class="a">Evans line / pts</th><th class="b">Kittle snaps</th><th class="b">Kittle tgt (share)</th><th class="b">Kittle line / pts</th></tr></thead>
+    <tbody>
+      <tr><td class="who">W1</td><td>@ LAR · W 27–7</td><td class="num">34</td><td class="num">49/65 (75%)</td><td class="num">7 (20.6%)</td><td class="num">6-49-1 · 16.9</td><td class="num">30/65 (46%)</td><td class="num">5 (14.7%)</td><td class="num">2-12-0 · 3.2</td></tr>
+      <tr><td class="who">W2</td><td>vs MIA · W 35–13</td><td class="num">22</td><td class="num">28/52 (54%)*</td><td class="num">3 (13.6%)</td><td class="num">3-54-0 · 8.4</td><td class="num">25/52 (48%)</td><td class="num">4 (18.2%)</td><td class="num">4-80-1 · 18.0</td></tr>
+      <tr class="hl"><td class="who">Total</td><td></td><td class="num">56</td><td class="num">77</td><td class="num">10 (17.9%)</td><td class="num">12.65/gm</td><td class="num">55</td><td class="num">9 (16.1%)</td><td class="num">10.6/gm</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">*Evans left W2 with the hip and did not return, so his W2 snap and target numbers are impaired. Read W1 as his healthy role. Targets and lines come from ESPN box scores (summary API). Snaps: W1 from RotoBaller / RotoWire / 49ers Webzone (65 offensive snaps), W2 from 49ers Webzone (PFF, 52 snaps). League points come from <code>data/week_stats.json</code>.</p>
+  <div class="why"><h3>Evans has the bigger role; Kittle has the better per-snap rate and room to grow</h3>
+    <p>Healthy Evans is an every-down outside receiver. He played 75% of snaps in W1 and tied Deebo for the WR target lead. That matches his track record: DraftSharks/PFF put his 2025 target share at 24.4%, with a 30.6% first-read share (how often he's the QB's first option) in seven full games.</p>
+    <p>Kittle is still on a managed count. The ledger's earlier note that his snaps were "lifting" needs a correction: he went from 46% to 48%, which is <strong>flat, not a ramp</strong>. W2 was a 35–13 blowout where Luke Farrell (54%) took the blocking snaps. Kittle's per-snap target rate (0.16) is higher than Evans' (0.13), though. If the count lifts toward his usual ~80%, the same rate would mean about 7 targets a game. RotoBaller notes he was the overall TE2 over Weeks 8–16 last year once fully healthy. <strong>Experts agree</strong> the ramp is coming (NBC, RotoBaller). Nobody has a date.</p>
+    <p><strong>Shared ceiling:</strong> SF threw 34 and 22 passes. In a run-first offense that keeps winning big, CMC, Deebo, Evans and Kittle split a small pie. W3 helps both because Demarcus Robinson is OUT.</p>
+  </div>
+
+  <h2>2 · Efficiency</h2>
+  <div class="grid">
+    <div class="stat"><div class="k">Yards / target</div><div class="v">10.3 · 10.2</div><div class="s">Evans · Kittle. Both are well above the ~8.0 league-average range. Small samples.</div></div>
+    <div class="stat"><div class="k">Catch rate</div><div class="v">90% · 67%</div><div class="s">Evans' 9-of-10 won't hold. His career rate is in the high-50s to low-60s on a deep route tree.</div></div>
+    <div class="stat"><div class="k">YAC share of yards</div><div class="v">19% · 51%</div><div class="s">Kittle's yards came after the catch (a 40-yd catch-and-run in W2). That's typical for him but lumpy.</div></div>
+    <div class="stat"><div class="k">PFF grade (W2)</div><div class="v">80.0 · 90.2</div><div class="s">PFF offensive grade via 49ers Webzone. Evans' 76.8 receiving grade led SF WRs in W1.</div></div>
+  </div>
+  <div class="def" style="margin-top:14px"><b>YAC (yards after catch)</b> is the yardage a receiver gains with the ball in his hands after the catch. It's the least repeatable kind of yardage, so a player whose line leans on it tends to come back down.</div>
+  <div class="why"><h3>Regression read: both come back toward their baselines</h3>
+    <p><strong>Evans:</strong> 90% catch rate and a TD on 7 targets is running hot. Converted to our scoring, his healthy 2024 (74-1,004-11 in 14 games) is ~17.2/gm. His injury-hit 2025 (30-368-3 in 8) is ~10.6/gm. At 33 in a lower-volume offense, ESPN's 12.8 projection sits sensibly between the two. <strong>Kittle:</strong> his W2 was 4 catches on 4 targets with a 40-yarder, which is efficiency that won't repeat, and his W1 was a snap-capped dud. His 2025 (57-628-7 in 11 games) = <strong>14.7/gm in our scoring</strong>. That's the rate to regress <em>up</em> to once the snap count lifts. Not a forecast; label: judgment.</p>
+  </div>
+
+  <h2>3 · What each is worth in our scoring</h2>
+  <div class="tscroll"><table>
+    <thead><tr><th>Range (judgment)</th><th class="a">Evans</th><th class="b">Kittle</th></tr></thead>
+    <tbody>
+      <tr><td class="who">Floor week (~25%)</td><td class="num">≤6 · 2–3 catches, no TD, or an early exit</td><td class="num">≤5 · capped snaps, 2 catches (W1-style)</td></tr>
+      <tr><td class="who">Median week</td><td class="num">~12 · 4-60, TD every ~3 games</td><td class="num">~11 now → ~13 once the count lifts</td></tr>
+      <tr><td class="who">Ceiling week (~20%)</td><td class="num">20+ · 6-90-1</td><td class="num">18+ · 5-80-1 (W2)</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">Ranges are judgment calls built from 2024–26 lines converted to PPR / 0.1 per yd / 6-pt TD, plus current snap share. Both players depend on TDs: 24–28% of their points so far came from one TD each.</p>
+
+  <h3 style="margin-top:22px">Value over replacement: the deciding table</h3>
+  <div class="def"><b>Value over replacement</b> is how many more points a player scores than whoever would play instead of him. In a 10-team league the waiver floor is high, so the replacement that matters is usually on <em>our own bench</em>.</div>
+  <div class="tscroll"><table>
+    <thead><tr><th>Player</th><th>Team (league)</th><th>Pts/gm</th><th>ESPN ROS proj/gm</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr class="hl"><td class="who">Mike Evans</td><td>Imad</td><td class="num">12.65</td><td class="num">12.80</td><td>WR26 of 65 rostered by ROS proj: a flex-level WR in this league</td></tr>
+      <tr class="hl"><td class="who">George Kittle</td><td>Man Wolf</td><td class="num">10.60</td><td class="num">12.27</td><td>TE4 of 22 rostered by ROS proj: a TE1 in a 10-team league</td></tr>
+      <tr><td class="who">Jameson Williams</td><td>Man Wolf</td><td class="num">6.90</td><td class="num">11.16</td><td>Our best FLEX filler (FP ROS WR29)</td></tr>
+      <tr><td class="who">Bhayshul Tuten</td><td>Man Wolf</td><td class="num">12.00</td><td class="num">11.09</td><td>JAX lead back, FLEX</td></tr>
+      <tr><td class="who">Xavier Worthy</td><td>Man Wolf</td><td class="num">9.15</td><td class="num">11.01</td><td>Bench; cut/trade trigger met</td></tr>
+      <tr><td class="who">Harold Fannin Jr.</td><td>Man Wolf</td><td class="num">7.25</td><td class="num">9.48</td><td>Our TE fallback. 20% target share W2, but CLE offense (#30)</td></tr>
+      <tr><td class="who">Juwan Johnson</td><td>Imad (in trade)</td><td class="num">12.50</td><td class="num">9.18</td><td>Wouldn't beat Fannin by ESPN projection</td></tr>
+      <tr><td class="who">Courtland Sutton</td><td>Free agent (86%)</td><td class="num">4.30</td><td class="num">11.14</td><td>Best waiver WR by projection</td></tr>
+      <tr><td class="who">Hunter Henry</td><td>Free agent (51%)</td><td class="num">6.30</td><td class="num">9.51</td><td>Best waiver TE, about equal to Fannin</td></tr>
+    </tbody>
+  </table></div>
+  <div class="why"><h3>Lineup math, once Collins is back (TE + 2 FLEX)</h3>
+    <p><strong>Hold Kittle:</strong> TE Kittle 12.27 + FLEX Williams 11.16 + Tuten 11.09 = <strong>34.52</strong>.<br>
+    <strong>Swap for Evans:</strong> TE Fannin 9.48 + FLEX Evans 12.80 + Williams 11.16 = <strong>33.44</strong> (−1.08/wk).<br>
+    <strong>Actual offer (Evans + Johnson):</strong> still 33.44, because Johnson (9.18) doesn't start over Fannin. Before Collins returns the gap is the same (34.37 vs 33.37).</p>
+    <p>The whole comparison rests on how far Kittle sits above Fannin. ESPN (12.27 vs 9.48), Boone (22 vs 10) and this week's 42-expert FantasyPros ranks (TE7 vs TE13) all put the gap at about 2–3 pts. The <em>one</em> source that doesn't is FantasyPros ROS (5–6 experts), which has Fannin TE10 and Kittle TE9, with Fannin's range wide (TE5–TE17). Under that view the swap wins. I trust the larger panels and the 2025 baselines here. <strong>Judgment call.</strong></p>
+  </div>
+
+  <h2>4 · Combined matchup calendar</h2>
+  <div class="def"><b>How to read this:</b> Both players are 49ers, so the NFL opponent is the same. What differs is how that defense handles WRs vs TEs. The rank is fantasy points allowed per game to the position over all of <strong>2025</strong> (Eat Drink &amp; Sleep Football, final 2025, <strong>half-PPR</strong>). 1 = fewest allowed (toughest), 32 = most allowed (softest). It's too early in 2026 to use this season's numbers, and defenses change between seasons, so treat this as a direction, not a forecast.</div>
+  <div class="tscroll"><table>
+    <thead><tr><th>Wk</th><th>Man Wolf plays</th><th>SF opponent</th><th class="a">vs WR (Evans)</th><th class="b">vs TE (Kittle)</th><th>Better spot</th></tr></thead>
+    <tbody>
+      <tr><td class="num">3</td><td>🥊ALI🥊</td><td>vs ARI (SF −8.5, O/U 47.5)</td><td class="num">15</td><td class="num"><span class="chip up">31</span></td><td><span class="win-b">KITTLE</span></td></tr>
+      <tr><td class="num">4</td><td>Redemption team</td><td>vs DEN</td><td class="num"><span class="chip down">2</span></td><td class="num">17</td><td><span class="win-b">KITTLE</span></td></tr>
+      <tr><td class="num">5</td><td>Imad</td><td>@ SEA</td><td class="num"><span class="chip down">6</span></td><td class="num">19</td><td><span class="win-b">KITTLE</span></td></tr>
+      <tr><td class="num">6</td><td>Playoff Chase</td><td>vs WSH (Tue)</td><td class="num">26</td><td class="num"><span class="chip up">30</span></td><td><span class="push">BOTH</span></td></tr>
+      <tr><td class="num">7</td><td>Get Hooked</td><td>@ ATL</td><td class="num">23</td><td class="num"><span class="chip down">3</span></td><td><span class="win-a">EVANS</span></td></tr>
+      <tr class="hl"><td class="num">8</td><td>—</td><td colspan="3"><strong>SF BYE</strong>, and NO's too: Olave and Kamara are also off (Juwan Johnson too, if acquired)</td><td><span class="push">SAME</span></td></tr>
+      <tr><td class="num">9</td><td>Bower Outage</td><td>vs LV</td><td class="num">22</td><td class="num"><span class="chip down">4</span></td><td><span class="win-a">EVANS</span></td></tr>
+      <tr><td class="num">10</td><td>Texas Two Step</td><td>@ DAL</td><td class="num"><span class="chip up">32</span></td><td class="num">14</td><td><span class="win-a">EVANS</span></td></tr>
+      <tr><td class="num">11</td><td>Steel Giants</td><td>vs MIN (Mon)</td><td class="num"><span class="chip down">1</span></td><td class="num">8</td><td><span class="win-b">KITTLE</span></td></tr>
+      <tr><td class="num">12</td><td>🥊ALI🥊</td><td>vs SEA</td><td class="num"><span class="chip down">6</span></td><td class="num">19</td><td><span class="win-b">KITTLE</span></td></tr>
+      <tr><td class="num">13</td><td>Redemption team</td><td>@ NYG</td><td class="num">24</td><td class="num"><span class="chip down">5</span></td><td><span class="win-a">EVANS</span></td></tr>
+      <tr><td class="num">14</td><td>Imad</td><td>vs LAR</td><td class="num">21</td><td class="num">12</td><td><span class="win-a">EVANS</span></td></tr>
+      <tr class="hl"><td class="num">15</td><td>Playoffs, round 1</td><td>@ LAC (Fri)</td><td class="num">9</td><td class="num"><span class="chip down">6</span></td><td><span class="push">BOTH TOUGH</span></td></tr>
+      <tr class="hl"><td class="num">16</td><td>Playoffs, semis</td><td>@ KC</td><td class="num">11</td><td class="num">7</td><td><span class="win-a">EVANS</span></td></tr>
+      <tr class="hl"><td class="num">17</td><td>Playoffs, final</td><td>vs PHI</td><td class="num">5</td><td class="num"><span class="chip down">1</span></td><td><span class="win-a">EVANS</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="why"><h3>What the calendar means</h3>
+    <p><strong>Front-loaded for Kittle, back-loaded for Evans.</strong> Kittle's soft spots come early (ARI W3, WSH W6), while he's still snap-capped, which is bad timing. Evans gets DAL (32nd vs WR) in W10 and a softer run from W13–14. The fantasy playoffs are tough for both. Evans' is slightly less bad (avg WR rank 8.3 vs TE rank 4.7), and PHI in the W17 final was the stingiest defense in the league against TEs. The bye is identical, so the W8 cluster (Olave, Kamara, the SF player) is the same either way. Over the whole season the calendar is close to a wash (W3–14 avg 16.2 vs 14.7).</p>
+  </div>
+
+  <h2>5 · Upside and risk</h2>
+  <div class="cols">
+    <div class="card" style="border-top-color:var(--a)"><h3>Evans: upside</h3><ul>
+      <li>Every-down outside role (75% snaps healthy), with 24.4% target share and a 30.6% first-read share in his 2025 full games.</li>
+      <li>Red-zone size, with 11 TDs as recently as 2024. Robinson OUT and Stribling (IR) not back until ~W12–13.</li>
+      <li>Softer back half (DAL W10, NYG W13, LAR W14).</li>
+    </ul></div>
+    <div class="card risk"><h3>Evans: risk</h3><ul>
+      <li>Age 33, Q with a hip that Shanahan says must be "managed". Missed 12 games across 2024–25. DraftSharks' injury model rates him "High Risk".</li>
+      <li>Only 3 targets in W2 before he got hurt. In a 22–34 attempt offense, weekly volume swings.</li>
+      <li>Catch rate (90%) will come down.</li>
+    </ul></div>
+    <div class="card" style="border-top-color:var(--b)"><h3>Kittle: upside</h3><ul>
+      <li>Overall TE2 across W8–16 of 2025. His 2025 rate is 14.7/gm in our scoring.</li>
+      <li>0.16 targets/snap while capped. If the count lifts, the volume follows.</li>
+      <li>Should peak late, just as the playoffs arrive (though the W15–17 matchups are harsh).</li>
+    </ul></div>
+    <div class="card risk"><h3>Kittle: risk</h3><ul>
+      <li>9 months off an Achilles tear. Snap share has been <strong>flat</strong> at 46–48%, with no ramp confirmed yet.</li>
+      <li>Blowouts shrink his role, and Farrell takes the snaps.</li>
+      <li>Missed games in 2025 too (11 played). TD-dependent.</li>
+    </ul></div>
+  </div>
+
+  <h2>6 · Fit with The Man Wolf and our strategy</h2>
+  <div class="why"><p><strong>Strategy check:</strong> <code>strategy.md</code> says "WR: volume over ceiling," "TE: mid-tier is fine unless a true elite (top-3) TE can be had cheaply," and "win-now." Kittle isn't elite by consensus (TE6–TE9), so strategy wouldn't <em>pay</em> for him. But it doesn't say to sell a TE1 for a smaller lineup total either. Win-now means weekly starting points come first.</p>
+    <ul style="color:var(--ink-2);font-size:15px">
+      <li><strong>Where each plays:</strong> Kittle is effectively our TE1, with Fannin as the fallback. Evans would be a FLEX. Neither changes our NFL concentration, since we'd still hold exactly one 49ers pass-catcher.</li>
+      <li><strong>WR depth argument for Evans:</strong> Collins (hamstring; ESPN now lists him Q for W3, not OUT, so confirm in <code>/weekly-lineup</code>) and Pittman (foot, IR) are both banged up. Evans would be insurance at WR. If Collins returns on schedule, that argument weakens.</li>
+      <li><strong>Roster cost:</strong> a 1-for-1 swap costs nothing. The actual 2-for-1 offer needs a cut (cut order from the ledger: Allgeier → Harvey → Worthy → Pittman).</li>
+      <li><strong>League angle:</strong> Imad (1-1, 5th) is our W5 and W14 opponent. Sending Kittle strengthens his TE slot (Kraft today) for both of those games.</li>
+      <li><strong>Keeper:</strong> neither has keeper value (Evans 33, Kittle 33 in Oct). The tiebreaker doesn't apply.</li>
+    </ul></div>
+
+  <h2>7 · Expert consensus vs our read</h2>
+  <div class="tscroll"><table>
+    <thead><tr><th>Source</th><th class="a">Evans</th><th class="b">Kittle</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td class="who">FantasyPros ROS ECR (PPR, 9/24)</td><td class="num">WR24 · #45 ovr (WR19–28)</td><td class="num">TE9 · #99 ovr (TE4–11)</td><td>5–6 experts. Fannin is TE10 (#98 ovr), essentially level with Kittle.</td></tr>
+      <tr><td class="who">Yahoo · Boone trade value (PPR, W3)</td><td class="num">36 (WR22)</td><td class="num">22 (TE6)</td><td>Fannin 10 (TE13), J. Johnson 11 (TE11)</td></tr>
+      <tr><td class="who">Roto Street Journal trade value (half-PPR, W3)</td><td class="num">2111 (WR19)</td><td class="num">1793 (TE5)</td><td>From the 09-25 trade evaluation</td></tr>
+      <tr><td class="who">ESPN ROS projection (league data)</td><td class="num">12.80/gm</td><td class="num">12.27/gm</td><td>Near equal. Fannin 9.48.</td></tr>
+      <tr><td class="who">FantasyPros W3 weekly (PPR, 42–43 experts)</td><td class="num">WR15 · FLEX #29</td><td class="num">TE7 · FLEX #56</td><td>Fannin TE13 · FLEX #83</td></tr>
+      <tr><td class="who">PFF (via 49ers Webzone)</td><td class="num">W1 76.8 recv · W2 80.0</td><td class="num">W2 90.2</td><td>Kittle graded highest in W2</td></tr>
+      <tr><td class="who">Analyst notes</td><td>Rapoport: hip "not major". DraftSharks: high injury risk, first-read role</td><td>RotoBaller: TE2 when healthy in 2025, "must-start". NBC: snap count managed</td><td></td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>Agreement:</strong> tight on Evans (WR19–24 everywhere). Wider on Kittle (TE5–TE9 by position, but every source ranks him below Evans by value). <strong>Our read:</strong> <span class="agree">AGREE</span> that Evans is the more valuable player in general. <span class="diverge">DIVERGE ↑ on Kittle for The Man Wolf specifically</span>: the consensus values each player against a generic replacement. Ours is Fannin at TE and ~11-pt flex options, and against those Kittle's edge is bigger. Judgment call. It flips if you believe FantasyPros ROS's view that Fannin ≈ Kittle.</p>
+
+  <h2>Why Kittle wins, and what would flip it</h2>
+  <div class="why">
+    <p><strong>Why:</strong> Same offense, same bye, similar volume, a near-equal calendar, and near-equal ESPN projections. The tiebreaker is our roster. Kittle keeps Fannin out of the starting lineup, and Evans only replaces a ~11-pt FLEX. Kittle also has a clean injury report today, while Evans is Q at 33.</p>
+    <p><strong>Flip to Evans if any of these happen:</strong> (1) Kittle's snap share stays under ~55% through W5 (the ramp isn't coming). (2) Fannin holds a 20%+ target share for another 2 weeks, which would close the TE gap. (3) Collins or Pittman suffers a setback that leaves us short at WR. (4) Evans plays through the hip in W3 at 75%+ snaps. Any two of these and Evans becomes the better piece for us.</p>
+    <p><strong>For the pending trade:</strong> this report doesn't reject it. With Johnson included, the deal trades about 1 pt/week of starting lineup for depth at WR and TE and a big market-value surplus. It's a closer call than "ACCEPT" suggested. If you want the weekly points, hold Kittle; if you'd rather have insurance for Collins' hamstring and Pittman's foot, take it.</p>
+  </div>
+
+  <h2>This week</h2>
+  <div class="week"><strong>W3 vs ARI</strong> (Sun 4:05 ET, Levi's) · SF −8.5, O/U 47.5 · Man Wolf vs 🥊ALI🥊.<br>
+  <strong>Kittle</strong> <span class="tag">ACTIVE</span> · FP TE7 · ARI allowed the 2nd-most TE points in 2025 · lean <strong>START</strong> (confirm in <code>/weekly-lineup</code>).<br>
+  <strong>Evans</strong> <span class="tag q">Q · hip</span> (DNP, DNP, limited) · FP WR15 · Robinson OUT means more WR snaps · lean start <em>if active</em>. SF's inactives post ~2:35 CT, after the early games lock. He's Imad's decision, not ours.</div>
+
+  <h2>Sources</h2>
+  <ul class="sources">
+    <li><a href="https://www.49erswebzone.com/articles/203605-cardinals-injury-report-questionable-romello/">49ers Webzone: final W3 injury report (Evans Q, Robinson OUT)</a></li>
+    <li><a href="https://www.49erswebzone.com/articles/203604-49ers-participating-friday-practice-cardinals/">49ers Webzone: Evans practices Friday</a></li>
+    <li><a href="https://sports.yahoo.com/articles/49ers-news-mike-evans-track-163412804.html">Yahoo: Evans on track for W3? (Rapoport)</a></li>
+    <li><a href="https://www.cbssports.com/fantasy/football/news/49ers-mike-evans-another-dnp-on-thursday/">CBS: Evans DNP Thursday</a></li>
+    <li><a href="https://www.nbcsports.com/fantasy/football/player-news/2026-09-18/george-kittle-achilles-upgrades-to-fp-will-play">NBC: Kittle (Achilles) full practice, will play</a></li>
+    <li><a href="https://www.rotoballer.com/player-news/george-kittle-rising-to-top-tier-te1-range-after-recovery/1933304">RotoBaller: Kittle W1 snaps, TE2 over W8–16 2025</a></li>
+    <li><a href="https://www.rotowire.com/football/article/nfl-box-score-breakdown-rams-49ers-recap-usage-stats-133612">RotoWire: SF–LAR W1 usage breakdown</a></li>
+    <li><a href="https://sports.yahoo.com/articles/49ers-offensive-pff-grades-vs-005346492.html">Yahoo: 49ers W1 PFF grades and snap counts</a></li>
+    <li><a href="https://www.49erswebzone.com/articles/203474-49ers-dolphins-grades-worst-counts/">49ers Webzone: W2 PFF grades and snap counts</a></li>
+    <li><a href="https://www.draftsharks.com/fantasy/points-outlook/mike-evans/6938">DraftSharks: Evans target / first-read share, injury risk</a></li>
+    <li><a href="https://www.fantasypros.com/nfl/rankings/ros-ppr-wr.php">FantasyPros: ROS PPR WR / TE / overall ECR</a></li>
+    <li><a href="https://www.fantasypros.com/nfl/rankings/ppr-te.php">FantasyPros: W3 PPR WR / TE / FLEX ECR</a></li>
+    <li><a href="https://sports.yahoo.com/fantasy/article/2026-trade-value-charts--justin-boones-fantasy-football-wide-receiver-breakdown-for-week-3-142746855.html">Yahoo: Boone WR trade values W3</a></li>
+    <li><a href="https://sports.yahoo.com/fantasy/article/2026-trade-value-charts--justin-boones-fantasy-football-tight-end-breakdown-for-week-3-142713660.html">Yahoo: Boone TE trade values W3</a></li>
+    <li><a href="https://www.fanduel.com/research/49ers-vs-cardinals-predictions-odds-picks-best-bets-for-nfl-week-3-2026">FanDuel Research: ARI @ SF odds</a></li>
+    <li><a href="https://eatdrinkandsleepfootball.com/fantasy/points-allowed/wr-half-ppr.html">EDSFootball: 2025 WR points allowed</a> · <a href="https://eatdrinkandsleepfootball.com/fantasy/points-allowed/te-half-ppr.html">TE points allowed</a></li>
+    <li><a href="https://www.statmuse.com/nfl/ask/george-kittle-2025-season-stats">StatMuse: Kittle 2025 (57-628-7, 11 gms)</a></li>
+    <li><a href="https://www.buccaneers.com/news/compilation-mike-evans-career-stats-and-accolades-bucs">Buccaneers.com: Evans career stats (2024, 2025)</a></li>
+    <li>ESPN scoreboard/summary API: SF 2026 schedule, W1–W2 box scores (scratchpad only)</li>
+    <li>League data: <code>data/teams.json</code>, <code>week_stats.json</code>, <code>free_agents.json</code>, <code>draft_results.json</code> (synced 2026-09-25 16:36); RSJ values and Stribling timeline from <code>reports/history.md</code></li>
+  </ul>
+
+  <div class="foot">Fantasy Professor · player-eval (compare) · generated 2026-09-25 · W1–W2 complete; W3 not yet played for SF (Sun 4:05 ET)</div>
+</main>
+</body>
+</html>

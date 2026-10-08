@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Michael Pittman Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#E9EAEC; --card:#FFFFFF; --ink:#15181D; --ink-2:#3A4049; --muted:#6B727D;
+  --rule:#C7CAD0; --rule-hard:#15181D; --navy:#173A5C; --navy-soft:#E2E8EF;
+  --up:#0E7A5F; --up-soft:#DCEDE7; --down:#B23A33; --down-soft:#F3E0DE;
+  --flag:#B87814; --flag-soft:#F6E9D2; --chip:#DFE1E5;
+  --a:#2F5E9E; --a-soft:#E0E8F4; --b:#8A4FA0; --b-soft:#EEE3F2;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+    --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+    --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+    --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+    --a:#8DB6EC; --a-soft:#18243A; --b:#CFA0E0; --b-soft:#2A1C31;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+  --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+  --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+  --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+  --a:#8DB6EC; --a-soft:#18243A; --b:#CFA0E0; --b-soft:#2A1C31;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:"Barlow","Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.5;margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px 56px}
+a{color:var(--navy)}
+.mast{background:#0B0D11;color:#E9EBEF;padding:26px 16px 22px;border-bottom:4px solid var(--flag)}
+.mast-inner{max-width:928px;margin:0 auto;display:flex;flex-wrap:wrap;gap:14px 28px;align-items:flex-end;justify-content:space-between}
+.mast h1{font-family:"Oswald",Impact,sans-serif;font-weight:700;font-size:clamp(32px,6.6vw,52px);line-height:.94;margin:0;text-transform:uppercase}
+.mast h1 em{font-style:normal;color:var(--flag);display:block;font-size:.55em;margin-top:6px}
+.mast-meta{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:#9AA3B0;line-height:1.9}
+h2{font-family:"Oswald",sans-serif;font-weight:600;font-size:22px;letter-spacing:.02em;text-transform:uppercase;margin:40px 0 14px;padding-bottom:6px;border-bottom:2px solid var(--rule-hard)}
+h3{font-family:"Oswald",sans-serif;font-weight:500;font-size:19px;margin:0 0 6px}
+p{margin:0 0 12px;color:var(--ink-2)}
+strong{color:var(--ink)}
+/* KPI grid */
+.grid{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+@media(min-width:760px){.grid{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px 16px}
+.stat .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.stat .v{font-family:"Oswald",sans-serif;font-size:28px;font-weight:600;line-height:1.1;margin:4px 0}
+.stat .s{font-size:13px;color:var(--muted);line-height:1.35}
+/* frames, status, definitions */
+.frame{margin-top:26px;background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:18px 22px}
+.frame p{font-size:15px;margin-bottom:6px}
+.frame ul{margin:6px 0 0;padding-left:20px;color:var(--ink-2);font-size:15px}
+.status{background:var(--navy-soft);border-radius:8px;padding:14px 18px;margin-top:14px;font-size:15px}
+.status b{color:var(--navy)}
+.why{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:20px 22px;margin-bottom:14px}
+.why p:last-child{margin-bottom:0}
+.def{border-left:3px solid var(--flag);background:var(--flag-soft);padding:8px 14px;border-radius:0 6px 6px 0;font-size:14.5px;margin:10px 0 14px}
+.def b{color:var(--flag)}
+.small{font-size:13px;color:var(--muted)}
+/* chips / tags */
+.chip{font-family:"IBM Plex Mono",monospace;font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--chip);color:var(--ink-2);white-space:nowrap}
+.chip.up{background:var(--up-soft);color:var(--up)}
+.chip.down{background:var(--down-soft);color:var(--down)}
+.chip.flag{background:var(--flag-soft);color:var(--flag)}
+/* status tags: ACTIVE / Q / D / O / IR / SUSP / UNCONFIRMED */
+.tag{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.06em;padding:2px 7px;border-radius:4px;background:var(--up-soft);color:var(--up);white-space:nowrap}
+.tag.q{background:var(--flag-soft);color:var(--flag)}
+.tag.o{background:var(--down-soft);color:var(--down)}
+/* consensus verdict tags */
+.agree{color:var(--up);font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600}
+.diverge{color:var(--flag);font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600}
+/* tables */
+.tscroll{overflow-x:auto;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--rule);border-radius:8px;overflow:hidden;font-size:14.5px}
+th{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;text-align:left;color:var(--muted);padding:9px 12px;border-bottom:2px solid var(--rule-hard);background:var(--navy-soft)}
+td{padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+td.num{font-family:"IBM Plex Mono",monospace;white-space:nowrap}
+td.who{color:var(--ink);font-weight:600;white-space:nowrap}
+tr.hl td{background:var(--flag-soft)}
+/* upside / risk */
+.cols{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:720px){.cols{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:16px 20px;border-top:5px solid var(--up)}
+.card.risk{border-top-color:var(--down)}
+.card ul{margin:0;padding-left:18px;font-size:15px;color:var(--ink-2)}
+.card li{margin-bottom:8px}
+/* scoring ranges */
+.range{display:grid;gap:10px;grid-template-columns:1fr}
+@media(min-width:720px){.range{grid-template-columns:repeat(3,1fr)}}
+.range .stat .v{font-size:32px}
+/* this-week note */
+.week{background:var(--card);border:1px solid var(--rule);border-left:6px solid var(--navy);border-radius:8px;padding:14px 18px;font-size:15px}
+/* ===== COMPARE MODE ===== */
+.verdict{margin-top:26px;background:var(--card);border:1px solid var(--rule);border-left:8px solid var(--up);border-radius:8px;padding:18px 22px}
+.verdict .lbl{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.verdict .call{font-family:"Oswald",sans-serif;font-size:30px;font-weight:600;line-height:1.1;margin:4px 0 8px}
+.pcards{display:grid;gap:14px;grid-template-columns:1fr;margin-top:18px}
+@media(min-width:680px){.pcards{grid-template-columns:1fr 1fr}}
+.pcard{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:16px 20px;border-top:5px solid var(--a)}
+.pcard.b{border-top-color:var(--b)}
+.pcard .name{font-family:"Oswald",sans-serif;font-size:26px;font-weight:600;line-height:1.05;margin:0 0 4px}
+.pcard .meta{font-size:14px;color:var(--muted);margin-bottom:8px}
+th.a,td.a{border-top:3px solid var(--a)} th.b,td.b{border-top:3px solid var(--b)}
+th.a{color:var(--a)} th.b{color:var(--b)}
+.win-a,.win-b,.push{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.05em;white-space:nowrap;padding:2px 8px;border-radius:4px}
+.win-a{background:var(--a-soft);color:var(--a)}
+.win-b{background:var(--b-soft);color:var(--b)}
+.push{background:var(--chip);color:var(--muted)}
+/* multi mode divider */
+.player-head{margin-top:48px;padding:14px 18px;background:#0B0D11;color:#E9EBEF;border-radius:8px;border-left:6px solid var(--flag);font-family:"Oswald",sans-serif;font-size:26px;text-transform:uppercase}
+.sources{font-size:13.5px;color:var(--muted);columns:1}
+@media(min-width:680px){.sources{columns:2}}
+.sources li{margin-bottom:4px;break-inside:avoid}
+.foot{margin-top:40px;padding-top:14px;border-top:1px solid var(--rule);font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);letter-spacing:.04em}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-inner">
+    <h1>Michael Pittman Jr.<em>WR · Pittsburgh Steelers · Player Report</em></h1>
+    <div class="mast-meta">
+      The Man Wolf · D League (394766)<br>
+      Fri 2026-09-25 · ESPN sync 23:03 · Week 3 pre-kickoff (PIT plays Sun)<br>
+      Rostered by The Man Wolf (IR slot) · drafted R10, #92
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="grid" style="margin-top:26px">
+    <div class="stat"><div class="k">League points / game</div><div class="v">8.8</div><div class="s">One game played (W1, bench). ESPN ROS projection 11.89/gm = WR29 of 65 WRs rostered in D League.</div></div>
+    <div class="stat"><div class="k">Route participation · W1</div><div class="v">~91%</div><div class="s">~42 routes on ~46 dropbacks; 88% of snaps (59/67). A full-time role when healthy.</div></div>
+    <div class="stat"><div class="k">Target share · W1</div><div class="v">8.1%</div><div class="s">3 of 37 PIT targets. His 2025 share in IND was 21%. That gap is the whole question.</div></div>
+    <div class="stat"><div class="k">Consensus ROS</div><div class="v">WR55</div><div class="s">FantasyPros ECR (range WR41–64). Yahoo/Boone: WR42, value 14. W3 weekly: WR102 (injury-discounted).</div></div>
+  </section>
+
+  <section class="frame">
+    <h3>The short version</h3>
+    <p><strong>WR4/5 depth: a bye-week flex, not a starter.</strong> Pittman is the Steelers' clear WR2 behind DK Metcalf and plays nearly every snap when healthy. But the rest of his situation caps him: Pittsburgh's offense has been one of the league's worst through two weeks (264 and 235 total yards, 23 points combined), Aaron Rodgers is averaging 5.1 yards per attempt, and in his one game Pittman drew only 3 targets. His ROS schedule is also rough: 7 of his 11 remaining regular-season games come against 2025 top-10 WR defenses. His 2025 profile (21% target share, 1.90 YPRR) says the 3-target game is too low to be his true level. The offense and schedule say he won't get far above ~10 points a week either.</p>
+    <p><strong>For The Man Wolf:</strong> he sits behind Olave, Collins (back ~W4) and Jameson Williams, roughly level with Worthy. His real job is cover in <strong>W5</strong> (Worthy's bye, vs IND, the 2nd-softest WR defense in 2025) and <strong>W8</strong> (Olave, Collins, Kittle and Kamara all on bye). Hold him, but he's the 3rd/4th name on the cut list, not untouchable. A healthy Courtland Sutton is sitting on our waiver wire and consensus ranks him higher.</p>
+    <div class="status"><b>Status (checked live 2026-09-25):</b> <span class="tag q">Q</span> foot. Missed W2 (limited Wed, DNP Thu/Fri, ruled out). W3 practice: <strong>limited Wed/Thu/Fri</strong> (Fri was a walkthrough). Questionable vs CIN; NBC/Rotoworld calls him "on the optimistic side of questionable." McCarthy says this is a <strong>different injury</strong> from the one that cost him much of camp starting Aug 8, so that's two separate injuries in seven weeks. No legal or suspension issues. Job security is solid: acquired from IND in March and immediately signed to a 3-yr/$59M extension. Age 28 (29 on Oct 5).
+    <br><br><b>Roster mechanics:</b> ESPN currently lists him <strong>QUESTIONABLE while in an IR slot</strong>. ESPN treats Q players as IR-ineligible, which can mark the roster illegal and <strong>block adds, drops and trade processing</strong> (including the pending Kittle trade) until he moves to the bench. Moving him out of IR needs a bench spot, which means a cut (see §6).</div>
+  </section>
+
+  <h2>1 · Role and volume</h2>
+  <div class="def"><b>Snap %</b> is the share of the offense's plays he's on the field for. <b>Route participation</b> is the share of pass plays he actually runs a route on. It's the better role measure, since blocking snaps don't score. 85%+ is a full-time starter. <b>Target share</b> is his share of the team's pass targets: 20%+ is a No. 1/strong No. 2 receiver, 15–20% a solid starter, under 12% a part-timer.</div>
+  <div class="tscroll"><table>
+    <thead><tr><th>Week</th><th>Opp</th><th>Snaps</th><th>Routes</th><th>Tgt</th><th>Team share</th><th>Line</th><th>League pts</th></tr></thead>
+    <tbody>
+      <tr><td class="who">W1</td><td>vs ATL (W 20–13)</td><td class="num">59 (88%)</td><td class="num">~42 (~91%)</td><td class="num">3</td><td class="num">8.1% (3/37)</td><td class="num">3-58-0</td><td class="num">8.8</td></tr>
+      <tr><td class="who">W2</td><td>@ NE (L 3–20)</td><td colspan="5"><span class="tag o">OUT</span> foot. Germie Bernard (rookie R2) 8 tgt, Roman Wilson 6, Metcalf 9.</td><td class="num">—</td></tr>
+      <tr class="hl"><td class="who">2025 (IND)</td><td>17 games</td><td class="num">—</td><td class="num">—</td><td class="num">111</td><td class="num">21%</td><td class="num">80-784-7</td><td class="num">11.8/gm</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">Snaps: Yahoo/SI snap counts. Routes: approximate, from the ~91% route rate logged in our 09-25 ledger entry; SI cites 92.9%, so sources differ slightly. Targets/lines: ESPN box scores. 2025 target share: FantasyPros (Derek Brown).</p>
+
+  <div class="tscroll"><table>
+    <thead><tr><th>PIT pass-catcher</th><th>W1 tgt</th><th>W2 tgt</th><th>Share (74 tgt)</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td class="who">DK Metcalf</td><td class="num">10</td><td class="num">9</td><td class="num">25.7%</td><td>Clear No. 1; only 8 catches (Get Hooked rosters him)</td></tr>
+      <tr class="hl"><td class="who">Michael Pittman Jr.</td><td class="num">3</td><td class="num">—</td><td class="num">8.1% (W1)</td><td>No. 2 outside WR by snaps</td></tr>
+      <tr><td class="who">Jaylen Warren (RB)</td><td class="num">6</td><td class="num">4</td><td class="num">13.5%</td><td>Q (shoulder) W3</td></tr>
+      <tr><td class="who">Roman Wilson</td><td class="num">6</td><td class="num">6</td><td class="num">16.2%</td><td>Slot; 55% snaps W1</td></tr>
+      <tr><td class="who">Pat Freiermuth (TE)</td><td class="num">5</td><td class="num">5</td><td class="num">13.5%</td><td>1 TD</td></tr>
+      <tr><td class="who">Germie Bernard</td><td class="num">0</td><td class="num">8</td><td class="num">10.8%</td><td>Only plays when Pittman sits; drop led to an INT in W2 (NBC)</td></tr>
+      <tr><td class="who">Rico Dowdle (RB)</td><td class="num">5</td><td class="num">2</td><td class="num">9.5%</td><td>OUT W3 (toe)</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="why"><h3>Locked-in role, thin target volume</h3>
+  <p>The role isn't in question. He played 88% of snaps and ran a route on nearly every dropback in W1, and when he sat, a rookie (Bernard) took his snaps rather than someone overtaking him. The teammates due back or arriving don't threaten him either. Wilson and Bernard compete for the <em>slot</em>, while Pittman and Metcalf play outside.</p>
+  <p>The issue is <strong>what the role produces</strong>. Pittsburgh throws ~37 targets a game, and Metcalf takes a quarter of them. Three targets in W1 is probably a floor, not the norm: it's one game, and he'd been limited by a separate injury through camp. But even a 17–18% share, a realistic number next to Metcalf, is ~6.5 targets a game in an offense averaging 4.7–5.5 yards per pass. Experts agree on the role. The Yahoo Outlook says he'd "reclaim a significant role from Bernard" and calls him a flex. No one frames him as a weekly starter.</p>
+  <p><strong>Watch next:</strong> his target share in his first two healthy games. ≥15% supports the ESPN projection; under 12% again means the W1 number wasn't noise.</p></div>
+
+  <h2>2 · Efficiency</h2>
+  <div class="def"><b>YPRR</b> (yards per route run) is receiving yards divided by routes run, the best single measure of how productive a receiver is per chance. 2.0+ is very good, ~1.5 average, under 1.2 poor. <b>TPRR</b> (targets per route run) is how often he's thrown to when he runs a route; ~20% is typical for a starting WR. <b>First-read share</b> is how often he's the QB's first option on a play. <b>YAC</b> is yards after the catch.</div>
+  <div class="grid">
+    <div class="stat"><div class="k">YPRR · W1</div><div class="v">1.38</div><div class="s">58 yds / ~42 routes. 2025: 1.90 (33rd of 117 qualifiers).</div></div>
+    <div class="stat"><div class="k">TPRR · W1</div><div class="v">~7%</div><div class="s">3 / ~42. Far below his norm; 2025 target share was 21%.</div></div>
+    <div class="stat"><div class="k">Yards / target · W1</div><div class="v">19.3</div><div class="s">3-for-3, long of 28. Unsustainable on 3 looks.</div></div>
+    <div class="stat"><div class="k">YAC share · W1</div><div class="v">43%</div><div class="s">25 of 58 yds after the catch; 2025 was a career-low 3.4 YAC per catch.</div></div>
+  </div>
+  <div class="why" style="margin-top:14px"><h3>Both W1 numbers will regress, in opposite directions</h3>
+  <p>His W1 <strong>target rate</strong> (~7%) should rise toward his baseline: a 21% target share and 24.5% first-read share in 2025 (FantasyPros). His W1 <strong>per-target efficiency</strong> (19.3 yds/target, 43% of yards after the catch) should fall. He's a possession receiver: career-best 72.1% catch rate in 2025 but only 9.8 yards per catch and 3.4 YAC per catch. Put those together and you get roughly <strong>5 catches for 50–55 yards</strong> on a normal day. That's his 2025 shape, minus the offensive quality.</p>
+  <p>The FantasyPros 2026 outlook is a warning on the quarterback link: Pittman was the WR9 in fantasy points per game through W10 of 2025 with a functioning QB, then topped 40 yards once after Daniel Jones got hurt. Rodgers at 4.7–5.5 yards per attempt is closer to the second half of 2025 than the first.</p></div>
+
+  <h2>3 · What it's worth in our scoring</h2>
+  <p>Our league is full PPR at 0.1/yd with 6-pt receiving TDs, which suits a catch-volume receiver like Pittman. His league-scoring baselines: <strong>15.5/gm (2023</strong>, 109-1,152-4), <strong>10.4 (2024</strong>, 69-808-3), <strong>11.8 (2025</strong>, 80-784-7). In 2025, <strong>21% of his points came from TDs</strong> (7 TDs, a career high). That's the regression-prone part, and it was earned in a better offense than this one.</p>
+  <div class="range">
+    <div class="stat" style="border-top:5px solid var(--down)"><div class="k">Floor week (~30%)</div><div class="v">≤ 6</div><div class="s">2–3 catches, 25–30 yds, Metcalf and the backs eat the volume. W1-style, without the long catches.</div></div>
+    <div class="stat" style="border-top:5px solid var(--navy)"><div class="k">Median week (~50%)</div><div class="v">8–11</div><div class="s">5 catches, 45–55 yds, no TD. His 2025 shape in a worse offense.</div></div>
+    <div class="stat" style="border-top:5px solid var(--up)"><div class="k">Ceiling week (~20%)</div><div class="v">17–22</div><div class="s">7 catches, 80 yds, a TD. Most plausible vs soft defenses: W5 IND, W15 BAL, W17 TEN.</div></div>
+  </div>
+  <p class="small" style="margin-top:8px">Ranges are judgment calls built from his 2023–25 baselines, W1 usage, PIT's ~37 targets/game, and league scoring. They are not model output.</p>
+
+  <div class="tscroll"><table>
+    <thead><tr><th>Player</th><th>Team (league)</th><th>Pts/gm</th><th>ESPN ROS proj/gm</th><th>FP ROS</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr class="hl"><td class="who">Michael Pittman Jr. <span class="tag q">Q</span></td><td>Man Wolf (IR)</td><td class="num">8.8 (1 gm)</td><td class="num">11.89</td><td class="num">WR55</td><td>WR29 of 65 rostered by ESPN proj</td></tr>
+      <tr><td class="who">Jameson Williams <span class="tag">ACTIVE</span></td><td>Man Wolf (WR)</td><td class="num">6.90</td><td class="num">11.16</td><td class="num">WR28</td><td>Current WR2 starter</td></tr>
+      <tr><td class="who">Xavier Worthy <span class="tag">ACTIVE</span></td><td>Man Wolf (BE)</td><td class="num">9.15</td><td class="num">11.01</td><td class="num">WR53</td><td>Direct peer; age 23 (keeper tiebreaker)</td></tr>
+      <tr><td class="who">Malik Washington <span class="tag">ACTIVE</span></td><td>Man Wolf (BE)</td><td class="num">7.50</td><td class="num">9.73</td><td class="num">WR68</td><td>Below Pittman</td></tr>
+      <tr><td class="who">Courtland Sutton <span class="tag">ACTIVE</span></td><td>Free agent (85.8% nat'l)</td><td class="num">4.30</td><td class="num">11.14</td><td class="num">WR40</td><td>Best FA WR. Healthy (Payton), but Waddle has cut his volume; dropped twice in this league</td></tr>
+      <tr><td class="who">Keenan Allen <span class="tag">ACTIVE</span></td><td>Free agent (23.6%)</td><td class="num">5.35</td><td class="num">9.01</td><td class="num">—</td><td>Next FA tier</td></tr>
+    </tbody>
+  </table></div>
+  <div class="why"><h3>Value over replacement: small</h3><p>ESPN has Pittman <strong>0.75 pts/gm</strong> above the best free-agent WR (Sutton); FantasyPros actually ranks Sutton 15 spots higher. In a 10-team league the waiver floor is high, and Pittman's edge over it is somewhere between −1 and +1 point a week. His value to us is <strong>availability on the right weeks</strong> (§6), not a projection gap. Waiver note if it comes to that: rolling priority, and we're <strong>#2</strong>. Sutton is listed as a free agent, so check whether he's still on waivers before spending it.</p></div>
+
+  <h2>4 · Matchups, week by week</h2>
+  <div class="def"><b>How to read this:</b> each defense's rank in <strong>2025 full-PPR fantasy points allowed to WRs</strong> per game (EDSFootball), where <strong>1 = fewest allowed (toughest)</strong> and 32 = most (softest). It's early (W3), so this is last season's data. Rosters and coordinators have changed, so treat it as a rough guide and blend in 2026 data from about W5. Chips: ranks 1–10 tough, 11–22 neutral, 23–32 good.</div>
+  <div class="tscroll"><table>
+    <thead><tr><th>Wk</th><th>NFL opponent</th><th>Def rank</th><th>Read</th><th>Man Wolf plays</th></tr></thead>
+    <tbody>
+      <tr><td class="num">3</td><td>vs CIN (CIN −3.5, O/U 42.5)</td><td class="num">2</td><td><span class="chip down">Tough</span></td><td>🥊ALI🥊</td></tr>
+      <tr><td class="num">4</td><td>@ CLE (Thu)</td><td class="num">7</td><td><span class="chip down">Tough</span></td><td>Redemption team</td></tr>
+      <tr><td class="num">5</td><td>vs IND</td><td class="num">31</td><td><span class="chip up">Good</span></td><td>Imad · <strong>Worthy on bye (KC)</strong></td></tr>
+      <tr><td class="num">6</td><td>@ TB</td><td class="num">19</td><td><span class="chip">Neutral</span></td><td>Playoff Chase · J. Williams + M. Washington on bye</td></tr>
+      <tr><td class="num">7</td><td>@ NO</td><td class="num">11</td><td><span class="chip">Neutral</span></td><td>Get Hooked</td></tr>
+      <tr><td class="num">8</td><td>vs CLE</td><td class="num">7</td><td><span class="chip down">Tough</span></td><td>Lamar n Order · <strong>Olave, Collins, Kittle, Kamara on bye</strong></td></tr>
+      <tr class="hl"><td class="num">9</td><td colspan="3"><strong>BYE</strong> · no other Man Wolf player is off this week</td><td>Bower Outage</td></tr>
+      <tr><td class="num">10</td><td>@ CIN</td><td class="num">2</td><td><span class="chip down">Tough</span></td><td>Texas Two Step</td></tr>
+      <tr><td class="num">11</td><td>@ PHI</td><td class="num">5</td><td><span class="chip down">Tough</span></td><td>Steel Giants</td></tr>
+      <tr><td class="num">12</td><td>vs DEN (Thanksgiving)</td><td class="num">8</td><td><span class="chip down">Tough</span></td><td>🥊ALI🥊</td></tr>
+      <tr><td class="num">13</td><td>vs HOU</td><td class="num">3</td><td><span class="chip down">Tough</span></td><td>Redemption team</td></tr>
+      <tr><td class="num">14</td><td>@ JAX</td><td class="num">17</td><td><span class="chip">Neutral</span></td><td>Imad</td></tr>
+      <tr class="hl"><td class="num">15</td><td>vs BAL</td><td class="num">29</td><td><span class="chip up">Good</span></td><td>Playoffs, round 1</td></tr>
+      <tr class="hl"><td class="num">16</td><td>vs CAR</td><td class="num">9</td><td><span class="chip down">Tough</span></td><td>Playoffs, round 2</td></tr>
+      <tr class="hl"><td class="num">17</td><td>@ TEN</td><td class="num">27</td><td><span class="chip up">Good</span></td><td>Championship</td></tr>
+    </tbody>
+  </table></div>
+  <div class="why"><h3>What the calendar means</h3><p><strong>The regular season is a grind:</strong> 7 of 11 remaining regular-season games are against top-10 2025 WR defenses, including CIN and CLE twice each. The one standout is <strong>W5 vs IND</strong>, which lands on Worthy's bye. <strong>The playoffs are the kindest stretch of his schedule</strong> (BAL 29th, TEN 27th around a tough CAR), which is a quiet reason not to cut him early. His W9 bye collides with no one on our roster.</p></div>
+
+  <h2>5 · Upside and risk</h2>
+  <div class="cols">
+    <div class="card"><h3>Upside drivers</h3><ul>
+      <li>Full-time outside role (88% snaps, ~91% routes) with no real competitor. Bernard and Wilson fight for the slot.</li>
+      <li>Proven target earner: 21% share, 24.5% first-read share in 2025, and 109 catches in 2023. The W1 3-target game is well below his norm.</li>
+      <li>Metcalf is catching only 8 of 19 targets. If Rodgers' accuracy on Metcalf stays poor, some volume drifts to the higher-percentage option, which is Pittman.</li>
+      <li>Friendly fantasy-playoff schedule (W15 BAL, W17 TEN).</li>
+    </ul></div>
+    <div class="card risk"><h3>Risk drivers</h3><ul>
+      <li><strong>Durability:</strong> two different injuries since Aug 8 (camp, then foot), still limited all week. Playing through foot injuries at WR often means reduced snaps on return. <em>Unconfirmed</em> whether he'll be on a snap count.</li>
+      <li><strong>Offense:</strong> PIT scored 3 points in W2; Rodgers at 4.7–5.5 Y/A; 19.5-point implied total in W3. His 2025 production collapsed once the QB play did.</li>
+      <li><strong>Schedule:</strong> 7 of 11 regular-season games vs top-10 WR defenses.</li>
+      <li><strong>TD dependence:</strong> 21% of 2025 points came from a career-high 7 TDs (his prior two seasons: 4 and 3).</li>
+    </ul></div>
+  </div>
+
+  <h2>6 · Fit with The Man Wolf and our strategy</h2>
+  <div class="why"><p><strong>Strategy check:</strong> "WR: volume over ceiling" favors his <em>archetype</em>, a possession receiver with a high catch rate, but the volume in Pittsburgh belongs to Metcalf. "Youth as a bench tiebreaker" works <em>against</em> him versus Worthy (23). Pittman is 28 with no keeper case under the flat round-skip cost. He was a R10 pick, so there's no sunk-cost reason to hold.</p>
+  <ul style="color:var(--ink-2);font-size:15px">
+    <li><strong>Where he fits:</strong> WR5 behind Olave, Collins (back ~W4) and Jameson Williams, and roughly level with Worthy (FP WR55 vs WR53; Boone 14 vs 12; ESPN 11.89 vs 11.01). He doesn't start over Kittle or Tuten at FLEX in a normal week.</li>
+    <li><strong>The weeks he earns his spot:</strong> <strong>W5</strong> (Worthy bye, vs IND) and above all <strong>W8</strong>, when Olave, Collins, Kittle and Kamara are all off. That week our WRs would be Jameson Williams, Worthy, Washington and Pittman (plus Evans if the Kittle trade goes through, but SF is <em>also</em> on bye W8). In W6, J. Williams and Washington are both off.</li>
+    <li><strong>The roster crunch arrives W4 no matter what:</strong> once he's cleared he must leave IR (it's already technically illegal while he's Q), and Collins comes off IR ~W4. That's two cuts, three with the 2-for-1 Kittle trade. The ledger's cut order still holds: <strong>Allgeier → Harvey → Worthy → Pittman</strong>. But Worthy vs Pittman is a near coin flip on consensus, and youth favors Worthy. <strong>Decision rule:</strong> if Pittman is under 12% target share in his first two healthy games (W3–W4), he drops below Worthy.</li>
+    <li><strong>League angle:</strong> Metcalf (Get Hooked, our W7 opponent) is the only other PIT pass-catcher rostered in-league, so no stack concerns. Pittman has little trade value (Boone 14), so at most he's a throw-in to balance a deal.</li>
+  </ul></div>
+
+  <h2>7 · Expert consensus vs our read</h2>
+  <div class="tscroll"><table>
+    <thead><tr><th>Source</th><th>Rank / value / grade</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td class="who">FantasyPros ROS ECR (5 experts, 9/24)</td><td class="num">WR55</td><td>Best WR41, worst WR64, std dev 8.6 (wide). Worthy WR53, Metcalf WR35, Sutton WR40.</td></tr>
+      <tr><td class="who">Yahoo · Boone trade value W3</td><td class="num">14 (WR42)</td><td>Full PPR. Worthy 12, Metcalf 22, J. Williams 28, M. Washington 9, Bernard 3.</td></tr>
+      <tr><td class="who">ESPN ROS projection</td><td class="num">11.89/gm</td><td>WR29 of 65 WRs rostered in D League. The most bullish source, leaning on his 2025 share.</td></tr>
+      <tr><td class="who">FantasyPros advanced (D. Brown, 2026 outlook)</td><td class="num">1.90 YPRR (2025)</td><td>33rd of 117; 21% target share (23rd); 24.5% first-read share; WR9 in pts/gm through W10 of 2025 before the QB injury.</td></tr>
+      <tr><td class="who">FantasyPros W3 weekly (44 experts)</td><td class="num">WR102 · F</td><td>Range WR35–174: experts split on whether he plays.</td></tr>
+      <tr><td class="who">Yahoo · The Outlook (CIN–PIT)</td><td class="num">Flex</td><td>"Reclaims a significant role from Bernard… a flex play against Cincinnati" if active.</td></tr>
+      <tr><td class="who">NBC Sports / Rotoworld</td><td class="num">Q, trending up</td><td>"On the optimistic side of questionable."</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>Agreement:</strong> <strong>wide.</strong> ESPN's projection prices him as a borderline WR3 (WR29-level), while FantasyPros ECR has him as a bench WR5 (WR55), and Boone sits between (WR42). <strong>Our read:</strong> <span class="agree">AGREE</span> with the FantasyPros/Boone cluster (WR45–55 value), i.e. <em>below</em> ESPN's projection. The evidence the ESPN projection underweights is his 8% W1 target share next to a 25.7%-share Metcalf, an offense averaging under 5.5 yards per attempt, and a top-10-defense-heavy schedule. It's a judgment call that the offense, more than Pittman, is the cap.</p>
+
+  <h2>8 · This week</h2>
+  <div class="week"><strong>W3 vs CIN</strong> · CIN −3.5, O/U 42.5 (PIT implied 19.5) · <span class="tag q">Q</span> foot, limited all week · consensus WR102 (FP) · lean <strong>sit, and leave him in IR through Sunday</strong> unless a roster move forces the issue. Even if he's active he doesn't beat Jameson Williams (FP WR26) or the Kittle/Tuten FLEX pair, and CIN allowed the 2nd-fewest WR points in 2025. PIT kicks off 12:00 CT; inactives ~10:30 CT. If ESPN blocks a transaction because he's Q in IR, move him to the bench and cut Allgeier. Confirm in <code>/weekly-lineup</code>.</div>
+
+  <h2>Sources</h2>
+  <ul class="sources">
+    <li><a href="https://www.nbcsports.com/fantasy/football/player-news/2026-09-25/michael-pittman-foot-questionable-for-week-3">NBC Sports: Pittman (foot) questionable for W3</a></li>
+    <li><a href="https://www.steelers.com/news/week-3-injury-report-bengals-x2555">Steelers.com: W3 injury report (Bengals)</a></li>
+    <li><a href="https://sports.yahoo.com/articles/steelers-vs-bengals-week-3-200535266.html">Yahoo: Steelers–Bengals Friday injury report</a></li>
+    <li><a href="https://www.rotowire.com/football/headlines/michael-pittman-injury-back-at-practice-wednesday-638804">RotoWire: back at practice Wednesday</a></li>
+    <li><a href="https://heavy.com/sports/nfl/pittsburgh-steelers/michael-pittman-foot-injury-update-mike-mccarthy/">Heavy: McCarthy, "different injury" from camp</a></li>
+    <li><a href="https://www.espn.com/nfl/story/_/id/49980918/steelers-rule-wr-pittman-jr-vs-patriots-foot-injury">ESPN: Steelers rule Pittman out W2</a></li>
+    <li><a href="https://sports.yahoo.com/articles/steelers-offensive-snap-counts-week-151035445.html">Yahoo: Steelers W1 snap counts</a></li>
+    <li><a href="https://www.nfl.com/news/michael-pittman-jr-trade-steelers-colts">NFL.com: trade + 3-yr/$59M extension</a></li>
+    <li><a href="https://www.fantasypros.com/nfl/rankings/ros-ppr-wr.php">FantasyPros: ROS PPR WR ECR</a></li>
+    <li><a href="https://www.fantasypros.com/nfl/rankings/ppr-wr.php">FantasyPros: W3 PPR WR ECR</a></li>
+    <li><a href="https://www.fantasypros.com/nfl/notes/427421/michael-pittman-2026-outlook.php">FantasyPros (Derek Brown): Pittman 2026 outlook, 2025 advanced stats</a></li>
+    <li><a href="https://sports.yahoo.com/fantasy/article/2026-trade-value-charts--justin-boones-fantasy-football-wide-receiver-breakdown-for-week-3-142746855.html">Yahoo: Boone WR trade values W3</a></li>
+    <li><a href="https://sports.yahoo.com/articles/outlook-week-3-cin-pit-173921956.html">Yahoo: The Outlook W3 (CIN–PIT lines + notes)</a></li>
+    <li><a href="https://sports.yahoo.com/articles/sean-payton-shares-injury-courtland-033151802.html">Yahoo: Payton on Sutton (not injured)</a></li>
+    <li><a href="https://eatdrinkandsleepfootball.com/fantasy/points-allowed/wr-ppr.html">EDSFootball: 2025 PPR WR points allowed</a></li>
+    <li>ESPN athlete stats API: Pittman career receiving (2023–26)</li>
+    <li>ESPN scoreboard/summary API: PIT W1–W2 box scores, 2026 schedules and byes (scratchpad only)</li>
+    <li>League data: <code>data/teams.json</code>, <code>week_stats.json</code>, <code>free_agents.json</code>, <code>draft_results.json</code>, <code>transactions.json</code> (synced 2026-09-25 23:03)</li>
+  </ul>
+
+  <div class="foot">Fantasy Professor · player-eval · generated 2026-09-25 · W1–W2 complete; W3 not yet played for PIT (Sun 1:00 ET) · Michael Pittman Jr. ESPN id 4035687</div>
+</main>
+</body>
+</html>

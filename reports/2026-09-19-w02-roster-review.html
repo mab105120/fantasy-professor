@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 2 Roster Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#E9EAEC; --card:#FFFFFF; --ink:#15181D; --ink-2:#3A4049; --muted:#6B727D;
+  --rule:#C7CAD0; --rule-hard:#15181D; --navy:#173A5C; --navy-soft:#E2E8EF;
+  --up:#0E7A5F; --up-soft:#DCEDE7; --down:#B23A33; --down-soft:#F3E0DE;
+  --flag:#B87814; --flag-soft:#F6E9D2; --chip:#DFE1E5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+    --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+    --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+    --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+  --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+  --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+  --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:"Barlow","Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.5;margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px 56px}
+a{color:var(--navy)}
+
+.mast{background:#0B0D11;color:#E9EBEF;padding:26px 16px 22px;border-bottom:4px solid var(--flag)}
+.mast-inner{max-width:928px;margin:0 auto;display:flex;flex-wrap:wrap;gap:14px 28px;align-items:flex-end;justify-content:space-between}
+.mast h1{font-family:"Oswald",Impact,sans-serif;font-weight:700;font-size:clamp(32px,6.6vw,52px);line-height:.94;margin:0;text-transform:uppercase}
+.mast h1 em{font-style:normal;color:var(--flag);display:block}
+.mast-meta{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:#9AA3B0;line-height:1.9}
+
+h2{font-family:"Oswald",sans-serif;font-weight:600;font-size:22px;letter-spacing:.02em;text-transform:uppercase;margin:40px 0 14px;padding-bottom:6px;border-bottom:2px solid var(--rule-hard)}
+h3{font-family:"Oswald",sans-serif;font-weight:500;font-size:19px;margin:0 0 6px}
+p{margin:0 0 12px;color:var(--ink-2)}
+strong{color:var(--ink)}
+
+.frame{margin-top:26px;background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:18px 22px}
+.frame h3{margin-bottom:8px}
+.frame p{font-size:15px;margin-bottom:6px}
+.frame ul{margin:6px 0 0;padding-left:20px;color:var(--ink-2);font-size:15px}
+.frame li{margin-bottom:4px}
+
+.lede{margin-top:18px;display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:680px){.lede{grid-template-columns:1fr 1fr}}
+.pick{background:var(--card);border:1px solid var(--rule);border-left:6px solid var(--up);border-radius:8px;padding:18px 20px}
+.pick.alt{border-left-color:var(--flag)}
+.pick .slot{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.pick .name{font-family:"Oswald",sans-serif;font-size:28px;font-weight:600;line-height:1.05;margin:0}
+.pick .tag{color:var(--muted);font-size:14px;margin-bottom:10px}
+.pick p{font-size:15px;margin-bottom:6px}
+
+.status{background:var(--navy-soft);border-radius:8px;padding:14px 18px;margin-top:14px;font-size:15px}
+.status b{color:var(--navy)}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+.chip{font-family:"IBM Plex Mono",monospace;font-size:11.5px;padding:3px 9px;border-radius:999px;background:var(--chip);color:var(--ink-2)}
+.chip.up{background:var(--up-soft);color:var(--up)}
+.chip.down{background:var(--down-soft);color:var(--down)}
+.chip.flag{background:var(--flag-soft);color:var(--flag)}
+
+.why{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:20px 22px;margin-bottom:14px}
+.def{border-left:3px solid var(--flag);background:var(--flag-soft);padding:8px 14px;border-radius:0 6px 6px 0;font-size:14.5px;margin:10px 0 14px}
+.def b{color:var(--flag)}
+
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--rule);border-radius:8px;overflow:hidden;font-size:15px}
+th{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-align:left;color:var(--muted);padding:10px 14px;border-bottom:2px solid var(--rule-hard);background:var(--navy-soft)}
+td{padding:11px 14px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+td.who{white-space:nowrap;color:var(--ink);font-weight:600}
+td.who span{display:block;font-weight:400;font-size:12.5px;color:var(--muted)}
+.verdict{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.verdict.pass{color:var(--down)}.verdict.taken{color:var(--muted)}.verdict.maybe{color:var(--flag)}.verdict.next{color:var(--up)}
+@media(max-width:640px){table,thead,tbody,tr,th,td{display:block}thead{display:none}tr{border-bottom:2px solid var(--rule)}td{border:0;padding:4px 14px}td.who{padding-top:12px}tr td:last-child{padding-bottom:12px}}
+
+.notes{display:grid;gap:12px}
+.note{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px 18px;display:flex;gap:14px;align-items:flex-start}
+.note .n{font-family:"Oswald",sans-serif;font-size:26px;font-weight:700;color:var(--flag);line-height:1}
+.note p{margin:0;font-size:15px}
+
+.sources{font-size:13.5px;color:var(--muted);columns:1}
+@media(min-width:680px){.sources{columns:2}}
+.sources li{margin-bottom:4px;break-inside:avoid}
+.foot{margin-top:40px;padding-top:14px;border-top:1px solid var(--rule);font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);letter-spacing:.04em}
+</style>
+<style>
+.grid{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:680px){.grid{grid-template-columns:1fr 1fr 1fr}}
+.stat{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px 16px}
+.stat .k{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.stat .v{font-family:"Oswald",sans-serif;font-size:30px;font-weight:600;line-height:1.1}
+.stat .s{font-size:13.5px;color:var(--muted)}
+.lineup td.who{white-space:normal}
+.tag-in{color:var(--up);font-weight:600}.tag-out{color:var(--down);font-weight:600}
+.offer{background:var(--navy-soft);border-radius:6px;padding:8px 12px;font-family:"IBM Plex Mono",monospace;font-size:13px;margin:8px 0}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-inner">
+    <h1>Roster Review<em>Week 2 · What Else Improves This Team</em></h1>
+    <div class="mast-meta">
+      The Man Wolf · D League (394766)<br>
+      Sat 2026-09-19 · full sync 21:03 · 1-0, 5th · PF 135.5 (5th)
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="grid" style="margin-top:26px">
+    <div class="stat"><div class="k">Roster shape</div><div class="v">7 RB · 4 WR</div><div class="s">Lineup needs 2 WR + 2 FLEX. Collins back ~Wk 4 makes it 5 WR. Still RB-heavy.</div></div>
+    <div class="stat"><div class="k">Power rank (Wk 1)</div><div class="v">5th · 21.5</div><div class="s">Top four are 23.9–26.7. Middle of the pack, not a contender yet.</div></div>
+    <div class="stat"><div class="k">Trade chip nobody's using</div><div class="v">Stafford</div><div class="s">Three teams roster exactly one QB. He's worth more to them than to your bench.</div></div>
+  </section>
+
+  <section class="frame">
+    <h3>Moves made today (confirmed by sync)</h3>
+    <p>Kamara added · Hunter added then swapped for Malik Washington · Bigsby added for Gesicki · Pittman to IR. Roster is full: 9 starters, 7 bench, 2 IR. Any further add now needs a drop — the weakest hold is <strong>RJ Harvey</strong> (three-way committee behind Dobbins, hamstring, game-time decision), then Allgeier once Jeremiyah Love takes over Arizona's backfield.</p>
+  </section>
+
+  <h2>1 · Week 2 lineup — one change</h2>
+
+  <table class="lineup">
+    <thead><tr><th>Slot</th><th>Call</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td class="who">WR</td><td><span class="tag-in">Olave in</span>, <span class="tag-out">Worthy out</span></td><td>Olave projects 15.9 vs Worthy 11.0. His hamstring is described by the Saints beat as precautionary; he was limited Thu/Fri. Saints play the early window, so inactives land 90 minutes before kickoff — if he's out, flip Worthy back in. Jameson Williams already played Thursday (5.3, locked).</td></tr>
+      <tr><td class="who">FLEX ×2</td><td>Tuten + Kittle (hold)</td><td>Tuten 10.1, Kittle 10.5. Kamara projects 5.4 this week because New Orleans is easing him in — bench him this week, expect him in the flex from Week 3. Washington (7.5 vs SF) and Bigsby (3.4) stay down.</td></tr>
+      <tr><td class="who">QB</td><td>Dak (hold)</td><td>Dak 20.0 vs WSH, Stafford 18.2 vs NYG. Close, Dak's matchup is friendlier.</td></tr>
+      <tr><td class="who">RB / TE / D-ST</td><td>Barkley, Henry, Fannin, Eagles (hold)</td><td>All active. Eagles vs TEN projects 7.1 — no stream needed.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>2 · The structural problem: RB-heavy, WR-thin</h2>
+
+  <div class="why">
+    <p>Seven running backs for two RB slots plus two flexes is more than you can start; four healthy receivers for two WR slots plus those same flexes is fewer than you'd like. The fix is not the wire — the 600-player pool has nothing at WR better than what you hold (best available: Reed 10.2, Shaheed 9.0, Jeudy 8.2). The fix is a trade that converts surplus RB depth and Stafford into a WR2/3.</p>
+    <div class="def"><b>Why Stafford is a chip, not a drop:</b> Lamar n Order, Redemption team and Bower Outage each roster exactly one QB. To them, Stafford is starting-caliber insurance for Lamar / Josh Allen / Burrow. To you, he's a platoon partner worth ~1 point a week. Same player, very different value — that gap is what a trade captures.</div>
+  </div>
+
+  <h2>3 · Three trade targets, verified</h2>
+
+  <table>
+    <thead><tr><th>Target</th><th>The case</th><th>The offer</th></tr></thead>
+    <tbody>
+      <tr><td class="who">Matthew Golden<span>WR · GB · 2nd yr · Lamar n Order (1-0)</span></td><td><strong>Primary target.</strong> Led Green Bay in Week 1 with a 30% target share (share of all the team's pass attempts thrown his way) on 87% of routes, 6-97, and Jordan Love calls him the locked-in "X" receiver. Rising fast; consensus calls him a Week 2 must-buy. Keeper-cheap. Lamar n Order rosters one QB (Lamar) and seven WRs including aging Adams/Diggs/Godwin — Golden is their WR3, and QB insurance for Lamar is their real hole. Status: healthy, no flag.</td><td><div class="offer">Stafford + RJ Harvey → Golden</div>If they balk, Stafford + Allgeier. Don't include Tuten — Golden's ESPN projection (11.2) is still below Tuten's; you're paying for trajectory.</td></tr>
+      <tr><td class="who">Luther Burden III<span>WR · CHI · 2nd yr · Bower Outage (0-1, 68 pts)</span></td><td><strong>The bigger swing.</strong> 73% of snaps (team-high), 5-of-5 for 63, and 2.79 yards per route run — elite territory, the kind of efficiency that marks a real player, not a rotational one. DJ Moore is gone; Burden is a top-3 target in a concentrated Ben Johnson passing game. Bower Outage scored 68, rosters one QB (Burrow) and a weak RB room (Kyren 13.8, then 11.1 and below) — they need both things you have too many of. Status: "looks 100%" per Ben Johnson.</td><td><div class="offer">Stafford + Tuten → Burden</div><strong>Only if Kamara proves he is an RB3 on Sunday</strong> (30%+ snaps, 4+ targets). Week 1 without him, Etienne took the passing-down role (9 targets) and Miller the leftovers (0 targets) — if Kamara inherits Miller's role, keep Tuten and offer Stafford + Allgeier instead. If Kamara does show, and Burden's ceiling is a WR2 with keeper value. If they want more, add Allgeier, not Bigsby.</td></tr>
+      <tr><td class="who">Jaylen Waddle<span>WR · DEN · Playoff Chase (0-1, 90 pts)</span></td><td><strong>The buy-low.</strong> 1 catch for 2 yards in Week 1, but on a team-high 78.8% route share — the routes were there, the targets (10.7%) weren't, and the whole Denver offense was broken on Monday night. Pre-season consensus had him at ~7 targets/game as Payton's focal point. Playoff Chase's RB3 is Rico Dowdle and RB4 is Chris Rodriguez (4.3) — they need a running back badly and have seven WRs. Status: healthy. Risk: the Denver offense stays bad.</td><td><div class="offer">Allgeier + Harvey → Waddle</div>Two spare RBs for a WR whose price just dropped. No Stafford needed — they roster two QBs.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="why">
+    <h3>How to sequence it</h3>
+    <p>Send the Golden offer first — it costs you the least and Lamar n Order's need is the sharpest. Run the Waddle offer in parallel, since it uses different pieces. Only go to Burden if Golden dies, because Burden costs Tuten. Landing any one of the three turns "7 RB / 4 WR" into a balanced roster and gets Stafford's value out of a bench seat without dropping him.</p>
+  </div>
+
+  <h2>4 · Wire — nothing to add today, two names to watch</h2>
+
+  <table>
+    <thead><tr><th>Player</th><th>When</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td class="who">Justice Hill<span>RB · BAL · 16%</span></td><td>When Love takes over ARI</td><td>Henry's backup. Once Allgeier's role shrinks, swap him for the handcuff to your other RB1 — same logic as Bigsby.</td></tr>
+      <tr><td class="who">Tank Dell<span>WR · HOU · IR</span></td><td>~Week 4</td><td>Collins coming off IR reopens a slot; Dell is eligible Week 5. Big upside, big knee. Only if the IR slot is free.</td></tr>
+      <tr><td class="who">Any WR</td><td>Now</td><td>Best available is Reed (10.2) — not better than Worthy or Washington's role. Trade, don't stream.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5 · League read (for the trade calls)</h2>
+  <div class="why">
+    <p><strong>Top four are pulling away on power score:</strong> ALI 26.7, Get Hooked 26.3, Redemption 25.6, Lamar n Order 24.0. You're 5th at 21.5 with the 5th-best points-for. That's a playoff team, not a title team, and the gap is at WR: the top four each roster six or seven receivers with two or three at 12+ projected; you have one (Olave) until Collins returns.</p>
+    <p><strong>Desperate teams:</strong> Bower Outage (68 pts, 1 QB, weak RB) and Playoff Chase (90 pts, no RB3) are 0-1 and already looking at a hole. Those are the two teams most likely to overpay for running backs this week — the window is before they win a game and relax.</p>
+  </div>
+
+  <h2>Sources</h2>
+  <ul class="sources">
+    <li><a href="https://www.nbcsports.com/fantasy/football/player-news/2026-09-18/chris-olave-officially-questionable-for-week-2">NBC — Olave questionable</a></li>
+    <li><a href="https://www.rotoballer.com/player-news/rj-harvey-questionable-for-week-2-with-hamstring-injury/1944324">RotoBaller — Harvey questionable</a></li>
+    <li><a href="https://www.nbcsports.com/fantasy/football/player-news/2026-09-13/golden-leads-pack-with-12-targets-in-week-1">NBC — Golden leads Packers with 12 targets</a></li>
+    <li><a href="https://heavy.com/sports/nfl/green-bay-packers/matthew-golden-fantasy-buy/">Heavy — Golden a Week 2 must-buy</a></li>
+    <li><a href="https://sports.yahoo.com/articles/updated-luther-burden-iii-fantasy-123459270.html">Yahoo — Burden outlook after DJ Moore exit</a></li>
+    <li><a href="https://www.draftsharks.com/fantasy/points-outlook/luther-burden-iii/35334">Draft Sharks — Burden Week 1 snaps/targets</a></li>
+    <li><a href="https://sports.yahoo.com/articles/jaylen-waddle-fantasy-outlook-2026-111946200.html">Yahoo — Waddle 2026 outlook</a></li>
+    <li><a href="https://www.fanduel.com/research/jaylen-waddle-nfl-fantasy-week-1-vs-chiefs-2026">FanDuel — Waddle Week 1 route/target share</a></li>
+    <li><a href="https://arizonasports.com/nfl/arizona-cardinals/what-to-make-of-cardinals-usage-of-jeremiyah-love-tyler-allgeier-in-week-1-win">Arizona Sports — Allgeier / Love usage</a></li>
+  </ul>
+
+  <div class="foot">Fantasy Professor · generated 2026-09-19 · full sync 21:03 (rosters, 600-player pool, transactions, power rankings, week stats) · Week 2 in progress</div>
+
+</main>
+</body>
+</html>

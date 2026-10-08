@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 2 Matchup Report — Imad vs Bower Outage</title>
+<style>
+  :root {
+    color-scheme: light;
+    --bg:#f5f5f3; --surface:#fff; --surface-2:#f0efec; --border:#e3e2de;
+    --text:#0b0b0b; --text-2:#52514e; --text-3:#8a8985;
+    --me:#2a78d6; --me-soft:#cde2fb; --opp:#eb6834; --opp-soft:#fbd9cb;
+    --good:#008300; --warn:#c98500; --bad:#e34948;
+    --shadow:0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.05); --radius:14px;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    color-scheme:dark; --bg:#121211; --surface:#1a1a19; --surface-2:#242423; --border:#2f2f2d;
+    --text:#fff; --text-2:#c3c2b7; --text-3:#8d8c85; --me:#3987e5; --me-soft:#1c3a62; --opp:#d95926; --opp-soft:#4a2a1a;
+    --good:#3fbf3f; --warn:#e0a021; --bad:#e66767; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3); } }
+  :root[data-theme="dark"] { color-scheme:dark; --bg:#121211; --surface:#1a1a19; --surface-2:#242423; --border:#2f2f2d;
+    --text:#fff; --text-2:#c3c2b7; --text-3:#8d8c85; --me:#3987e5; --me-soft:#1c3a62; --opp:#d95926; --opp-soft:#4a2a1a;
+    --good:#3fbf3f; --warn:#e0a021; --bad:#e66767; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3); }
+  *{box-sizing:border-box} html{scroll-behavior:smooth;scroll-padding-top:72px}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.55}
+  a{color:var(--me);text-decoration:none} a:hover{text-decoration:underline}
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  nav .inner{max-width:1040px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:4px;overflow-x:auto;height:56px}
+  nav .brand{font-weight:700;margin-right:12px;white-space:nowrap}
+  nav a{color:var(--text-2);font-size:14px;padding:6px 10px;border-radius:8px;white-space:nowrap} nav a:hover{background:var(--surface-2);text-decoration:none;color:var(--text)}
+  main{max-width:1040px;margin:0 auto;padding:24px 16px 80px}
+  header.hero{padding:28px 0 8px}
+  .eyebrow{color:var(--text-3);font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+  h1{font-size:clamp(28px,4vw,40px);margin:6px 0 4px;line-height:1.15;letter-spacing:-.01em} h2{font-size:22px;margin:0 0 12px} h3{font-size:16px;margin:18px 0 8px}
+  .sub{color:var(--text-2);margin:0} section{margin-top:36px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+  .grid{display:grid;gap:16px} .g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))} .g3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+  p{margin:8px 0} ul{padding-left:20px;margin:8px 0} li{margin:4px 0} .muted{color:var(--text-2)} .small{font-size:13px}
+  .pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--text-2);vertical-align:middle}
+  .pill.me{background:var(--me-soft);color:var(--text)} .pill.opp{background:var(--opp-soft);color:var(--text)} .pill.good{color:var(--good)} .pill.warn{color:var(--warn)} .pill.bad{color:var(--bad)}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle} .dot.me{background:var(--me)} .dot.opp{background:var(--opp)}
+  .term{border-bottom:1px dotted var(--text-3);cursor:help}
+  .score{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;text-align:center}
+  .score .team{padding:12px} .score .name{font-weight:700;font-size:18px} .score .rec{color:var(--text-2);font-size:13px}
+  .score .num{font-size:48px;font-weight:700;line-height:1.05;letter-spacing:-.02em;margin:6px 0 0} .score .lbl{font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em} .score .vs{color:var(--text-3);font-weight:600}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px}
+  .tile{background:var(--surface-2);border-radius:10px;padding:12px 14px} .tile .l{font-size:12px;color:var(--text-2)} .tile .v{font-size:22px;font-weight:600;margin-top:2px} .tile .d{font-size:12px;color:var(--text-3)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th{text-align:left;font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;font-weight:600;padding:8px;border-bottom:1px solid var(--border)}
+  td{padding:9px 8px;border-bottom:1px solid var(--border);vertical-align:top} tr:last-child td{border-bottom:0} td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .slot{font-weight:600;color:var(--text-2);font-size:12px} .tablewrap{overflow-x:auto}
+  .bars{display:grid;grid-template-columns:86px 1fr;row-gap:10px;column-gap:12px;align-items:center}
+  .bars .lab{font-size:13px;color:var(--text-2);text-align:right} .bars .pair{display:grid;gap:2px}
+  .bar{position:relative;height:12px;border-radius:0 4px 4px 0} .bar.me{background:var(--me)} .bar.opp{background:var(--opp)}
+  .bar .val{position:absolute;left:calc(100% + 6px);top:-3px;font-size:12px;color:var(--text-2);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .legend{display:flex;gap:18px;font-size:13px;color:var(--text-2);margin:4px 0 14px;flex-wrap:wrap}
+  .decision{border-left:4px solid var(--me);padding-left:14px;margin:14px 0} .decision .call{font-weight:700}
+  .callout{background:var(--surface-2);border-radius:10px;padding:12px 14px;margin:12px 0} .callout.warn{border-left:4px solid var(--warn)} .callout.good{border-left:4px solid var(--good)}
+  .game{border-top:1px solid var(--border);padding:14px 0} .game:first-of-type{border-top:0;padding-top:0}
+  .game .gh{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+  .game .gt{font-weight:700;font-size:17px} .game .gm{font-size:13px;color:var(--text-2)}
+  .game .who{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;margin:8px 0}
+  .game .who div{background:var(--surface-2);border-radius:8px;padding:6px 10px;font-size:14px}
+  .game .who .h{font-weight:600;font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em}
+  .game .watch{margin:6px 0 0} .game .watch li{margin:3px 0}
+  dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;margin:0} dt{font-weight:600} dd{margin:0;color:var(--text-2)}
+  footer{margin-top:48px;color:var(--text-3);font-size:13px}
+  @media (max-width:640px){ .score{grid-template-columns:1fr} .score .vs{display:none} .bars{grid-template-columns:64px 1fr} dl{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<nav><div class="inner">
+  <span class="brand">Imad · Week 2</span>
+  <a href="#call">The call</a><a href="#scoreboard">Scoreboard</a><a href="#lineup">Lineup</a><a href="#slots">Slot by slot</a><a href="#games">Game by game</a><a href="#opponent">Opponent</a><a href="#stakes">Stakes</a><a href="#glossary">Glossary</a>
+</div></nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">D League · Week 2 · Sept 17–21, 2026 · prepared for Imad</div>
+  <h1>Imad vs Bower Outage</h1>
+  <p class="sub">Matchup report built Sat Sept 19, ~23:00 CT from an ESPN sync at 21:04 CT plus live injury checks (Burrow, Falcons QB, Bowers). Neither team had a player in Thursday's game, so every number below is a projection until Sunday noon.</p>
+</header>
+
+<!-- ============ THE CALL ============ -->
+<section id="call">
+  <div class="card">
+    <h2>The call</h2>
+    <p><strong>You're a 14-point favorite on paper, and the lineup is already set the right way.</strong> ESPN projects you at 125.4 and Bower Outage at 111.0. They're the thinnest roster in the league — 68 points in Week 1 (lowest by 22), two starters on IR (A.J. Brown, Jordan Mason), Brock Bowers doubtful, and a bench that turned over seven players in a week. This is a game you lose only by getting out-lucked, so the job is to not hand it back: no galaxy-brain swaps, and keep an eye on the two 0-1 tiebreakers this game creates.</p>
+    <div class="callout good"><strong>Their ceiling is real, though.</strong> Joe Burrow (confirmed playing after a full Friday practice), Garrett Wilson, Kyren Williams and Luther Burden are legitimate — and Jalen Coker just posted 33.8. Bower Outage's median is ~111, but a 140 is inside their range if Burrow and Burden go off against Houston/Minnesota. A 14-point projected edge is roughly a 68/32 game, not a walkover.</p>
+    <div class="grid g3" style="margin-top:14px">
+      <div class="tile"><div class="l">Decision 1</div><div class="v">Purdy stays</div><div class="d">over Lawrence — SF −12.5 at home vs MIA</div></div>
+      <div class="tile"><div class="l">Decision 2</div><div class="v">Evans + Watson</div><div class="d">London stays benched with Cooper Rush starting</div></div>
+      <div class="tile"><div class="l">Decision 3</div><div class="v">Skattebo in flex</div><div class="d">over Judkins — Cleveland's offense is the problem</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCOREBOARD ============ -->
+<section id="scoreboard">
+  <div class="card">
+    <h2>Scoreboard &amp; projection tally</h2>
+    <div class="score">
+      <div class="team">
+        <div class="name"><span class="dot me"></span>Imad</div>
+        <div class="rec">0–1 · 8th · 125.0 PF · waiver #3 · power 17.7 (W1)</div>
+        <div class="num">125.4</div>
+        <div class="lbl">Projected (lineup as set)</div>
+        <div class="small muted">0 banked · 9 starters to play</div>
+      </div>
+      <div class="vs">VS</div>
+      <div class="team">
+        <div class="name"><span class="dot opp"></span>Bower Outage</div>
+        <div class="rec">0–1 · 10th · 68.3 PF · waiver #8 · power 6.6 (W1)</div>
+        <div class="num">111.0</div>
+        <div class="lbl">Projected (lineup as set)</div>
+        <div class="small muted">0 banked · 9 starters to play</div>
+      </div>
+    </div>
+    <div class="tiles">
+      <div class="tile"><div class="l">Projected margin</div><div class="v">+14.4</div><div class="d">~68/32 in your favor; team scores land within ~25 of projection two-thirds of the time</div></div>
+      <div class="tile"><div class="l">Week 1</div><div class="v">125.0 · 68.3</div><div class="d">You lost to Lamar n Order's 148; they lost to Redemption's 142</div></div>
+      <div class="tile"><div class="l">Points left on your bench W1</div><div class="v">~41</div><div class="d">Watson 32.7, Purdy 21.1, Evans 16.9, SEA D 14.0 sat while London/Judkins/LAC D started — all fixed this week</div></div>
+      <div class="tile"><div class="l">Direct clashes</div><div class="v">3 games</div><div class="d">CIN–HOU, NYG–LAR, GB–NYJ have starters on both sides</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LINEUP ============ -->
+<section id="lineup">
+  <div class="card">
+    <h2>Your lineup, reviewed</h2>
+    <p class="muted small">Your lineup as set at 21:04 CT Saturday is already the projection-optimal nine. Nothing to change; three spots are worth understanding. Proj = ESPN Week 2 projection in this league's scoring (PPR, 4-pt pass TD).</p>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Slot</th><th>Player</th><th>Game</th><th>Status</th><th class="num">Proj</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="slot">QB</td><td>Brock Purdy</td><td>SF vs MIA · 3:25</td><td><span class="pill good">Active</span></td><td class="num">20.6</td><td>Biggest favorite of the season (−12.5). Blowout risk caps the 4th quarter, but three quarters of Purdy at home vs a Dolphins D that allowed 5 sacks in W1 is plenty.</td></tr>
+        <tr><td class="slot">RB</td><td>Kenneth Walker III</td><td>KC vs IND · SNF</td><td><span class="pill good">Active</span></td><td class="num">17.8</td><td>34.1 in W1, RB3 overall. Indy's defense was historically bad in W1 and has already changed play-callers.</td></tr>
+        <tr><td class="slot">RB</td><td>Chase Brown</td><td>CIN at HOU · 12:00</td><td><span class="pill good">Active</span></td><td class="num">15.5</td><td>18.8 in W1. Burrow playing (see below) keeps the offense on schedule and Brown's receiving work alive.</td></tr>
+        <tr><td class="slot">WR</td><td>Mike Evans</td><td>SF vs MIA · 3:25</td><td><span class="pill good">Active</span></td><td class="num">13.0</td><td>16.9 in W1 on the SF side. Purdy–Evans stack: their points move together.</td></tr>
+        <tr><td class="slot">WR</td><td>Christian Watson</td><td>GB at NYJ · 12:00</td><td><span class="pill good">Active</span></td><td class="num">12.5</td><td>32.7 in W1 (WR3 overall). With Jacobs on the exempt list, GB throws; Watson and Golden are the key targets.</td></tr>
+        <tr><td class="slot">TE</td><td>Tucker Kraft</td><td>GB at NYJ · 12:00</td><td><span class="pill good">Active</span></td><td class="num">10.6</td><td>Steady 9.5 in W1. Same game as Watson — two GB starters in one 12:00 game.</td></tr>
+        <tr><td class="slot">FLEX</td><td>Rashee Rice</td><td>KC vs IND · SNF</td><td><span class="pill good">Active</span></td><td class="num">15.0</td><td>9.9 in W1; Indy's corners are elite outside, which pushes Mahomes to the slot — that's Rice's room. Walker–Rice stack on SNF.</td></tr>
+        <tr><td class="slot">FLEX</td><td>Cam Skattebo</td><td>NYG at LAR · MNF</td><td><span class="pill good">Active</span></td><td class="num">12.8</td><td>14.1 in W1; the Giants are run-first by identity. Your last piece to score — and it's the same game as their Kyren Williams.</td></tr>
+        <tr><td class="slot">D/ST</td><td>Seahawks D/ST</td><td>SEA at ARI · 3:25</td><td><span class="pill good">—</span></td><td class="num">7.6</td><td>14.0 in W1 (D/ST3). Drew Lock starting for SEA hurts the offense, not the defense; the 40.5 total says a low-scoring game, which is D/ST-friendly.</td></tr>
+        <tr><td colspan="4" style="text-align:right;font-weight:600">Total</td><td class="num" style="font-weight:600">125.4</td><td></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>Bench</h3>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Player</th><th>Game</th><th>Status</th><th class="num">Proj</th><th>Why benched</th></tr></thead>
+      <tbody>
+        <tr><td>Drake London (WR)</td><td>ATL vs CAR · 12:00</td><td><span class="pill good">Active</span></td><td class="num">12.9</td><td>Cooper Rush starts (Penix out, Tua doubtful). Rush went 12/22 for 143 in W1 and London got 5.5. The projection is a coin flip with Evans/Watson (13.0/12.5) but the QB situation makes London the lowest-floor of the three. Hold.</td></tr>
+        <tr><td>Quinshon Judkins (RB)</td><td>CLE at TB · 12:00</td><td><span class="pill good">Active</span></td><td class="num">12.0</td><td>7.0 in W1. Browns are 8.5-point road dogs; negative game script means fewer carries. Skattebo (12.8) is the better flex and the safer one.</td></tr>
+        <tr><td>Trevor Lawrence (QB)</td><td>JAX at DEN · 3:05</td><td><span class="pill good">Active</span></td><td class="num">15.9</td><td>26.1 in W1 — a great week, but Purdy projects 4.7 higher at home against a worse defense. Lawrence is a genuine QB2 with trade value in a league where three teams carry one QB.</td></tr>
+        <tr><td>Wan'Dale Robinson (WR)</td><td>TEN vs PHI · 12:00</td><td><span class="pill good">Active</span></td><td class="num">9.5</td><td>Titans vs the Eagles' pass rush in a 39.5-total game. No.</td></tr>
+        <tr><td>Devaughn Vele (WR)</td><td>NO at BAL · 12:00</td><td><span class="pill good">Active</span></td><td class="num">9.5</td><td>19.9 in W1 and a plus game-script this week (Saints 7.5-point dogs, Olave questionable). Closest bench player to a start — if Olave sits, Vele becomes the Saints' WR1 for a day. Still behind Evans/Watson.</td></tr>
+        <tr><td>Juwan Johnson (TE)</td><td>NO at BAL · 12:00</td><td><span class="pill good">Active</span></td><td class="num">8.9</td><td>14.4 in W1. Kraft projects higher; fine TE2.</td></tr>
+        <tr><td>Emmett Johnson (RB)</td><td>KC vs IND · SNF</td><td><span class="pill good">Active</span></td><td class="num">6.5</td><td>Walker's handcuff. Correct hold, no role while Walker is healthy.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>The three spots, argued</h3>
+    <div class="decision">
+      <div class="call">1. Purdy over Lawrence — Purdy. <span class="pill">+4.7 proj</span></div>
+      <p>Lawrence had the better Week 1 (26.1 vs 21.1), which is why this is worth a sentence. The <span class="term" title="Point spread — the number of points the favorite is expected to win by, set by sportsbooks">spread</span> settles it: SF is a 12.5-point home favorite over a Malik Willis-led Dolphins team, Jacksonville is a 2.5-point road dog in Denver. Big favorites throw efficiently for three quarters and then run out the clock; that's a 20-point median with a low floor. Lawrence's path to beating that is a shootout with Bo Nix, who was terrible in W1. Purdy, and it agrees with every major W2 ranking.</p>
+    </div>
+    <div class="decision">
+      <div class="call">2. WR — Evans and Watson; London holds. <span class="pill">wash on paper</span></div>
+      <p>Three receivers project within half a point (Evans 13.0, London 12.9, Watson 12.5). When projections tie, decide on <span class="term" title="The quarterback and offense a receiver depends on — a receiver can't beat his quarterback's ceiling">the offense he's attached to</span>. Evans has Purdy at home as a huge favorite. Watson has Jordan Love in a pass-heavy script with Jacobs unavailable and just posted 32.7. London has Cooper Rush, who completed 12 passes last week. London is the most talented of the three and the one you drafted in round 3 — he'll be a starter again the moment Atlanta has a quarterback. This week he isn't.</p>
+    </div>
+    <div class="decision">
+      <div class="call">3. Flex — Skattebo over Judkins. <span class="pill">+0.9 proj, bigger floor gap</span></div>
+      <p>Judkins is the better back on a worse team. Cleveland is an 8.5-point road underdog with an offense that generated four pressures' worth of protection and 7.0 points from Judkins last week; trailing teams abandon the run. The Giants are 7-point dogs too, but they're run-first by design and Skattebo's 14.1 came against Dallas. Skattebo also plays Monday night, which gives you a live piece after everything else is in — that only matters if the game is close, but it's a free option.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLOT BY SLOT ============ -->
+<section id="slots">
+  <div class="card">
+    <h2>Slot by slot: where the 14 points live</h2>
+    <p class="muted small">ESPN Week 2 projections for each team's set starting slot. The two bars in each row share one scale, so length is comparable across the chart.</p>
+    <div class="legend"><span><span class="dot me"></span>Imad</span><span><span class="dot opp"></span>Bower Outage</span><span class="small">Full width = 24 pts</span></div>
+    <div class="bars">
+      <div class="lab">QB</div><div class="pair"><div class="bar me" style="width:86%"><span class="val">Purdy 20.6</span></div><div class="bar opp" style="width:69%"><span class="val">Burrow 16.5 (Q, playing)</span></div></div>
+      <div class="lab">RB1</div><div class="pair"><div class="bar me" style="width:74%"><span class="val">Walker 17.8</span></div><div class="bar opp" style="width:59%"><span class="val">K. Williams 14.2</span></div></div>
+      <div class="lab">RB2</div><div class="pair"><div class="bar me" style="width:64%"><span class="val">C. Brown 15.5</span></div><div class="bar opp" style="width:55%"><span class="val">Price 13.2</span></div></div>
+      <div class="lab">WR1</div><div class="pair"><div class="bar me" style="width:54%"><span class="val">Evans 13.0</span></div><div class="bar opp" style="width:66%"><span class="val">G. Wilson 15.9</span></div></div>
+      <div class="lab">WR2</div><div class="pair"><div class="bar me" style="width:52%"><span class="val">Watson 12.5</span></div><div class="bar opp" style="width:52%"><span class="val">Burden 12.5</span></div></div>
+      <div class="lab">TE</div><div class="pair"><div class="bar me" style="width:44%"><span class="val">Kraft 10.6</span></div><div class="bar opp" style="width:39%"><span class="val">H. Henry 9.4</span></div></div>
+      <div class="lab">FLEX</div><div class="pair"><div class="bar me" style="width:63%"><span class="val">Rice 15.0</span></div><div class="bar opp" style="width:50%"><span class="val">Coker 11.9</span></div></div>
+      <div class="lab">FLEX</div><div class="pair"><div class="bar me" style="width:53%"><span class="val">Skattebo 12.8</span></div><div class="bar opp" style="width:42%"><span class="val">Croskey-Merritt 10.2</span></div></div>
+      <div class="lab">D/ST</div><div class="pair"><div class="bar me" style="width:32%"><span class="val">Seahawks 7.6</span></div><div class="bar opp" style="width:30%"><span class="val">Chiefs 7.2</span></div></div>
+    </div>
+    <h3>Reading it</h3>
+    <ul>
+      <li><strong>You lead eight of nine slots.</strong> The only one you trail is WR1 (Garrett Wilson +2.9), and WR2 is dead even. That's what a 14-point gap built from many small edges looks like — it's more robust than one built from a single star, because no one player's dud flips it.</li>
+      <li><strong>Your biggest edges are at QB (+4.1) and RB1 (+3.6)</strong> — Purdy at home as a huge favorite, Walker against the worst defense of Week 1.</li>
+      <li><strong>Their upside slots are WR1, WR2 and QB.</strong> Wilson (Jets vs GB's shaky pass protection… on the other side), Burden (consensus bounce-back pick vs MIN), Burrow (vs HOU). If they beat you it's through the air.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ GAME BY GAME ============ -->
+<section id="games">
+  <div class="card">
+    <h2>Game by game: what to look for</h2>
+    <p class="muted small">Every NFL game where either team has a starter, in kickoff order (CT). Lines are ESPN's Saturday-evening numbers. Bench players noted where they matter.</p>
+
+    <div class="game">
+      <div class="gh"><span class="gt">Bengals at Texans</span><span class="gm">Sun 12:00 · HOU −2.5 · O/U 46.5</span></div>
+      <div class="who"><div><span class="h">Imad</span><br>Chase Brown (RB, 15.5)</div><div><span class="h">Bower Outage</span><br>Joe Burrow (QB, 16.5)</div></div>
+      <ul class="watch">
+        <li><strong>Direct clash, but not a zero-sum one.</strong> Both starters are Bengals: a productive Cincinnati offense helps both of you. What you want is Brown scoring the touchdowns instead of Burrow throwing them — a rushing TD is 6 to you and 0 to him; a passing TD is 4 to him and (if it's to Chase/Higgins) 0 to you.</li>
+        <li><strong>Burrow's back:</strong> full practice Friday, Zac Taylor says "good to go", Burrow's quote was "if I'm not getting surgery, I'll be out there." Treat him as playing. If he aggravates it mid-game, Brown's usage likely goes up (more runs, checkdowns) — bad for them, neutral-to-good for you.</li>
+        <li>Houston without Nico Collins (hamstring, out) is a weaker offense, which keeps this closer and keeps Brown on the field late.</li>
+      </ul>
+    </div>
+
+    <div class="game">
+      <div class="gh"><span class="gt">Packers at Jets</span><span class="gm">Sun 12:00 · GB −3.5 · O/U 44.5</span></div>
+      <div class="who"><div><span class="h">Imad</span><br>Christian Watson (WR, 12.5), Tucker Kraft (TE, 10.6)</div><div><span class="h">Bower Outage</span><br>Garrett Wilson (WR, 15.9)</div></div>
+      <ul class="watch">
+        <li><strong>Direct clash and a real one:</strong> a shootout helps them slightly more (Wilson is their highest-projected player), a Packers-controlled game helps you (two starters). Green Bay's pass protection was the concern in W1; if Love has time, Watson's deep targets are the swing — his 32.7 last week came on big plays, not volume.</li>
+        <li><strong>Target split to log:</strong> with Josh Jacobs still on the Commissioner's Exempt List, Green Bay is pass-heavy; watch whether Watson, Golden, or Kraft is Love's first read. That decides Watson vs London for next week too.</li>
+        <li>Geno Smith has historically been efficient against Jonathan Gannon-style defenses — that's Wilson's case. Jets WR Omar Cooper Jr. is on IR, concentrating targets on Wilson.</li>
+      </ul>
+    </div>
+
+    <div class="game">
+      <div class="gh"><span class="gt">Panthers at Falcons</span><span class="gm">Sun 12:00 · CAR −2.5 · O/U 43.5</span></div>
+      <div class="who"><div><span class="h">Imad</span><br><span class="muted">Drake London (bench)</span></div><div><span class="h">Bower Outage</span><br>Jalen Coker (WR, 11.9)</div></div>
+      <ul class="watch">
+        <li><strong>Coker is their wild card.</strong> 33.8 in W1 (WR2 overall that week), claimed off waivers. Bryce Young's targets against a Falcons secondary without its QB situation settled — that's a live 20-point week. Nothing you can do about it except note that his projection (11.9) already discounts the spike.</li>
+        <li><strong>London on your bench:</strong> Cooper Rush confirmed as starter. If London posts 18+ with Rush, that's a signal he's start-worthy regardless of QB and you re-run the WR debate for Week 3 (at Texas Two Step).</li>
+      </ul>
+    </div>
+
+    <div class="game">
+      <div class="gh"><span class="gt">Steelers at Patriots</span><span class="gm">Sun 12:00 · NE −5.5 · O/U 41.5</span></div>
+      <div class="who"><div><span class="h">Imad</span><br><span class="muted">none</span></div><div><span class="h">Bower Outage</span><br>Hunter Henry (TE, 9.4) · <span class="muted">A.J. Brown (IR)</span></div></div>
+      <ul class="watch">
+        <li>With A.J. Brown (ankle) on IR, Henry is the beneficiary — ESPN's reporters expect increased targets. He's their TE by necessity (Bowers doubtful), so this is a 9-point slot for them with a 15-point ceiling if Maye leans on him in the red zone. Low total (41.5) says don't expect much.</li>
+      </ul>
+    </div>
+
+    <div class="game">
+      <div class="gh"><span class="gt">Vikings at Bears</span><span class="gm">Sun 12:00 · CHI −4.5 · O/U 48.5</span></div>
+      <div class="who"><div><span class="h">Imad</span><br><span class="muted">none</span></div><div><span class="h">Bower Outage</span><br>Luther Burden III (WR, 12.5) · <span class="muted">Jordan Mason (IR)</span></div></div>
+      <ul class="watch">
+        <li><strong>Burden is the consensus bounce-back pick of the week</strong> — 73% of snaps and 2.79 yards per route run in W1 (a strong efficiency number: yards gained per pass route run, where 2+ is starter territory) against a Vikings secondary that Brian Flores' blitzing leaves exposed. This is their best chance at a 20-point slot. Ben Johnson's offense vs Flores' blitz is the game's chess match; if Chicago handles the pressure, Burden eats.</li>
+      </ul>
+    </div>
+
+    <div class="game">
+      <div class="gh"><span class="gt">Dolphins at 49ers</span><span class="gm">Sun 3:25 · SF −12.5 · O/U 44.5</span></div>
+      <div class="who"><div><span class="h">Imad</span><br>Brock Purdy (QB, 20.6), Mike Evans (WR, 13.0)</div><div><span class="h">Bower Outage</span><br><span class="muted">none</span></div></div>
+      <ul class="watch">
+        <li><strong>Your biggest game — 33.6 projected, all yours.</strong> The Purdy–Evans <span class="term" title="Stack — starting a QB and his receiver together, so their points rise and fall together">stack</span> means a 3-TD Purdy day probably comes with a big Evans line, and vice versa. The risk of a 12.5-point favorite is the 4th quarter: if it's 31–7 at the half, Purdy's second half is handoffs. Three quarters of Purdy at home against a line that allowed 5 sacks in W1 still clears his projection.</li>
+        <li>Watch Kittle's snap count (SF TE, back from a snap-limited W1): more Kittle means slightly fewer Evans targets, but a healthier, more diverse offense overall.</li>
+      </ul>
+    </div>
+
+    <div class="game">
+      <div class="gh"><span class="gt">Seahawks at Cardinals</span><span class="gm">Sun 3:25 · SEA −3.5 · O/U 40.5</span></div>
+      <div class="who"><div><span class="h">Imad</span><br>Seahawks D/ST (7.6)</div><div><span class="h">Bower Outage</span><br>Jadarian Price (RB, 13.2) · <span class="muted">Zach Charbonnet (IR)</span></div></div>
+      <ul class="watch">
+        <li><strong>Aligned, not opposed:</strong> your D/ST and their RB are on the same team. A Seattle win with Drew Lock (Darnold out, glute) leaning on the run helps both of you — but Price's carries are their 13 points, and your D/ST's 7.6 is a floor play. The 40.5 total is the second-lowest of the week: sacks and turnovers against a Cardinals offense that scored 26 in a W1 upset are the upside.</li>
+        <li>Price's role: ESPN's reporters expect more touches with the run emphasis under Lock. If he gets 18+ carries he beats projection; that's the main thing in this game that can hurt you.</li>
+      </ul>
+    </div>
+
+    <div class="game">
+      <div class="gh"><span class="gt">Commanders at Cowboys</span><span class="gm">Sun 3:25 · DAL −3.5 · O/U 50.5</span></div>
+      <div class="who"><div><span class="h">Imad</span><br><span class="muted">none</span></div><div><span class="h">Bower Outage</span><br>Jacory Croskey-Merritt (RB, 10.2) · <span class="muted">Antonio Williams (bench)</span></div></div>
+      <ul class="watch">
+        <li>Highest total on the board (50.5) — two 0-1 teams with bad defensive tape. Croskey-Merritt led Washington's backfield in W1 (12.6). A shootout lifts him via receiving work and goal-line looks; ~10 is the median but the game environment gives him a 15–18 ceiling.</li>
+      </ul>
+    </div>
+
+    <div class="game">
+      <div class="gh"><span class="gt">Colts at Chiefs</span><span class="gm">Sun 7:20 · KC −6.5 · O/U 46.5</span></div>
+      <div class="who"><div><span class="h">Imad</span><br>Kenneth Walker III (RB, 17.8), Rashee Rice (FLEX, 15.0) · <span class="muted">Emmett Johnson (bench)</span></div><div><span class="h">Bower Outage</span><br>Chiefs D/ST (7.2) · <span class="muted">Alec Pierce (bench)</span></div></div>
+      <ul class="watch">
+        <li><strong>Your second-biggest game (32.8 projected) — and mostly aligned with theirs.</strong> A Chiefs blowout is your dream (Walker clock-killing carries, Rice red-zone looks) and it also feeds their Chiefs D/ST (sacks, INTs against a Colts offense that benched its QB in W1). The difference in scale is the point: your two starters project 32.8, their D/ST 7.2. You want KC to win big; you just want them to do it on offense.</li>
+        <li><strong>Rice vs the Colts' corners:</strong> Indy's outside corners are elite but the defense as a whole was historically bad in W1 (they've changed the defensive play-caller since). Mahomes should work the slot, which is Rice's room. If Rice sees 8+ targets, he beats 15.</li>
+        <li>This is the last Sunday game. If you're up 20+ going in, the matchup is functionally over: their only Monday piece is Kyren Williams.</li>
+      </ul>
+    </div>
+
+    <div class="game">
+      <div class="gh"><span class="gt">Giants at Rams</span><span class="gm">Mon 7:15 · LAR −7 · O/U 48.5</span></div>
+      <div class="who"><div><span class="h">Imad</span><br>Cam Skattebo (FLEX, 12.8)</div><div><span class="h">Bower Outage</span><br>Kyren Williams (RB, 14.2)</div></div>
+      <ul class="watch">
+        <li><strong>Direct RB-vs-RB clash to close the week.</strong> Kyren is the better bet on paper (+1.4, and the Rams are 7-point favorites, which means leading and running late). Skattebo's case is the Giants' run-first identity and a Rams run defense that is without Garrett. If the matchup is within ~5 points going into Monday, this game decides it and Kyren is the favorite to win the head-to-head slot.</li>
+        <li>Puka Nacua is questionable (hamstring) for the Rams — if he sits, LA leans on Kyren even more. Aaron Donald's possible return after 981 days is a storyline, not a fantasy factor, unless he's eating Skattebo's runs.</li>
+      </ul>
+    </div>
+
+    <div class="game">
+      <div class="gh"><span class="gt">Bench-only games</span><span class="gm">for completeness</span></div>
+      <ul class="watch">
+        <li><strong>Browns at Buccaneers (12:00, TB −8.5):</strong> your Judkins, their Gainwell — both benched, both correctly. Judkins' carry count is the thing to log for Week 3.</li>
+        <li><strong>Saints at Ravens (12:00, BAL −7.5):</strong> your Vele and Juwan Johnson. If Olave (Q) is inactive, Vele is the Saints' WR1 in a game they'll be chasing — a 15-point bench day is possible. Note it; don't chase it.</li>
+        <li><strong>Jaguars at Broncos (3:05, DEN −2.5):</strong> your Lawrence. Jacksonville has scored 23+ in 12 straight; a big Lawrence day on your bench is the cost of the (correct) Purdy call.</li>
+        <li><strong>Raiders at Chargers (3:05, LAC −6.5):</strong> their Brock Bowers, doubtful (knee cleanup; limited Friday, coach wants "significant improvement"). Michael Mayer starts if Bowers sits. Either way Bowers is on their bench this week, so nothing changes for you — but expect him back for Week 3.</li>
+        <li><strong>Eagles at Titans (12:00, PHI −7):</strong> your Wan'Dale Robinson, benched. Correct.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OPPONENT ============ -->
+<section id="opponent">
+  <div class="card">
+    <h2>Scouting Bower Outage</h2>
+    <div class="grid g2">
+      <div>
+        <h3>Who they are</h3>
+        <ul>
+          <li><strong>The thinnest roster in the league right now.</strong> 68.3 in W1 — 22 points below the next-lowest score. Power score 6.6 (10th of 10). They drafted Bowers (R1, injured), A.J. Brown (R2, now IR), Kyren (R3), G. Wilson (R4), Price (R5), Burden (R6), Burrow (R7) — a top-heavy build that lost its two best pieces by Week 2.</li>
+          <li><strong>Seven roster moves in a week</strong> (Mayfield in and out, Ferguson in and out, three D/STs, Coker, Hunter Henry, Antonio Williams, Coleman twice). That's a manager scrambling, not building — and their waiver priority is #8, so they can't out-claim you for anything good.</li>
+          <li><strong>One QB (Burrow)</strong> after dropping Mayfield. If Burrow's back flares up, they have no fallback. Worth remembering as a trade angle: your Lawrence is a real asset to them.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>How they beat you</h3>
+        <ul>
+          <li>Burrow + Burden + Wilson all hit 20 in their pass-friendly matchups (HOU without Collins, MIN's blitz, GB's protection issues) while Purdy gets pulled from a blowout early. That's a ~140 for them and a ~110 for you. It's inside the distribution — maybe a 1-in-4 shot.</li>
+          <li>Coker repeats W1. He's a waiver claim who scored 33.8; the projection (11.9) says regression, but Bryce Young targeted him heavily.</li>
+        </ul>
+        <h3>Where their score comes from</h3>
+        <p class="small muted">All nine starters play Sunday except Kyren (MNF). By Sunday night you'll know ~86% of their score. Their 12:00 window is heavy — Burrow, Wilson, Coker, Burden, H. Henry — so by 3:00 CT you'll have a very good read.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STAKES ============ -->
+<section id="stakes">
+  <div class="card">
+    <h2>Stakes</h2>
+    <div class="grid g2">
+      <div>
+        <h3>Standings after Week 1</h3>
+        <div class="tablewrap">
+        <table>
+          <thead><tr><th>#</th><th>Team</th><th>Rec</th><th class="num">PF</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>🥊ALI🥊</td><td>1–0</td><td class="num">165.2</td></tr>
+            <tr><td>2</td><td>Get Hooked</td><td>1–0</td><td class="num">150.1</td></tr>
+            <tr><td>3</td><td>Lamar n Order</td><td>1–0</td><td class="num">148.0</td></tr>
+            <tr><td>4</td><td>Redemption team</td><td>1–0</td><td class="num">142.0</td></tr>
+            <tr><td>5</td><td>The Man Wolf</td><td>1–0</td><td class="num">135.5</td></tr>
+            <tr><td>6</td><td>Steel Giants</td><td>0–1</td><td class="num">142.6</td></tr>
+            <tr><td>7</td><td>Texas Two Step</td><td>0–1</td><td class="num">126.0</td></tr>
+            <tr style="background:color-mix(in srgb,var(--me-soft) 45%,var(--surface))"><td>8</td><td><span class="dot me"></span>Imad</td><td>0–1</td><td class="num">125.0</td></tr>
+            <tr><td>9</td><td>Playoff Chase</td><td>0–1</td><td class="num">90.5</td></tr>
+            <tr><td>10</td><td><span class="dot opp"></span>Bower Outage</td><td>0–1</td><td class="num">68.3</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      <div>
+        <h3>Why this week matters</h3>
+        <ul>
+          <li><strong>0–2 is a hole in a 14-week season.</strong> Six of ten make the playoffs; historically about 1 in 3 teams that start 0–2 get there. You're the favorite by 14 — this is the week the schedule hands you to get to 1–1.</li>
+          <li><strong>Points-for is the tiebreaker</strong> and you're 8th in it despite a good roster, because ~41 points sat on your bench in W1 (Watson 32.7, Purdy 21.1, Evans 16.9, Seahawks D 14.0). That's fixed this week. Keep it fixed — set the projection-optimal lineup every week unless you have a specific reason not to, and write the reason down.</li>
+          <li><strong>Week 3 is Texas Two Step</strong> (0–1, 126 PF — a near-mirror of your team). Log Watson's, London's and Judkins' usage this week; the WR3 and RB3 decisions come back immediately.</li>
+          <li><strong>Trade note for later:</strong> Bower Outage has one QB and needs a lot. Lawrence for Garrett Wilson or Kyren is the kind of deal a scrambling 0–2 manager takes. Not this week — you don't trade with the team you're playing — but next.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section id="glossary">
+  <div class="card">
+    <h2>Glossary</h2>
+    <dl>
+      <dt>Projection (proj)</dt><dd>ESPN's median expected fantasy points for the week under this league's scoring (PPR, 4-pt passing TD). A median means the player beats it about as often as not; team totals land within ~25 of the sum about two-thirds of the time.</dd>
+      <dt>Spread / total</dt><dd>Spread = how many points the sportsbook favorite is expected to win by. Total (O/U) = expected combined score. Big favorites run late (good for RBs, bad for their QB's 4th quarter); high totals mean more fantasy points to go around.</dd>
+      <dt>Stack</dt><dd>Starting a QB and his own receiver (Purdy–Evans) or RB and receiver (Walker–Rice). Their points move together — higher ceiling, higher variance.</dd>
+      <dt>Game script</dt><dd>How the flow of the game shapes usage: a trailing team throws (good for its WRs, bad for its RB), a leading team runs.</dd>
+      <dt>Yards per route run (YPRR)</dt><dd>Receiving yards divided by pass routes run — an efficiency stat that strips out how often the team throws. 2.0+ is starter territory; Burden's 2.79 in W1 is excellent.</dd>
+      <dt>Power score</dt><dd>ESPN's team-strength metric, a two-game rolling average of scoring that ignores win/loss.</dd>
+      <dt>Q / Doubtful / IR</dt><dd>Questionable = uncertain, usually plays (Burrow); Doubtful = usually sits (Bowers, Tua); IR = out at least 4 games. Inactives are announced 90 minutes before kickoff.</dd>
+    </dl>
+  </div>
+</section>
+
+<footer>
+  <p>Data: ESPN league 394766 sync 2026-09-19 21:04 CT (<code>teams.json</code>, <code>week_stats.json</code> W2 in progress, <code>power_rankings.json</code>, <code>transactions.json</code>, <code>draft_results.json</code>). Live checks Sat ~23:00 CT: Burrow (NFL.com, NBC Sports, CBS), Falcons QB (atlantafalcons.com, NFL.com, CBS), Bowers (raiders.com, NFL.com). Lines: ESPN betting (Week 2). Game notes: ESPN reporter previews. Projections are inputs, not results.</p>
+  <p>Fantasy Professor · prepared for Imad · Imad decides.</p>
+</footer>
+</main>
+</body>
+</html>

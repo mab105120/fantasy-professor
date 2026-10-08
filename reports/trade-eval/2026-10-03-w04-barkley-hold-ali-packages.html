@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Barkley: Hold or Sell</title>
+<style>
+:root{
+  --bg:#0d1117;--bg2:#11161f;--card:#161c26;--card2:#1c2330;--line:#29313f;
+  --ink:#e8ecf2;--mute:#8b96a8;--faint:#5c6778;
+  --accent:#7aa2ff;--accent-bg:rgba(122,162,255,.12);
+  --good:#4fd18b;--good-bg:rgba(79,209,139,.12);
+  --warn:#f2b64c;--warn-bg:rgba(242,182,76,.12);
+  --bad:#ff6b6b;--bad-bg:rgba(255,107,107,.12);
+  --give:#ff8f70;--get:#4fd18b;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html{color-scheme:dark}
+body{margin:0;background:radial-gradient(1200px 500px at 50% -200px,#1a2340 0%,var(--bg) 60%) no-repeat,var(--bg);color:var(--ink);
+  font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:980px;margin:0 auto;padding:32px 16px 72px}
+a{color:var(--accent)}
+b,strong{color:#fff;font-weight:650}
+
+/* header */
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700}
+h1{font-size:30px;line-height:1.2;margin:6px 0 8px;letter-spacing:-.01em}
+.meta{display:flex;flex-wrap:wrap;gap:8px;color:var(--mute);font-size:13px}
+.meta span{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+
+/* sticky section nav */
+nav.toc{position:sticky;top:0;z-index:5;margin:22px -16px 0;padding:10px 16px;background:rgba(13,17,23,.85);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.toc a{flex:none;font-size:13px;color:var(--mute);text-decoration:none;padding:4px 10px;border-radius:999px}
+nav.toc a:hover{background:var(--card2);color:var(--ink)}
+
+section{scroll-margin-top:60px}
+h2{font-size:19px;margin:40px 0 12px;display:flex;align-items:center;gap:10px}
+h2::before{content:"";width:4px;height:18px;border-radius:2px;background:var(--accent)}
+h3{font-size:15px;margin:0 0 8px}
+p{margin:8px 0}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin:12px 0}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+
+/* verdict banner */
+.verdict{display:flex;gap:18px;align-items:flex-start;border-radius:var(--radius);padding:20px;margin:24px 0 8px;border:1px solid}
+.verdict.accept{background:var(--good-bg);border-color:rgba(79,209,139,.35)}
+.verdict.decline{background:var(--bad-bg);border-color:rgba(255,107,107,.35)}
+.verdict.counter{background:var(--warn-bg);border-color:rgba(242,182,76,.35)}
+.verdict .badge{flex:none;font-weight:800;font-size:14px;letter-spacing:.08em;padding:8px 14px;border-radius:10px;color:#0d1117}
+.verdict.accept .badge{background:var(--good)}.verdict.decline .badge{background:var(--bad)}.verdict.counter .badge{background:var(--warn)}
+.verdict .call{font-size:17px;font-weight:600;margin:0 0 4px}
+.verdict .why{color:var(--mute);margin:0}
+@media (max-width:560px){.verdict{flex-direction:column}}
+
+/* KPI tiles */
+.kpi .label{font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+.kpi .val{font-size:26px;font-weight:750;font-variant-numeric:tabular-nums;margin:2px 0}
+.kpi .sub{font-size:13px;color:var(--mute)}
+.up{color:var(--good)}.down{color:var(--bad)}.flat{color:var(--mute)}
+
+/* give / get sides */
+.side{border-top:3px solid}
+.side.give{border-top-color:var(--give)}.side.get{border-top-color:var(--get)}
+.side-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.side-h .who{font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:800}
+.give .who{color:var(--give)}.get .who{color:var(--get)}
+.side-h .tot{font-size:13px;color:var(--mute)}
+.player{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.player:first-of-type{border-top:0}
+.pos{flex:none;width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:12px;font-weight:800;background:var(--card2);border:1px solid var(--line)}
+.pos.QB{color:#c9a0ff}.pos.RB{color:#4fd1c5}.pos.WR{color:#7aa2ff}.pos.TE{color:#f2b64c}.pos.DST{color:#a0aec0}
+.player .name{font-weight:650}
+.player .info{font-size:13px;color:var(--mute)}
+.player .nums{margin-left:auto;text-align:right;font-variant-numeric:tabular-nums;font-size:13px;color:var(--mute);white-space:nowrap}
+.player .nums b{display:block;font-size:16px}
+
+/* tags */
+.tag{display:inline-block;font-size:11px;font-weight:750;letter-spacing:.03em;padding:2px 7px;border-radius:6px;vertical-align:1px}
+.tag.ok{color:var(--good);background:var(--good-bg)}
+.tag.q{color:var(--warn);background:var(--warn-bg)}
+.tag.o{color:var(--bad);background:var(--bad-bg)}
+.tag.n{color:var(--accent);background:var(--accent-bg)}
+.tag.m{color:var(--mute);background:var(--card2)}
+
+/* value meter: set --give / --get widths as % of the larger side */
+.meter{margin:6px 0 2px}
+.meter .row{display:grid;grid-template-columns:90px 1fr 60px;gap:10px;align-items:center;margin:8px 0;font-size:13px}
+.meter .track{height:12px;background:var(--card2);border-radius:999px;overflow:hidden}
+.meter .fill{height:100%;border-radius:999px}
+.meter .fill.give{background:linear-gradient(90deg,#ff8f70,#ff6b6b)}
+.meter .fill.get{background:linear-gradient(90deg,#3fb67a,#4fd18b)}
+.meter .v{text-align:right;font-variant-numeric:tabular-nums;font-weight:650}
+
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--card)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{background:var(--bg2);color:var(--mute);font-weight:650;font-size:11px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody tr:hover{background:rgba(255,255,255,.02)}
+tr.chg td{background:var(--accent-bg)}
+
+/* lists, callouts */
+ul.clean{list-style:none;padding:0;margin:0}
+ul.clean li{padding:8px 0 8px 26px;position:relative;border-top:1px solid var(--line)}
+ul.clean li:first-child{border-top:0}
+ul.clean li::before{position:absolute;left:0;top:8px;font-weight:800}
+ul.pro li::before{content:"+";color:var(--good)}
+ul.con li::before{content:"−";color:var(--bad)}
+ul.risk li::before{content:"!";color:var(--warn)}
+ul.step li::before{content:"→";color:var(--accent)}
+.note{border-left:3px solid var(--accent);background:var(--accent-bg);padding:12px 14px;border-radius:0 10px 10px 0;margin:12px 0;font-size:14px}
+.note.warn{border-color:var(--warn);background:var(--warn-bg)}
+
+/* proposal packages */
+.pkg{position:relative}
+.pkg .rank{position:absolute;top:14px;right:16px;font-size:30px;font-weight:800;color:var(--faint)}
+.pkg .swap{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin:10px 0}
+.pkg .swap .arrow{color:var(--faint);font-size:20px}
+.pkg .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:750}
+.pkg .give .lbl{color:var(--give)}.pkg .get .lbl{color:var(--get)}
+.dots{display:inline-flex;gap:3px;vertical-align:middle}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--card2);border:1px solid var(--line)}
+.dots i.on{background:var(--accent);border-color:var(--accent)}
+
+details{margin-top:28px;color:var(--mute);font-size:13px}
+summary{cursor:pointer;color:var(--ink);font-weight:600}
+dl.gloss{display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;margin:12px 0}
+dl.gloss dt{font-weight:700;color:var(--ink)}dl.gloss dd{margin:0}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--faint);font-size:12px}
+</style>
+</head>
+<body><main>
+
+<div class="eyebrow">Trade targets · Week 4</div>
+<h1>Saquon Barkley: hold, or sell to 🥊ALI🥊 only at full price</h1>
+<div class="meta">
+  <span>Built Sat 2026-10-03 02:05 EEST</span>
+  <span>ESPN sync 01:43 (W4 in progress, W1–3 final)</span>
+  <span>The Man Wolf 3-0 · 2nd</span>
+  <span>Partner: 🥊ALI🥊 (team 1) 1-2 · 6th</span>
+</div>
+
+<nav class="toc">
+  <a href="#verdict">Verdict</a><a href="#findings">Barkley findings</a><a href="#schedule">Schedule</a>
+  <a href="#partner">ALI</a><a href="#packages">Packages</a><a href="#rejected">Not offering</a><a href="#risks">Risks</a><a href="#next">Next steps</a>
+</nav>
+
+<section id="verdict">
+<div class="verdict counter">
+  <div class="badge">HOLD</div>
+  <div>
+    <p class="call">Don't panic-sell Barkley. His slump comes from zero TDs and two targets a game. He hasn't lost his job. ALI's interest is a chance to sell at market price, never below it.</p>
+    <p class="why">Confidence: <b>medium</b>. Experts still rank him a low-end RB1 (FantasyPros ROS RB10), but they're split, and his role in the passing game has shrunk. Only take one of the three packages below. Each one returns at least his consensus value. If ALI won't meet that price, keep him: weeks 6–9 are the softest stretch on his schedule.</p>
+  </div>
+</div>
+
+<div class="grid g3">
+  <div class="card kpi"><div class="label">Scored vs expected</div><div class="val down">7.0 / 15.2</div><div class="sub">pts/gm in our scoring, W1–3 vs ESPN ROS projection</div></div>
+  <div class="card kpi"><div class="label">Expert ROS rank</div><div class="val flat">RB10</div><div class="sub">FantasyPros consensus, #22 overall (range #15–#42)</div></div>
+  <div class="card kpi"><div class="label">Remaining reg-season games</div><div class="val up">6 of 9</div><div class="sub">are favorable RB matchups (W5–W14). Playoffs: 2 of 3 tough</div></div>
+</div>
+</section>
+
+<section id="findings">
+<h2>Barkley: what the evidence says</h2>
+<div class="grid g2">
+  <div class="card"><h3>What's actually wrong</h3><ul class="clean con">
+    <li><b>No touchdowns.</b> He has 0 TDs and only 2 carries inside the 5-yard line all season. Jalen Hurts' QB sneaks ("tush push") take the goal-line work. Through Week 3 he's PPR RB33.</li>
+    <li><b>Almost no receiving role.</b> He has 2 targets a game (6 total, 3 catches for 6 yds). That's down from 3.1/gm in 2025 and 7.6 as a rookie. His <i>route share</i> (how often he runs a pass route when the QB drops back) was 42% in W3, while Will Shipley took passing downs. In PPR that costs him points every week.</li>
+    <li><b>The offense is worse.</b> New OC Sean Mannion's unit is 24th in yards. DeVonta Smith (hamstring) and Goedert (knee) are OUT for W4. PHI ran only 47 plays in W3.</li>
+    <li><b>Age 29, and 2025 was already a step down.</b> You remember correctly: he finished RB14 per game in 2025 (1,140 rush yds, 4.1 YPC, 9 TDs), after his 2,005-yard 2024.</li>
+  </ul></div>
+  <div class="card"><h3>What's still fine</h3><ul class="clean pro">
+    <li><b>He still owns the job.</b> W3: 72–74% of snaps and 17 of 20 RB opportunities (85%). Bigsby got 2 snaps, Shipley 11–13.</li>
+    <li><b>He's running well.</b> 5.1 yards per carry is 7th among RBs with 30+ carries, a full yard better than 2025. In healthy games he's had 15 carries for ~83 yds.</li>
+    <li><b>Week 2 was the stinger, not decline.</b> He had 4 carries before leaving. The W3 MRI was clean and he's on no injury report for W4 vs LAR.</li>
+    <li><b>TDs should come back some.</b> He scored 13 and 9 TDs the last two years. A lead back with 0 TDs on 85% of the opportunities is the classic regression spot (FanDuel's buy-low case).</li>
+  </ul></div>
+</div>
+
+<div class="tw"><table>
+<thead><tr><th>Source</th><th>Barkley</th><th>Read</th></tr></thead>
+<tbody>
+<tr><td>FantasyPros ROS consensus (10/02)</td><td class="n">RB10 · #22 ovr</td><td>Low-end RB1. The range is wide (#15 to #42), so experts are split.</td></tr>
+<tr><td>FantasyPros W4 trade-value chart</td><td class="n">42.4</td><td>RB tier: Gibbs 75.1, Henry 50.5, Jeanty 46.8, <b>Barkley 42.4</b>, Tuten 39.6</td></tr>
+<tr><td>Yahoo W4 trade-value chart</td><td class="n">42–43</td><td>Priced about the same as Hubbard (44)</td></tr>
+<tr><td>CBS, Dave Richard W4 chart</td><td class="n">29.5</td><td>3rd RB on the chart (behind Gibbs and Henry), ahead of Jeanty (23)</td></tr>
+<tr><td>Touchdown Wire (BJ Rudell)</td><td>SELL</td><td>"On track to become one of this year's biggest RB busts": targets, goal line, age</td></tr>
+<tr><td>FanDuel Research</td><td>BUY-LOW</td><td>TD regression. He's still the clear lead back</td></tr>
+<tr><td>ESPN W4 playbook</td><td>Lineup lock</td><td>W4 vs LAR, projected 14.3</td></tr>
+</tbody></table></div>
+
+<div class="note"><b>Our read: AGREE on hold, DIVERGE ↓ from ESPN's 15.2/gm.</b> In this league's scoring I estimate ~13/gm the rest of the way. That's ~15 carries × 5 YPC ≈ 8 pts, ~1.5 catches ≈ 2.5, and ~0.4 TD/gm ≈ 2.5. That's a solid RB2 with RB1 weeks in the soft stretch, not a bust. Selling at his low point hands the TD regression to ALI. Selling at a <i>fair</i> price (consensus value back, roster not weakened) is not panic, and all three packages below meet that bar.</div>
+</section>
+
+<section id="schedule">
+<h2>Remaining schedule</h2>
+<p style="color:var(--mute);font-size:14px">Two lenses on each run defense. The first is RB fantasy points allowed per game in 2025 (rank 1 = allowed the most, i.e. the easiest matchup). The second is rush yards per game allowed in 2026 W1–3 (rank 32 = allowed the most). Three games is a noisy sample, so the call weighs both.</p>
+<div class="tw"><table>
+<thead><tr><th>Wk</th><th>Opp</th><th class="n">2025 RB pts/gm (rank)</th><th class="n">2026 rush yds/gm · YPC (rank)</th><th>Call</th></tr></thead>
+<tbody>
+<tr><td>4</td><td>vs LAR</td><td class="n">21.1 (20)</td><td class="n">101 · 4.00 (11)</td><td><span class="tag m">NEUTRAL</span></td></tr>
+<tr><td>5</td><td>@ JAX</td><td class="n">18.4 (30)</td><td class="n">91 · 3.61 (8)</td><td><span class="tag o">TOUGH</span></td></tr>
+<tr class="chg"><td>6</td><td>vs CAR</td><td class="n">24.2 (10)</td><td class="n">193 · 5.74 (32)</td><td><span class="tag ok">SMASH</span></td></tr>
+<tr class="chg"><td>7</td><td>vs DAL</td><td class="n">25.9 (5)</td><td class="n">180 · 5.04 (31)</td><td><span class="tag ok">SMASH</span></td></tr>
+<tr><td>8</td><td>@ WSH</td><td class="n">25.4 (6)</td><td class="n">82 · 3.84 (3)</td><td><span class="tag m">MIXED</span></td></tr>
+<tr class="chg"><td>9</td><td>vs NYG</td><td class="n">26.0 (4)</td><td class="n">104 · 4.67 (13)</td><td><span class="tag ok">GOOD</span></td></tr>
+<tr><td>10</td><td colspan="4">BYE (with Harvey, Eagles D/ST)</td></tr>
+<tr><td>11</td><td>vs PIT</td><td class="n">19.9 (24)</td><td class="n">113 · 4.34 (18)</td><td><span class="tag m">NEUTRAL</span></td></tr>
+<tr class="chg"><td>12</td><td>@ DAL</td><td class="n">25.9 (5)</td><td class="n">180 · 5.04 (31)</td><td><span class="tag ok">SMASH</span></td></tr>
+<tr class="chg"><td>13</td><td>@ ARI</td><td class="n">27.5 (3)</td><td class="n">128 · 4.56 (26)</td><td><span class="tag ok">GOOD</span></td></tr>
+<tr class="chg"><td>14</td><td>vs IND</td><td class="n">20.4 (22)</td><td class="n">141 · 4.87 (29)</td><td><span class="tag ok">GOOD</span></td></tr>
+<tr><td>15</td><td>vs SEA</td><td class="n">19.9 (25)</td><td class="n">87 · 3.26 (6)</td><td><span class="tag o">TOUGH</span></td></tr>
+<tr><td>16</td><td>vs HOU</td><td class="n">19.5 (27)</td><td class="n">87 · 3.47 (5)</td><td><span class="tag o">TOUGH</span></td></tr>
+<tr><td>17</td><td>@ SF</td><td class="n">24.3 (9)</td><td class="n">106 · 3.73 (15)</td><td><span class="tag m">NEUTRAL</span></td></tr>
+</tbody></table></div>
+<div class="note warn"><b>Timing matters.</b> Weeks 6–14 are kind, so if you hold, his value should rebuild by mid-season. Weeks 15–16 (SEA, HOU) are among the hardest RB matchups in the league, right when our playoffs start. That gives you a second sell window: <b>re-check at the Week 8 checkpoint</b> and, if he's back to RB1 numbers, consider moving him before the 11/25 deadline for a back with a better playoff slate.</div>
+</section>
+
+<section id="partner">
+<h2>Why ALI is a real buyer</h2>
+<div class="card">
+<ul class="clean step">
+  <li><b>Better than their record.</b> They're 1-2 and 6th, but 4th in points scored (402.7) and have had the most points scored against them in the league (434.6). That's a frustrated manager who thinks he's one piece away.</li>
+  <li><b>The league's busiest trader.</b> Three trades already (Javonte → D. Smith; Flowers + Concepcion → Nabers + Wicks + A. Mitchell; Sadiq → J. Daniels) and about 20 adds and drops. He's shown he will make 2-for-1 and 3-for-2 deals.</li>
+  <li><b>Roster crunch.</b> Both IR slots are full (Tyreek Hill, A. Mitchell), and two more OUT players sit on his bench: D. Smith (hamstring) and J. Daniels (elbow, week-to-week). Any deal where he gets back fewer players frees a spot he badly needs.</li>
+  <li><b>RB is where his strength is.</b> He has Gibbs and Jeanty (both <b>keepers</b>, so untouchable), plus Hubbard (his R9 pick) and Henderson (R8). He clearly wants to start 3–4 RBs through the 2 FLEX spots. Barkley would push one of his cheap RBs to surplus, and surplus is what he can trade.</li>
+  <li><b>QB is a mess.</b> Kyler (FP QB20) has 5.0 pts/gm in 2 games, and Daniels is OUT. He has churned Herbert, Dart and Love. Stafford is a real sweetener here.</li>
+  <li><b>He has shopped Egbuka before.</b> On 09-30 he floated Egbuka for Collins, so he's willing to move him.</li>
+</ul>
+</div>
+</section>
+
+<section id="packages">
+<h2>Three packages, ranked by what they do for you × odds ALI says yes</h2>
+<p style="color:var(--mute);font-size:14px">Values are the FantasyPros / CBS / Yahoo W4 PPR trade charts. Lineup numbers are ESPN ROS points per game. Note that FP and Yahoo add up 2-for-1s naively, which overstates the side getting two players. CBS is the fairest check on a consolidation deal, and on CBS all three are close to even. That's why ALI can say yes. <b>All three spend Barkley, so only one goes out at a time.</b></p>
+
+<div class="card pkg">
+  <div class="rank">#1</div>
+  <h3>Barkley → ALI for Chuba Hubbard + Emeka Egbuka</h3>
+  <div class="swap">
+    <div class="give"><div class="lbl">Give</div>Saquon Barkley (RB, PHI) <span class="tag ok">ACTIVE</span></div>
+    <div class="arrow">⇄</div>
+    <div class="get"><div class="lbl">Get</div>Chuba Hubbard (RB, CAR) <span class="tag ok">ACTIVE</span><br>Emeka Egbuka (WR, TB) <span class="tag ok">ACTIVE</span></div>
+  </div>
+  <p>Acceptance odds <span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+     &nbsp; Helps us <span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></p>
+  <div class="tw"><table><tbody>
+    <tr><td>Value (FP / CBS / Yahoo)</td><td class="n">42.4 / 29.5 / 43 → <b>59.0 / 31.0 / 71</b></td></tr>
+    <tr><td>Our lineup</td><td class="n">RB2 Hubbard 14.8 vs Barkley 15.2 = <span class="down">−0.4</span> by ESPN · <span class="up">+1.8</span> on our 13/gm Barkley read</td></tr>
+    <tr><td>W8 vs Lamar n Order (3-0)</td><td class="n">Olave, Collins, Kittle and Kamara are all on bye. Egbuka (bye W10) <span class="up">starts at WR</span></td></tr>
+  </tbody></table></div>
+  <p><b>Why you:</b> Hubbard is a lead back now that Jonathon Brooks is on IR (core). He has 41 carries + 9 targets and 17.7/gm, but 3 TDs drive that, so expect ~12–13. That's level with Barkley for the regular season, and his Week 15 game vs CIN is a much better playoff matchup. Egbuka (2nd year, 6/5/9 targets, ~11/gm) is the WR3 who covers the Week 8 bye collision, and he's a cheap keeper option under the flat round-skip rule. That fits <i>strategy.md</i>'s "bench floor" lesson from 2025. Cut: M. Washington.</p>
+  <p><b>Why ALI:</b> He gets the back he asked about, consolidates two players into one, and frees a roster spot for his OUT players. Hubbard cost him only an R9 pick. Barkley replaces Hubbard in his FLEX (+0.4). <b>Cost to him:</b> Odunze/Wicks start for Egbuka (−1.5) until Smith returns. That makes this the hardest sell of the three, so add Stafford if he balks (see below).</p>
+  <p><b>Risk:</b> CAR's bye is <b>Week 5, next week</b>, so Harvey or Kamara plays RB2 vs Imad. Experts disagree on Hubbard: FP ROS RB21, range #41–#95. Egbuka's QB is a UDFA rookie while Mayfield (thumb) is out until ~W7.</p>
+</div>
+
+<div class="card pkg">
+  <div class="rank">#2</div>
+  <h3>Barkley → ALI for DeVonta Smith + TreVeyon Henderson</h3>
+  <div class="swap">
+    <div class="give"><div class="lbl">Give</div>Saquon Barkley (RB, PHI) <span class="tag ok">ACTIVE</span></div>
+    <div class="arrow">⇄</div>
+    <div class="get"><div class="lbl">Get</div>DeVonta Smith (WR, PHI) <span class="tag o">O</span> hamstring<br>TreVeyon Henderson (RB, NE) <span class="tag ok">ACTIVE</span></div>
+  </div>
+  <p>Acceptance odds <span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+     &nbsp; Helps us <span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span> <span class="tag q">once Smith is healthy</span></p>
+  <div class="tw"><table><tbody>
+    <tr><td>Value (FP / CBS / Yahoo)</td><td class="n">42.4 / 29.5 / 43 → <b>67.8 / 28.5 / 73</b></td></tr>
+    <tr><td>Our lineup, Smith healthy</td><td class="n">Tuten moves to RB2, Smith 15.3 at FLEX = <span class="up">+0.1</span> by ESPN · <span class="up">+2.3</span> on our read</td></tr>
+    <tr><td>Our lineup, while Smith is out</td><td class="n">FLEX goes to M. Washington / J. Williams (~10.5) = <span class="down">−4.7/wk</span></td></tr>
+  </tbody></table></div>
+  <p><b>Why you:</b> This is the buy-low with the highest ceiling. Smith is PHI's target leader: 27 targets in 3 games, 16.2/gm, FP ROS WR12, #21 overall, just ahead of Barkley. In PPR his role is worth more than Barkley's current one. Henderson (2nd year, NE lead back in W2 with 16 carries, 8 in W3; FP RB24) replaces Harvey as RB depth and adds keeper value. Cut: Harvey.</p>
+  <p><b>Why ALI:</b> This has the clearest yes of the three. Smith can't play and can't go on IR. Barkley starts for him <b>right now</b> in place of Wicks (+6.0/wk). When Smith would have returned, Barkley ≈ Smith for him, and he gets a roster spot back. He only gives up bench depth he isn't starting.</p>
+  <p><b>Risk:</b> Smith missed every practice this week, and <b>there's no public timeline (UNCONFIRMED)</b>. Don't send this until Monday's update says short-term. It also doesn't spread your risk: same PHI offense, same W10 bye, same tough playoff slate. Henderson missed W1 (0 pts, reason unconfirmed) and shares carries with Stevenson.</p>
+</div>
+
+<div class="card pkg">
+  <div class="rank">#3</div>
+  <h3>Barkley → ALI for Chuba Hubbard + TreVeyon Henderson</h3>
+  <div class="swap">
+    <div class="give"><div class="lbl">Give</div>Saquon Barkley (RB, PHI) <span class="tag ok">ACTIVE</span></div>
+    <div class="arrow">⇄</div>
+    <div class="get"><div class="lbl">Get</div>Chuba Hubbard (RB, CAR) <span class="tag ok">ACTIVE</span><br>TreVeyon Henderson (RB, NE) <span class="tag ok">ACTIVE</span></div>
+  </div>
+  <p>Acceptance odds <span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+     &nbsp; Helps us <span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></p>
+  <div class="tw"><table><tbody>
+    <tr><td>Value (FP / CBS / Yahoo)</td><td class="n">42.4 / 29.5 / 43 → <b>64.8 / 27.5 / 71</b></td></tr>
+    <tr><td>Our lineup</td><td class="n">Same as #1: <span class="down">−0.4</span> by ESPN · <span class="up">+1.8</span> on our read. Henderson is RB depth</td></tr>
+  </tbody></table></div>
+  <p><b>Why you:</b> This follows <i>strategy.md</i> rule 1 ("RB depth is the lineup lever… Buy RB when it's available"). You end up with Henry, Hubbard, Tuten, Henderson and Kamara, plus a 2nd-year keeper option. Cut: Harvey.</p>
+  <p><b>Why ALI:</b> His WR room stays intact, and Barkley replaces Hubbard in his FLEX (+0.4). He turns two cheap mid-round RBs into the name he asked for, and frees a roster spot. On CBS it's even (he "wins" 29.5 to 27.5).</p>
+  <p><b>Risk:</b> It doesn't help Week 8 (no WR coming back). Hubbard's bye is W5. This is the safest yes for ALI but the smallest gain for you, so use it as the fallback if he rejects #1.</p>
+</div>
+
+<div class="note"><b>Sweetener for any package: add Stafford.</b> It fixes ALI's QB hole (Kyler 5.0/gm, Daniels OUT) and makes the deal 2-for-2, so neither side has to cut. Stafford is FP QB13, which <i>strategy.md</i> calls an expendable backup ("over a backup QB or a second TE"). The cost: Dak's bye is <b>Week 14, the last regular-season week</b>. You'd stream a QB that week (Bryce Young / Love tier). Lead without him and add him only to close.</div>
+</section>
+
+<section id="rejected">
+<h2>Not offering, and why</h2>
+<div class="card"><ul class="clean con">
+  <li><b>Jeanty</b> (FP 46.8, RB8): an ALI <b>keeper</b>, age 22. Under the flat round-skip rule, ALI's 2027 plan depends on him. He won't swap him for a 29-year-old. This is the "Barkley for Gibbs" kind of offer.</li>
+  <li><b>Gibbs</b>: obviously not. ALI's other keeper and the RB1 overall.</li>
+  <li><b>Nabers</b> (WR15): ALI traded for him on 09-27 and is young enough to be a keeper. His NYG bye is W8, which makes our W8 collision worse.</li>
+  <li><b>Isaiah Likely / Mark Andrews</b>: no TE need (Fannin TE8, Kittle TE6). Likely's bye is also W8.</li>
+  <li><b>Straight 1-for-1 for Hubbard, Egbuka or Henderson</b>: each ranks well below Barkley (FP RB21 / WR24 / RB24 vs RB10). That's exactly the discount sale you said you didn't want.</li>
+</ul></div>
+</section>
+
+<section id="risks">
+<h2>Risks &amp; exposure</h2>
+<div class="card"><ul class="clean risk">
+  <li><b>Selling before the TD regression:</b> if Barkley scores 2+ TDs in W6–7 (CAR, DAL), you've sold low. Every package returns more total value to cover that risk. Holding is fine too.</li>
+  <li><b>Byes:</b> #1 and #3 bring in a CAR W5 bye (next week, vs Imad). #2 keeps the PHI W10 pile-up (Smith + Harvey + Eagles D/ST). All three remove Barkley from W10.</li>
+  <li><b>Rematch:</b> you play ALI again in W12. Every package makes him a bit stronger. Low concern at ~97% playoff odds, but don't add Stafford and Egbuka together for nothing.</li>
+  <li><b>Keeper value:</b> Barkley at 29 is a poor 2027 keeper. Henderson and Egbuka (2nd year) are the only players here with real keeper upside.</li>
+  <li><b>Conflicting open ALI ideas:</b> the 09-30 ledger has two pending ALI plans (Stafford + Harvey → Hubbard; Collins → Egbuka + Henderson counter). <b>These packages replace both.</b> Don't have two ALI offers out at once.</li>
+</ul></div>
+</section>
+
+<section id="next">
+<h2>Next steps</h2>
+<div class="card"><ul class="clean step">
+  <li><b>Sunday:</b> start Barkley vs LAR (ESPN lineup lock, 14.3 projected). One more data point before an offer goes out costs nothing.</li>
+  <li><b>Reply to ALI's interest:</b> pitch <b>#1 (Hubbard + Egbuka)</b>. If he refuses Egbuka, fall back to <b>#3 (Hubbard + Henderson)</b>. Add Stafford only to close.</li>
+  <li><b>#2 only after Monday's Smith update.</b> If it's a multi-week hamstring, drop it.</li>
+  <li><b>If nothing lands:</b> hold, and re-check at the Week 8 checkpoint against the W15–16 playoff slate.</li>
+  <li><b>If Hubbard is still unclear after Sunday</b> (experts range from #41 to #95), consider <code>/player-eval Barkley vs Hubbard</code> before sending.</li>
+</ul></div>
+</section>
+
+<details>
+<summary>Glossary</summary>
+<dl class="gloss">
+<dt>ROS</dt><dd>Rest of season: value from now to the end of the fantasy playoffs, not points already scored.</dd>
+<dt>ECR</dt><dd>Expert consensus ranking: FantasyPros' average of many analysts' rankings. A wide best-to-worst range means experts disagree.</dd>
+<dt>Trade-value chart</dt><dd>A number per player so a trade's two sides can be added up. Charts overstate 2-for-1 deals because two good bench players don't equal one starter.</dd>
+<dt>Route share</dt><dd>How often a player runs a pass route when his QB drops back. Low for an RB means he's off the field on passing downs, which costs PPR points.</dd>
+<dt>Opportunities</dt><dd>Carries plus targets. The share of a backfield's opportunities is the cleanest measure of who owns the job.</dd>
+<dt>YPC</dt><dd>Yards per carry. It measures efficiency, but it's noisy over small samples.</dd>
+<dt>TD regression</dt><dd>Touchdowns swing a lot from week to week. A lead back with heavy usage and 0 TDs is more likely to score more going forward than to keep scoring zero.</dd>
+<dt>Tush push</dt><dd>The Eagles' QB-sneak play near the goal line. It sends short TDs to Hurts instead of the RB.</dd>
+<dt>Consolidation</dt><dd>Trading two lesser players for one better one. The side getting the best player usually "pays" a little in total value.</dd>
+</dl>
+</details>
+
+<footer>
+Sources: ESPN Fantasy API (rosters, ROS projections, designations; sync 2026-10-03 01:43) ·
+<a href="https://www.fantasypros.com/nfl/rankings/ros-ppr-overall.php">FantasyPros ROS PPR ECR (10/02)</a> ·
+<a href="https://www.fantasypros.com/2026/09/fantasy-football-trade-value-chart-week-4-2026/">FantasyPros W4 trade-value chart</a> ·
+<a href="https://sports.yahoo.com/articles/week-4-fantasy-football-trade-194124581.html">Yahoo W4 trade-value chart</a> ·
+<a href="https://www.cbssports.com/fantasy/football/news/dave-richards-week-4-trade-chart-and-rest-of-season-fantasy-football-rankings-help-you-win-now/">CBS, Dave Richard W4 trade chart</a> ·
+<a href="https://sports.yahoo.com/articles/saquon-barkley-fantasy-bust-turnaround-132425058.html">Touchdown Wire / Yahoo (BJ Rudell)</a> ·
+<a href="https://www.fanduel.com/research/fantasy-football-buy-low-running-backs-rb-breakout-candidates-for-week-4">FanDuel Research buy-low RBs W4</a> ·
+<a href="https://www.rotowire.com/football/article/nfl-box-score-breakdown-eagles-bears-recap-usage-stats-mnf-137491">RotoWire Eagles–Bears usage breakdown</a> ·
+<a href="https://espn.com/fantasy/football/story/_/id/50058762/fantasy-playbook-projections-lineup-locks-2026-week-4-shadow-reports">ESPN W4 fantasy playbook</a> ·
+<a href="https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/devonta-smith-out-for-week-4-vs-rams-with-hamstring-injury">PFT: D. Smith out W4 (10/02)</a> ·
+<a href="https://www.inquirer.com/eagles/2026-season-preview-sean-mannion-running-backs-offense-20260909.html">Inquirer on OC Mannion</a> ·
+<a href="https://www.rotoballer.com/player-news/chuba-hubbard-poised-for-another-rb2-outing-in-week-3/1950685">RotoBaller: Hubbard / Brooks IR</a> ·
+<a href="https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/ashton-jeanty-listed-as-full-participant-for-raiders">PFT: Jeanty full practice</a> ·
+<a href="https://www.4for4.com/news/jayden-daniels-suffered-dislocated-left-elbow-x-rays-negative">4for4: J. Daniels elbow</a> ·
+<a href="https://fftoolbox.fulltimefantasy.com/football/2025/points-allowed.cfm?pos=RB">FFToolbox 2025 RB points allowed</a> ·
+ESPN scoreboard/summary API (2026 W1–4 rushing allowed, computed) · league files: teams, week_stats, draft_results (deduped), transactions.<br>
+Status check: every player in a package was checked against ESPN designations at sync plus team and beat reports. Smith's return timeline and the reason for Henderson's W1 zero are unconfirmed. No suspensions or legal issues found for any player named.
+</footer>
+</main></body></html>

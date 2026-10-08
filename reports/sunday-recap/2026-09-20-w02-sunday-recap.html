@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 2 Sunday Recap</title>
+<style>
+  :root { color-scheme:light; --bg:#f5f5f3; --surface:#fff; --surface-2:#f0efec; --border:#e3e2de; --text:#0b0b0b; --text-2:#52514e; --text-3:#8a8985;
+    --wolf:#2a78d6; --wolf-soft:#cde2fb; --off:#2a78d6; --dfn:#eb6834; --good:#008300; --warn:#c98500; --bad:#e34948;
+    --ga:#1c5cab; --gb:#3987e5; --gc:#86b6ef; --gd:#cde2fb; --gf:#f0efec; --ga-ink:#fff; --gb-ink:#fff; --gc-ink:#0b0b0b; --gd-ink:#0b0b0b; --gf-ink:#52514e;
+    --shadow:0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.05); --radius:14px; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { color-scheme:dark; --bg:#121211; --surface:#1a1a19; --surface-2:#242423; --border:#2f2f2d; --text:#fff; --text-2:#c3c2b7; --text-3:#8d8c85; --wolf:#3987e5; --wolf-soft:#1c3a62; --off:#3987e5; --dfn:#d95926; --good:#3fbf3f; --warn:#e0a021; --bad:#e66767;
+    --ga:#5598e7; --gb:#2a78d6; --gc:#1c5cab; --gd:#104281; --gf:#2f2f2d; --ga-ink:#0b0b0b; --gb-ink:#fff; --gc-ink:#fff; --gd-ink:#c3c2b7; --gf-ink:#8d8c85; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3); } }
+  :root[data-theme="dark"] { color-scheme:dark; --bg:#121211; --surface:#1a1a19; --surface-2:#242423; --border:#2f2f2d; --text:#fff; --text-2:#c3c2b7; --text-3:#8d8c85; --wolf:#3987e5; --wolf-soft:#1c3a62; --off:#3987e5; --dfn:#d95926; --good:#3fbf3f; --warn:#e0a021; --bad:#e66767;
+    --ga:#5598e7; --gb:#2a78d6; --gc:#1c5cab; --gd:#104281; --gf:#2f2f2d; --ga-ink:#0b0b0b; --gb-ink:#fff; --gc-ink:#fff; --gd-ink:#c3c2b7; --gf-ink:#8d8c85; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3); }
+  *{box-sizing:border-box} html{scroll-behavior:smooth;scroll-padding-top:100px}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.55}
+  a{color:var(--wolf);text-decoration:none} a:hover{text-decoration:underline}
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  nav .inner{max-width:1100px;margin:0 auto;padding:0 16px} nav .row{display:flex;align-items:center;gap:4px;overflow-x:auto;height:48px} nav .row.games{height:40px;border-top:1px solid var(--border)}
+  nav .brand{font-weight:700;margin-right:12px;white-space:nowrap} nav a{color:var(--text-2);font-size:13px;padding:5px 9px;border-radius:8px;white-space:nowrap} nav a:hover{background:var(--surface-2);text-decoration:none;color:var(--text)}
+  main{max-width:1100px;margin:0 auto;padding:24px 16px 80px}
+  .eyebrow{color:var(--text-3);font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+  h1{font-size:clamp(28px,4vw,40px);margin:6px 0 4px;line-height:1.15;letter-spacing:-.01em} h2{font-size:22px;margin:0 0 12px} h3{font-size:16px;margin:16px 0 8px}
+  .sub{color:var(--text-2);margin:0} section{margin-top:36px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+  .muted{color:var(--text-2)} .small{font-size:13px} p{margin:8px 0} ul{padding-left:20px;margin:8px 0} li{margin:4px 0}
+  .pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--text-2);vertical-align:middle}
+  .pill.wolf{background:var(--wolf-soft);color:var(--text)} .pill.warn{color:var(--warn)} .pill.bad{color:var(--bad)} .pill.good{color:var(--good)}
+  table{width:100%;border-collapse:collapse;font-size:14px} th{text-align:left;font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;padding:8px;border-bottom:1px solid var(--border)}
+  td{padding:9px 8px;border-bottom:1px solid var(--border);vertical-align:top} tr:last-child td{border-bottom:0} td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .chg{background:color-mix(in srgb,var(--wolf-soft) 45%,var(--surface))} .tablewrap{overflow-x:auto} .slot{font-weight:600;color:var(--text-2);font-size:12px}
+  .lggrid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))} .lg{padding:16px} .lgrow{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+  .side{text-align:center;padding:6px;border-radius:10px} .side.me{background:color-mix(in srgb,var(--wolf-soft) 45%,var(--surface))}
+  .side .nm{font-weight:700} .side .rec{font-size:12px;color:var(--text-2)} .side .pj{font-size:30px;font-weight:700;line-height:1.1;margin-top:4px;font-variant-numeric:tabular-nums} .side .lb{font-size:11px;color:var(--text-3)}
+  .mid{text-align:center} .spread{font-size:13px;font-weight:600;background:var(--surface-2);border-radius:999px;padding:3px 10px;white-space:nowrap}
+  .game{margin-top:16px} .ghead{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  .teams{font-size:22px;font-weight:700;letter-spacing:-.01em} .teams .at{font-weight:400;color:var(--text-3);font-size:15px} .when{color:var(--text-2);font-size:13px}
+  .odds{display:flex;gap:10px;flex-wrap:wrap} .odds>div{background:var(--surface-2);border-radius:10px;padding:6px 12px;min-width:84px} .odds .l{display:block;font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em} .odds .v{font-weight:600;font-size:14px}
+  .story{margin:12px 0 10px}
+  /* unit grade cards */
+  .unitgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px;margin:12px 0}
+  .tcard{border:1px solid var(--border);border-radius:12px;padding:12px 14px;background:var(--surface)}
+  .th{display:flex;align-items:baseline;gap:8px;margin-bottom:8px} .tab{font-weight:800;font-size:18px;letter-spacing:.02em} .tfull{color:var(--text-2)}
+  .grow{display:grid;grid-template-columns:1fr 1fr;gap:12px} .gbox{background:var(--surface-2);border-radius:10px;padding:10px 12px}
+  .glab{font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+  .gline{display:flex;align-items:center;gap:10px;margin:4px 0 6px} .grank{font-size:13px;color:var(--text-2);font-variant-numeric:tabular-nums}
+  .grade{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:34px;padding:0 8px;border-radius:8px;font-weight:800;font-size:18px;letter-spacing:.02em}
+  .grade.sm{min-width:34px;height:26px;font-size:14px;padding:0 6px}
+  .grade.ga{background:var(--ga);color:var(--ga-ink)} .grade.gb{background:var(--gb);color:var(--gb-ink)} .grade.gc{background:var(--gc);color:var(--gc-ink)} .grade.gd{background:var(--gd);color:var(--gd-ink)} .grade.gf{background:var(--gf);color:var(--gf-ink);border:1px solid var(--border)}
+  .strip{position:relative;height:22px;margin:2px 0 4px} .strip .track{position:absolute;left:0;right:0;top:9px;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--ga),var(--gd))}
+  .strip .mark{position:absolute;top:4px;width:14px;height:14px;border-radius:50%;transform:translateX(-50%);border:2px solid var(--surface-2);box-shadow:0 0 0 1px var(--text-3)} .strip .mark.off{background:var(--off)} .strip .mark.dfn{background:var(--dfn)}
+  .strip .s1,.strip .s32{position:absolute;top:14px;font-size:10px;color:var(--text-3)} .strip .s1{left:0} .strip .s32{right:0}
+  .gstats{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--text-2);flex-wrap:wrap;margin-top:6px}
+  .edge{margin-top:10px;font-size:13px;padding:6px 10px;border-radius:8px;background:var(--surface-2);border-left:4px solid var(--text-3)} .edge.good{border-left-color:var(--good)} .edge.bad{border-left-color:var(--bad)}
+  .mwline{margin-top:6px;font-size:13px;background:color-mix(in srgb,var(--wolf-soft) 55%,var(--surface));border-radius:8px;padding:5px 10px}
+  .impact{border-top:1px solid var(--border);padding-top:10px} .ihead{font-size:13px;font-weight:600;color:var(--text-2);margin-bottom:6px}
+  .teams-list{list-style:none;padding:0;margin:0;display:grid;gap:6px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+  .teams-list .team{background:var(--surface-2);border-radius:10px;padding:8px 12px;font-size:14px} .teams-list .team.me{background:color-mix(in srgb,var(--wolf-soft) 55%,var(--surface));border:1px solid var(--wolf)}
+  .tname{font-weight:700} .cnt{float:right;font-size:12px;color:var(--text-3)} .st{margin-top:2px} .be{margin-top:2px}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:14px} .tile{background:var(--surface-2);border-radius:10px;padding:12px 14px} .tile .l{font-size:12px;color:var(--text-2)} .tile .v{font-size:20px;font-weight:600;margin-top:2px} .tile .d{font-size:12px;color:var(--text-3)}
+  /* scatter */
+  .scatter{width:100%;height:auto;max-width:760px;display:block;margin:0 auto;font-family:inherit}
+  .scatter .q{fill:var(--wolf-soft);opacity:.35} .scatter .ql{font-size:11px;fill:var(--text-3)} .scatter .grid{stroke:var(--border);stroke-width:1} .scatter .ax{font-size:12px;fill:var(--text-2)}
+  .scatter .pt circle{stroke:var(--surface);stroke-width:2} .scatter .pt.nm circle{fill:var(--text-3)} .scatter .pt.mw circle{fill:var(--wolf)}
+  .scatter .pt text{font-size:11px;fill:var(--text-2)} .scatter .pt.mw text{font-weight:700;fill:var(--text)}
+  .scatter .pt:hover circle{r:8}
+  .legend{display:flex;gap:18px;font-size:13px;color:var(--text-2);margin:8px 0;flex-wrap:wrap;justify-content:center} .legend .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .gkey{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--text-2)}
+  footer{margin-top:48px;color:var(--text-3);font-size:13px}
+  @media (max-width:640px){ .lgrow{grid-template-columns:1fr} .cnt{float:none;display:block} .grow{grid-template-columns:1fr} }
+
+
+  /* sunday-recap additions: game-state pills */
+  .state{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--text-2);vertical-align:middle}
+  .state.live{background:color-mix(in srgb,var(--bad) 14%,var(--surface));color:var(--bad)} .state.live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--bad);animation:pulse 1.2s ease-in-out infinite}
+  .state.upcoming{background:color-mix(in srgb,var(--warn) 14%,var(--surface));color:var(--warn)}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+  .score{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin:10px 0 14px}
+  .score .t{text-align:center;padding:10px;border-radius:12px;background:var(--surface-2)} .score .t.me{background:color-mix(in srgb,var(--wolf-soft) 55%,var(--surface));border:1px solid var(--wolf)}
+  .score .t .n{font-weight:700} .score .t .r{font-size:12px;color:var(--text-2)} .score .t .p{font-size:32px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums;margin-top:4px} .score .t .left{font-size:12px;color:var(--text-3);margin-top:2px}
+  .score .vs{font-size:13px;color:var(--text-3);text-align:center}
+  td.over{color:var(--good);font-weight:600} td.under{color:var(--bad);font-weight:600} td.even{color:var(--text-2)}
+  .flag{border-left:4px solid var(--bad);background:color-mix(in srgb,var(--bad) 8%,var(--surface));padding:10px 14px;border-radius:8px;margin:12px 0} .flag.warn{border-left-color:var(--warn);background:color-mix(in srgb,var(--warn) 10%,var(--surface))}
+  .impact{margin-top:12px;border-top:1px solid var(--border);padding-top:10px}
+  @media (max-width:640px){ .score{grid-template-columns:1fr} }
+</style></head><body>
+<nav><div class="inner"><div class="row"><span class="brand">🐺 Sunday Recap · Week 2</span>
+<a href="#wolf">The Man Wolf</a><a href="#ali-hooked">ALI vs Get Hooked</a><a href="#red-tts">Redemption vs Texas</a><a href="#lamar-chase">Lamar vs Playoff Chase</a><a href="#bower-imad">Bower vs Imad</a><a href="#nfl">NFL color</a></div></div></nav>
+<main>
+<div class="eyebrow">D League · Week 2 · Sunday, September 20, 2026 · synced 7:21 PM</div>
+<h1>Dak sets a record, Saquon scares everyone, and the Bears forget how to score</h1>
+<p class="sub">Fourteen of sixteen games are in the books. Two still to play: <span class="state upcoming">Upcoming</span> Colts at Chiefs (SNF, 8:20 ET tonight) and <span class="state upcoming">Upcoming</span> Giants at Rams (MNF). Every "projected finish" below adds ESPN's pre-game projection for the unplayed players to the live score — treat it as a lean, not a lock.</p>
+
+<section id="wolf" class="card">
+<div class="ghead"><div><div class="eyebrow">Section 1</div><h2>The Man Wolf vs Steel Giants</h2></div><span class="state final">Man Wolf done · SG has 1 left</span></div>
+<div class="score">
+  <div class="t me"><div class="n">The Man Wolf</div><div class="r">1-0 · all 9 starters final</div><div class="p">125.0</div><div class="left">proj. 121.2 pre-game</div></div>
+  <div class="vs">vs</div>
+  <div class="t"><div class="n">Steel Giants</div><div class="r">0-1 · Nabers (MNF) still to play</div><div class="p">77.7</div><div class="left">+14.9 proj. remaining → ~92.6</div></div>
+</div>
+<p class="story">This one was over by the 4 o'clock window. Dak Prescott just walked into AT&amp;T Stadium and threw four touchdowns — the 249th of his career, a 24-yarder to CeeDee Lamb, pushed him past Tony Romo as the Cowboys' all-time TD-pass leader. In this league's 4-point-per-passing-TD scoring, that's 29.76 from your QB slot against a 20.0 projection. Chris Olave kept the Saints' upset of Baltimore humming with 8 catches on 10 targets for 86 and a score (22.6), and George Kittle — your FLEX play — turned four targets into 80 yards and a touchdown in San Francisco's 35-13 rout of Miami (18.0 on a 10.5 projection).</p>
+<p class="story">Then there's the part you already know about. <strong>Saquon Barkley took one handoff in Nashville, got stood up by Jeffery Simmons, and walked to the locker room with a stinger.</strong> He came back to the sideline in a neck roll, re-entered to start the second half, and finished with 4 carries for 9 yards and one catch for 11 — 3.0 points on a 17.6 projection. More on his status below.</p>
+<div class="tablewrap"><table>
+<tr><th>Slot</th><th>Player</th><th>Game</th><th class="num">Actual</th><th class="num">Proj.</th><th class="num">+/−</th><th>Line</th></tr>
+<tr><td class="slot">QB</td><td>Dak Prescott</td><td>DAL 37, WSH 20 · Final</td><td class="num">29.76</td><td class="num">20.01</td><td class="num over">+9.8</td><td>26/31, 279 yds, 4 TD; 4 rush for 26</td></tr>
+<tr><td class="slot">RB</td><td>Derrick Henry</td><td>NO 24, BAL 17 · Final</td><td class="num">17.70</td><td class="num">17.61</td><td class="num even">+0.1</td><td>16 car, 68 yds, TD; 3 rec, 19 yds</td></tr>
+<tr><td class="slot">RB</td><td>Saquon Barkley <span class="pill bad">stinger · MRI pending</span></td><td>PHI 24, TEN 20 · Final</td><td class="num">3.00</td><td class="num">17.62</td><td class="num under">−14.6</td><td>4 car, 9 yds; 1 rec, 11 yds — left on play 1, returned 3rd Q</td></tr>
+<tr><td class="slot">WR</td><td>Chris Olave</td><td>NO 24, BAL 17 · Final</td><td class="num">22.60</td><td class="num">15.92</td><td class="num over">+6.7</td><td>8 rec / 10 tgt, 86 yds, TD</td></tr>
+<tr><td class="slot">WR</td><td>Jameson Williams</td><td>BUF 41, DET 31 · Final (Thu)</td><td class="num">5.30</td><td class="num">12.33</td><td class="num under">−7.0</td><td>2 rec / 4 tgt, 33 yds in a 72-point shootout</td></tr>
+<tr><td class="slot">TE</td><td>Harold Fannin Jr.</td><td>CLE 23, TB 19 · Final</td><td class="num">10.40</td><td class="num">10.03</td><td class="num even">+0.4</td><td>5 rec / 6 tgt, 54 yds</td></tr>
+<tr><td class="slot">FLEX</td><td>George Kittle</td><td>SF 35, MIA 13 · Final</td><td class="num">18.00</td><td class="num">10.50</td><td class="num over">+7.5</td><td>4 rec / 4 tgt, 80 yds, TD</td></tr>
+<tr><td class="slot">FLEX</td><td>Bhayshul Tuten</td><td>DEN 20, JAX 13 · Final</td><td class="num">14.20</td><td class="num">10.05</td><td class="num over">+4.2</td><td>13 car, 65 yds, TD; 2 rec, −3 yds</td></tr>
+<tr><td class="slot">D/ST</td><td>Eagles D/ST</td><td>PHI 24, TEN 20 · Final</td><td class="num">4.00</td><td class="num">7.09</td><td class="num under">−3.1</td><td>2 sacks, 20 pts allowed</td></tr>
+</table></div>
+<div class="flag"><strong>Injury flag — Saquon Barkley (RB, PHI).</strong> Left arm/neck stinger on the Eagles' first offensive play; listed questionable to return, came back for the second half, and told reporters post-game "I'm alright" but is getting an MRI — "we'll know more later in the week." Severity is <em>unconfirmed</em> until that MRI. The silver lining is already on your bench: Tank Bigsby handled the load while Saquon was out — 13 carries, 33 yards and a touchdown (11.8 on a 3.35 projection) — with Will Shipley mixing in.</div>
+<div class="flag warn"><strong>Also from that game:</strong> Dallas Goedert (Redemption team) left in the second quarter with a knee injury after getting upended run-blocking, questionable to return. He had 1 catch for 4 yards. Not your player, but it's the second Eagles skill-position injury in one afternoon.</div>
+<h3>How it finishes</h3>
+<p>You're done at <strong>125.0</strong>. Steel Giants sit at 77.7 with only Malik Nabers (projected 14.9) left on Monday night — a 47.3-point gap that Nabers has no realistic path to close alone; he'd need the best game of his career three times over. Their day was sunk in Minneapolis: Caleb Williams threw for 138 yards with a pick in a 9-3 Vikings win (7.72 on 19.4), Colston Loveland caught 1 ball for 3 yards, and D'Andre Swift (12.9) was fine but not the fix. Parker Washington (7/98) was the only Giants starter to clear projection by more than a point. Pencil in <strong>2-0</strong>.</p>
+</section>
+
+<section id="ali-hooked" class="card">
+<div class="ghead"><div><div class="eyebrow">Section 2 · Matchup</div><h2>🥊ALI🥊 vs Get Hooked</h2></div><span class="state final">3 players left · SNF/MNF</span></div>
+<div class="score">
+  <div class="t"><div class="n">🥊ALI🥊</div><div class="r">1-0 · Dart + Likely (MNF) to play</div><div class="p">97.3</div><div class="left">+29.1 proj. remaining → ~126.4</div></div>
+  <div class="vs">vs</div>
+  <div class="t"><div class="n">Get Hooked</div><div class="r">1-0 · Tyler Warren (SNF) to play</div><div class="p">132.9</div><div class="left">+11.4 proj. remaining → ~144.3</div></div>
+</div>
+<p class="story">Get Hooked's two wideouts put up 70.5 points between them and that's the whole story. Amon-Ra St. Brown feasted on Thursday night — 9 catches on 13 targets, 142 yards, two scores (35.2 on 20.4) — and then CeeDee Lamb one-upped him Sunday with 8/153/2 and the record-breaking catch (35.3 on 18.0). The Patriots D/ST chipped in 20 with a defensive touchdown, a pick, a fumble and four sacks while holding Pittsburgh to 3. Drake Maye (8.0) and Bijan Robinson (11.1 — 72 rushing yards, no score, in a 34-3 Falcons humiliation) were the only starters meaningfully short.</p>
+<p class="story">ALI got a DeVonta Smith explosion — 10 catches on 13 targets for 117 and a TD (27.7 on 14.0) with Barkley and Goedert both sidelined, exactly the target-funnel you'd expect — and a steady Jahmyr Gibbs (23.3). But Ashton Jeanty ground out 21 carries for 48 yards (10.3 on 18.3), Rome Odunze was buried in the Bears' 3-point offense (7.3), and the Bucs D/ST gave up 23 to Cleveland.</p>
+<div class="impact"><div class="ihead">Fantasy impact</div>ALI trails by 35.6 with Jaxson Dart and Isaiah Likely (combined 29.1 projected) still to go against Tyler Warren (11.4). They need roughly a 36-point net swing from a rookie QB and a TE on Monday night — possible in a Rams-Giants shootout, not likely. Get Hooked is the favorite to reach <strong>2-0</strong> and, at ~144, likely posts the week's high score. Lamb and St. Brown are now the two most expensive WRs in this league's trade market; nobody's prying them loose cheaply.</div>
+</section>
+
+<section id="red-tts" class="card">
+<div class="ghead"><div><div class="eyebrow">Section 2 · Matchup</div><h2>Redemption team vs Texas Two Step</h2></div><span class="state final">Mahomes (SNF) left</span></div>
+<div class="score">
+  <div class="t"><div class="n">Redemption team</div><div class="r">1-0 · all 9 starters final</div><div class="p">102.3</div><div class="left">proj. 128.0 pre-game</div></div>
+  <div class="vs">vs</div>
+  <div class="t"><div class="n">Texas Two Step</div><div class="r">0-1 · Mahomes (SNF) to play</div><div class="p">78.0</div><div class="left">+18.2 proj. remaining → ~96.2</div></div>
+</div>
+<p class="story">Josh Allen did Josh Allen things in a 41-31 Thursday-night win over Detroit: 248 passing yards, 3 TD passes, and 14 carries for 69 yards and two rushing scores — 40.8 points, nearly double his 22.7 projection and the top QB score of the week in this league. Christian McCaffrey added 22.6 on two goal-line touchdowns (10 carries for 23 yards, but who's counting). And then the rest of the lineup went dark: DJ Moore finished at −0.1 after leaving Thursday's game with a shoulder/AC-joint sprain, Goedert 1.4 after his knee injury, Javonte Williams 8.0, Etienne 7.1, McLaurin 7.0, Deebo 6.5. Two stars, seven zeros.</p>
+<p class="story">Texas Two Step needed a bounce-back and instead ran straight into the Bears-Vikings 9-3 game. Justin Jefferson caught 3 of 6 for 55 (8.5 on 18.4), Aaron Jones 10.5, and Kyle Pitts caught nothing that mattered (2.5) while Atlanta was being run out of its own building. Omarion Hampton (17.5) and Tee Higgins (14.5) beat their numbers, but there just wasn't enough on the board.</p>
+<div class="impact"><div class="ihead">Fantasy impact</div>Texas Two Step trails by 24.3 with only Patrick Mahomes tonight. In 4-point-TD scoring that's a 300-yard, three-touchdown night just to get level — about 6 points above his projection. Redemption is the lean to go <strong>2-0</strong>, but they're carrying real damage: DJ Moore is uncertain for Week 3 with the AC-joint sprain (Bills' own report says "not serious"), and Goedert's knee is unresolved. Texas also has Jayden Daniels on the bench now listed DOUBTFUL after his elbow injury in Dallas. If Texas falls to <strong>0-2</strong>, that's an owner who drafted for a title and may get antsy — worth a look next week on the trade-leverage board.</div>
+</section>
+
+<section id="lamar-chase" class="card">
+<div class="ghead"><div><div class="eyebrow">Section 2 · Matchup</div><h2>Lamar n Order vs Playoff Chase</h2></div><span class="state final">Coin flip · 1 player each left</span></div>
+<div class="score">
+  <div class="t"><div class="n">Lamar n Order</div><div class="r">1-0 · Davante Adams (MNF) to play</div><div class="p">136.6</div><div class="left">+15.5 proj. remaining → ~152.1</div></div>
+  <div class="vs">vs</div>
+  <div class="t"><div class="n">Playoff Chase</div><div class="r">0-1 · Jonathan Taylor (SNF) to play</div><div class="p">133.5</div><div class="left">+18.4 proj. remaining → ~151.9</div></div>
+</div>
+<p class="story">This is the game of the week and it's not close to decided. Jaxon Smith-Njigba just authored the league's top line: 9 catches on 11 targets, 155 yards and a career-high three touchdowns — including an 82-yard bomb from Drew Lock (starting for an injured Sam Darnold) on Seattle's second offensive play — good for 42.5 points against an 18.5 projection in a 31-7 blowout of Arizona. The Panthers D/ST, of all things, added 24 with three interceptions, two fumble recoveries, two sacks and a defensive TD while holding Atlanta to 3. Stefon Diggs caught two touchdowns from a Commanders offense that lost Jayden Daniels (21.7), and Trey McBride (18.1) got Arizona's only score. The cost: Lamar Jackson himself (14.8, one TD, one pick in the upset loss to New Orleans) and both running backs — David Montgomery 4.4, Rhamondre Stevenson 3.6 with a lost fumble.</p>
+<p class="story">Playoff Chase answered with depth instead of a single haymaker: James Cook 20.9, Ja'Marr Chase 7 catches for 75 and two scores (26.5), Sam LaPorta 17.2 in Thursday's shootout, and Jaylen Waddle — now a Bronco — 8 for 138 (21.8 on 12.2). Jalen Hurts threw the 92-yard pick-six that gifted Tennessee its first points and finished at 16.2, below projection.</p>
+<div class="impact"><div class="ihead">Fantasy impact</div>3.1 points separate them. Playoff Chase has Jonathan Taylor tonight against Kansas City (18.4 proj); Lamar n Order waits until Monday for Davante Adams against the Giants (15.5). The pre-game projections land within 0.2 of each other — this is a genuine coin flip that decides whether Lamar n Order goes 2-0 or Playoff Chase escapes an 0-2 hole. Watch Taylor's workload tonight: if the Colts are chasing points at Arrowhead, his receiving role decides it.</div>
+</section>
+
+<section id="bower-imad" class="card">
+<div class="ghead"><div><div class="eyebrow">Section 2 · Matchup</div><h2>Bower Outage vs Imad</h2></div><span class="state final">5 players left · SNF/MNF</span></div>
+<div class="score">
+  <div class="t"><div class="n">Bower Outage</div><div class="r">0-1 · Kyren (MNF), Chiefs D/ST (SNF) to play</div><div class="p">88.1</div><div class="left">+21.7 proj. remaining → ~109.8</div></div>
+  <div class="vs">vs</div>
+  <div class="t"><div class="n">Imad</div><div class="r">0-1 · Walker, Rice (SNF), Skattebo (MNF) to play</div><div class="p">75.7</div><div class="left">+45.7 proj. remaining → ~121.4</div></div>
+</div>
+<p class="story">The battle of the 0-1s is going to be decided under the lights. Bower Outage got a monster from Dalton Schultz — 12 catches on 14 targets for 140 yards (26.0 on 8.9, nearly 3x) as the Texans' passing game had nowhere else to go in a 20-6 loss to Cincinnati — plus Garrett Wilson 16.7 in the Jets' OT loss and Jalen Coker 14.6 in Carolina's blowout. But Jadarian Price coughed up a fumble (5.0), Luther Burden was stuck in the Bears' 3-point offense (6.2), and Croskey-Merritt managed 5.8.</p>
+<p class="story">Imad's Sunday was Brock Purdy and not much else: 287 yards, 2 TD passes and a rushing score (28.5 on 20.6) in the 49ers' rout of Miami. Mike Evans (8.4) and Tucker Kraft (3.5) missed, Chase Brown was held to 11.2 by a stingy Texans front, and Christian Watson (14.1) was the only other starter over projection.</p>
+<div class="impact"><div class="ihead">Fantasy impact</div>Imad trails by 12.4 but has three starters left — Kenneth Walker III and Rashee Rice tonight in the Chiefs-Colts game, Cam Skattebo on Monday — against Bower's Kyren Williams and Chiefs D/ST. On projections Imad flips it, ~121 to ~110. Note the cross-currents tonight: Bower is rooting for the Chiefs defense while Imad needs Chiefs skill players — a KC blowout helps <em>both</em>, a low-scoring slog helps Bower. Whoever loses drops to <strong>0-2</strong> and becomes the league's first must-win owner in Week 3; the loser's roster is the first place to look for a seller.</div>
+</section>
+
+<section id="nfl" class="card">
+<div class="eyebrow">Section 3</div><h2>Notable NFL color with D League fingerprints</h2>
+<ul>
+<li><strong>Vikings 9, Bears 3.</strong> A single-digit game that torched six starters across four D League teams: Caleb Williams and Colston Loveland (Steel Giants), Rome Odunze (ALI), Luther Burden (Bower), and Justin Jefferson + Aaron Jones (Texas Two Step) combined for 47.6 points against 89.5 projected. If you own a Bears pass-catcher, that's now two weeks of evidence the passing volume is not what August thought.</li>
+<li><strong>Panthers 34, Falcons 3.</strong> Four Panthers cashed in — Panthers D/ST 24 (Lamar n Order), Tetairoa McMillan 15.1 (Playoff Chase), Jalen Coker 14.6 (Bower), Chuba Hubbard 14.4 (ALI) — while Bijan Robinson (11.1, Get Hooked) and Kyle Pitts (2.5, Texas Two Step) wore it.</li>
+<li><strong>Cowboys 37, Commanders 20.</strong> Beyond Dak's record, Jayden Daniels hurt his left elbow trying to score from the 1 on the final play of the first half. He's on Texas Two Step's bench, now listed DOUBTFUL in ESPN's data. Severity unconfirmed.</li>
+<li><strong>Seahawks 31, Cardinals 7.</strong> Drew Lock went 19-of-26 for 235 and three TDs to JSN with Sam Darnold (glute) out; Seattle's 12th straight win dating to last season. Jeremiyah Love (Lamar n Order) managed 7.5 on the losing side.</li>
+<li><strong>Bills 41, Lions 31 (Thursday).</strong> The week's shootout produced Josh Allen's 40.8, St. Brown's 35.2, Gibbs 23.3, Cook 20.9 and LaPorta 17.2 — and DJ Moore's shoulder. Jameson Williams (Man Wolf) got just 4 targets in a 72-point game; that's the number to watch, not the points.</li>
+</ul>
+</section>
+
+<footer>Sources: ESPN league data (synced 2026-09-20 19:21, Week 2 <code>complete: false</code>); scores via CBS Sports scoreboard; injury reporting via NBC Sports/PFT, Yahoo Sports, FOX Sports, RotoWire/CBS; game recaps via AP/NBC/Spokesman-Review. Disposable Sunday recap — not logged to history.md.</footer>
+</main></body></html>

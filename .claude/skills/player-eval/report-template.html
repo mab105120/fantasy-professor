@@ -1,0 +1,296 @@
+<!doctype html>
+<!--
+  PLAYER EVAL TEMPLATE — player-eval skill.
+  Copy this file's <head>/<style> verbatim into every player-eval report and
+  build the body from the components below. Everything in the body is
+  PLACEHOLDER content in [brackets]: replace all of it with real analysis
+  and drop components that don't apply.
+    - SINGLE mode: header, KPI grid, short version + status, sections 1–8.
+    - MULTI mode: summary strip, then the SINGLE sections repeated per
+      player under a .player-head divider.
+    - COMPARE mode: header, verdict banner, player cards, scorecard,
+      paired tables, combined calendar, then risks/consensus/this week.
+  Don't invent new colours or components when an existing one fits.
+  Reference report: reports/2026-09-25-w03-juwan-johnson.html
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[Player] Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#E9EAEC; --card:#FFFFFF; --ink:#15181D; --ink-2:#3A4049; --muted:#6B727D;
+  --rule:#C7CAD0; --rule-hard:#15181D; --navy:#173A5C; --navy-soft:#E2E8EF;
+  --up:#0E7A5F; --up-soft:#DCEDE7; --down:#B23A33; --down-soft:#F3E0DE;
+  --flag:#B87814; --flag-soft:#F6E9D2; --chip:#DFE1E5;
+  --a:#2F5E9E; --a-soft:#E0E8F4; --b:#8A4FA0; --b-soft:#EEE3F2;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+    --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+    --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+    --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+    --a:#8DB6EC; --a-soft:#18243A; --b:#CFA0E0; --b-soft:#2A1C31;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+  --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+  --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+  --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+  --a:#8DB6EC; --a-soft:#18243A; --b:#CFA0E0; --b-soft:#2A1C31;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:"Barlow","Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.5;margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px 56px}
+a{color:var(--navy)}
+.mast{background:#0B0D11;color:#E9EBEF;padding:26px 16px 22px;border-bottom:4px solid var(--flag)}
+.mast-inner{max-width:928px;margin:0 auto;display:flex;flex-wrap:wrap;gap:14px 28px;align-items:flex-end;justify-content:space-between}
+.mast h1{font-family:"Oswald",Impact,sans-serif;font-weight:700;font-size:clamp(32px,6.6vw,52px);line-height:.94;margin:0;text-transform:uppercase}
+.mast h1 em{font-style:normal;color:var(--flag);display:block;font-size:.55em;margin-top:6px}
+.mast-meta{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:#9AA3B0;line-height:1.9}
+h2{font-family:"Oswald",sans-serif;font-weight:600;font-size:22px;letter-spacing:.02em;text-transform:uppercase;margin:40px 0 14px;padding-bottom:6px;border-bottom:2px solid var(--rule-hard)}
+h3{font-family:"Oswald",sans-serif;font-weight:500;font-size:19px;margin:0 0 6px}
+p{margin:0 0 12px;color:var(--ink-2)}
+strong{color:var(--ink)}
+/* KPI grid */
+.grid{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+@media(min-width:760px){.grid{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px 16px}
+.stat .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.stat .v{font-family:"Oswald",sans-serif;font-size:28px;font-weight:600;line-height:1.1;margin:4px 0}
+.stat .s{font-size:13px;color:var(--muted);line-height:1.35}
+/* frames, status, definitions */
+.frame{margin-top:26px;background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:18px 22px}
+.frame p{font-size:15px;margin-bottom:6px}
+.frame ul{margin:6px 0 0;padding-left:20px;color:var(--ink-2);font-size:15px}
+.status{background:var(--navy-soft);border-radius:8px;padding:14px 18px;margin-top:14px;font-size:15px}
+.status b{color:var(--navy)}
+.why{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:20px 22px;margin-bottom:14px}
+.why p:last-child{margin-bottom:0}
+.def{border-left:3px solid var(--flag);background:var(--flag-soft);padding:8px 14px;border-radius:0 6px 6px 0;font-size:14.5px;margin:10px 0 14px}
+.def b{color:var(--flag)}
+.small{font-size:13px;color:var(--muted)}
+/* chips / tags */
+.chip{font-family:"IBM Plex Mono",monospace;font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--chip);color:var(--ink-2);white-space:nowrap}
+.chip.up{background:var(--up-soft);color:var(--up)}
+.chip.down{background:var(--down-soft);color:var(--down)}
+.chip.flag{background:var(--flag-soft);color:var(--flag)}
+/* status tags: ACTIVE / Q / D / O / IR / SUSP / UNCONFIRMED */
+.tag{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.06em;padding:2px 7px;border-radius:4px;background:var(--up-soft);color:var(--up);white-space:nowrap}
+.tag.q{background:var(--flag-soft);color:var(--flag)}
+.tag.o{background:var(--down-soft);color:var(--down)}
+/* consensus verdict tags */
+.agree{color:var(--up);font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600}
+.diverge{color:var(--flag);font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600}
+/* tables */
+.tscroll{overflow-x:auto;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--rule);border-radius:8px;overflow:hidden;font-size:14.5px}
+th{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;text-align:left;color:var(--muted);padding:9px 12px;border-bottom:2px solid var(--rule-hard);background:var(--navy-soft)}
+td{padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+td.num{font-family:"IBM Plex Mono",monospace;white-space:nowrap}
+td.who{color:var(--ink);font-weight:600;white-space:nowrap}
+tr.hl td{background:var(--flag-soft)}
+/* upside / risk */
+.cols{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:720px){.cols{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:16px 20px;border-top:5px solid var(--up)}
+.card.risk{border-top-color:var(--down)}
+.card ul{margin:0;padding-left:18px;font-size:15px;color:var(--ink-2)}
+.card li{margin-bottom:8px}
+/* scoring ranges */
+.range{display:grid;gap:10px;grid-template-columns:1fr}
+@media(min-width:720px){.range{grid-template-columns:repeat(3,1fr)}}
+.range .stat .v{font-size:32px}
+/* this-week note */
+.week{background:var(--card);border:1px solid var(--rule);border-left:6px solid var(--navy);border-radius:8px;padding:14px 18px;font-size:15px}
+/* ===== COMPARE MODE ===== */
+.verdict{margin-top:26px;background:var(--card);border:1px solid var(--rule);border-left:8px solid var(--up);border-radius:8px;padding:18px 22px}
+.verdict .lbl{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.verdict .call{font-family:"Oswald",sans-serif;font-size:30px;font-weight:600;line-height:1.1;margin:4px 0 8px}
+.pcards{display:grid;gap:14px;grid-template-columns:1fr;margin-top:18px}
+@media(min-width:680px){.pcards{grid-template-columns:1fr 1fr}}
+.pcard{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:16px 20px;border-top:5px solid var(--a)}
+.pcard.b{border-top-color:var(--b)}
+.pcard .name{font-family:"Oswald",sans-serif;font-size:26px;font-weight:600;line-height:1.05;margin:0 0 4px}
+.pcard .meta{font-size:14px;color:var(--muted);margin-bottom:8px}
+th.a,td.a{border-top:3px solid var(--a)} th.b,td.b{border-top:3px solid var(--b)}
+th.a{color:var(--a)} th.b{color:var(--b)}
+.win-a,.win-b,.push{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.05em;white-space:nowrap;padding:2px 8px;border-radius:4px}
+.win-a{background:var(--a-soft);color:var(--a)}
+.win-b{background:var(--b-soft);color:var(--b)}
+.push{background:var(--chip);color:var(--muted)}
+/* multi mode divider */
+.player-head{margin-top:48px;padding:14px 18px;background:#0B0D11;color:#E9EBEF;border-radius:8px;border-left:6px solid var(--flag);font-family:"Oswald",sans-serif;font-size:26px;text-transform:uppercase}
+.sources{font-size:13.5px;color:var(--muted);columns:1}
+@media(min-width:680px){.sources{columns:2}}
+.sources li{margin-bottom:4px;break-inside:avoid}
+.foot{margin-top:40px;padding-top:14px;border-top:1px solid var(--rule);font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);letter-spacing:.04em}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER (all modes). Compare: "[A] vs [B]" + <em>[decision]</em> ===== -->
+<header class="mast">
+  <div class="mast-inner">
+    <h1>[Player]<em>[POS] · [NFL team] · Player Report</em></h1>
+    <div class="mast-meta">
+      The Man Wolf · D League (394766)<br>
+      [Day YYYY-MM-DD] · ESPN sync [HH:MM] · Week [N] [pre-kickoff / in progress]<br>
+      Rostered by [team (slot) / Free agent (x% rostered)]
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ===== COMPARE ONLY: VERDICT BANNER ===== -->
+  <section class="verdict">
+    <div class="lbl">Decision · [keep vs cut / start / trade target / waiver add] · confidence [high/medium/low]</div>
+    <div class="call">[Winner] over [Loser]</div>
+    <p>[One-sentence reason.] <strong>Consensus:</strong> [matches / diverges: why].</p>
+  </section>
+
+  <!-- ===== COMPARE ONLY: PLAYER CARDS ===== -->
+  <section class="pcards">
+    <div class="pcard"><div class="name">[Player A]</div><div class="meta">[POS · team · owner] · <span class="tag">ACTIVE</span></div><p>[Tier label · consensus ROS rank · league pts/gm]</p></div>
+    <div class="pcard b"><div class="name">[Player B]</div><div class="meta">[POS · team · owner] · <span class="tag q">Q</span></div><p>[Tier label · consensus ROS rank · league pts/gm]</p></div>
+  </section>
+
+  <!-- ===== MULTI ONLY: SUMMARY STRIP (one row per player), then .player-head per player ===== -->
+  <!-- <div class="player-head">[Player name] · [POS] [TEAM]</div> -->
+
+  <!-- ===== SINGLE / MULTI: KPI GRID ===== -->
+  <section class="grid" style="margin-top:26px">
+    <div class="stat"><div class="k">League points / game</div><div class="v">[12.5]</div><div class="s">[Positional rank among rostered players in D League.]</div></div>
+    <div class="stat"><div class="k">[Key role metric]</div><div class="v">[84%]</div><div class="s">[Healthy-sample note.]</div></div>
+    <div class="stat"><div class="k">[Share metric]</div><div class="v">[13.1%]</div><div class="s">[What the number means.]</div></div>
+    <div class="stat"><div class="k">Consensus ROS</div><div class="v">[TE11]</div><div class="s">[Sources that agree; weekly rank.]</div></div>
+  </section>
+
+  <!-- ===== SHORT VERSION + STATUS ===== -->
+  <section class="frame">
+    <h3>The short version</h3>
+    <p><strong>[ROS tier label and headline call.]</strong> [The case in a few sentences.]</p>
+    <p><strong>For The Man Wolf:</strong> [What it means for our roster.]</p>
+    <div class="status"><b>Status (checked live YYYY-MM-DD):</b> [Designation, practice line, legal/suspension check, contract/job security. UNCONFIRMED if it couldn't be verified.]</div>
+  </section>
+
+  <!-- ===== COMPARE ONLY: SCORECARD ===== -->
+  <h2>Scorecard</h2>
+  <div class="tscroll"><table>
+    <thead><tr><th>Dimension</th><th class="a">[Player A]</th><th class="b">[Player B]</th><th>Edge</th></tr></thead>
+    <tbody>
+      <tr><td class="who">Status / durability</td><td>[..]</td><td>[..]</td><td><span class="win-a">A</span></td></tr>
+      <tr><td class="who">Role</td><td>[..]</td><td>[..]</td><td><span class="win-b">B</span></td></tr>
+      <tr><td class="who">Volume</td><td>[..]</td><td>[..]</td><td><span class="push">PUSH</span></td></tr>
+      <tr><td class="who">Efficiency</td><td>[..]</td><td>[..]</td><td>[..]</td></tr>
+      <tr><td class="who">TD equity</td><td>[..]</td><td>[..]</td><td>[..]</td></tr>
+      <tr><td class="who">Value in our scoring</td><td>[..]</td><td>[..]</td><td>[..]</td></tr>
+      <tr><td class="who">Value over replacement</td><td>[..]</td><td>[..]</td><td>[..]</td></tr>
+      <tr><td class="who">Schedule ROS</td><td>[..]</td><td>[..]</td><td>[..]</td></tr>
+      <tr><td class="who">Playoff weeks 15–17</td><td>[..]</td><td>[..]</td><td>[..]</td></tr>
+      <tr><td class="who">Teammate / depth risk</td><td>[..]</td><td>[..]</td><td>[..]</td></tr>
+      <tr><td class="who">Expert consensus</td><td>[..]</td><td>[..]</td><td>[..]</td></tr>
+      <tr><td class="who">Strategy / keeper fit</td><td>[..]</td><td>[..]</td><td>[..]</td></tr>
+      <tr><td class="who">This week</td><td>[..]</td><td>[..]</td><td>[..]</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- ===== 1 · ROLE AND VOLUME (compare: add A/B columns side by side) ===== -->
+  <h2>1 · Role and volume</h2>
+  <div class="def"><b>[Stat term]</b> is [plain-language definition, with good/elite thresholds for the position].</div>
+  <div class="tscroll"><table>
+    <thead><tr><th>Week</th><th>Opp</th><th>Snaps</th><th>Routes</th><th>Tgt</th><th>Team share</th><th>Line</th><th>League pts</th></tr></thead>
+    <tbody>
+      <tr><td class="who">W[1]</td><td>[@ DET (L 30–31)]</td><td class="num">[..]</td><td class="num">[..]</td><td class="num">[..]</td><td class="num">[..]</td><td class="num">[..]</td><td class="num">[..]</td></tr>
+      <tr class="hl"><td class="who">Total</td><td></td><td class="num">[..]</td><td class="num">[..]</td><td class="num">[..]</td><td class="num">[..]</td><td class="num">[..]</td><td class="num">[..]</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">[Where each column comes from.]</p>
+  <div class="why"><h3>[Conclusion headline]</h3><p>[Healthy vs impaired weeks, committee partners, what experts say about the role, what to watch next.]</p></div>
+
+  <!-- ===== 2 · EFFICIENCY ===== -->
+  <h2>2 · Efficiency</h2>
+  <div class="grid">
+    <div class="stat"><div class="k">[Metric]</div><div class="v">[..]</div><div class="s">[Benchmark.]</div></div>
+    <div class="stat"><div class="k">[Metric]</div><div class="v">[..]</div><div class="s">[Benchmark.]</div></div>
+    <div class="stat"><div class="k">[Metric]</div><div class="v">[..]</div><div class="s">[Benchmark.]</div></div>
+    <div class="stat"><div class="k">[Metric]</div><div class="v">[..]</div><div class="s">[Benchmark.]</div></div>
+  </div>
+  <div class="why" style="margin-top:14px"><h3>[Regression read]</h3><p>[Which numbers won't hold, the baseline to regress toward, and advanced-stat sources (PFF/NGS) cited.]</p></div>
+
+  <!-- ===== 3 · VALUE IN OUR SCORING + REPLACEMENT ===== -->
+  <h2>3 · What it's worth in our scoring</h2>
+  <div class="range">
+    <div class="stat" style="border-top:5px solid var(--down)"><div class="k">Floor week (~[x]%)</div><div class="v">[..]</div><div class="s">[Scenario.]</div></div>
+    <div class="stat" style="border-top:5px solid var(--navy)"><div class="k">Median week</div><div class="v">[..]</div><div class="s">[Scenario.]</div></div>
+    <div class="stat" style="border-top:5px solid var(--up)"><div class="k">Ceiling week (~[x]%)</div><div class="v">[..]</div><div class="s">[Scenario.]</div></div>
+  </div>
+  <p class="small" style="margin-top:8px">Ranges are judgment calls built from [baseline + usage + league scoring], not model output.</p>
+  <div class="tscroll"><table>
+    <thead><tr><th>Player</th><th>Team (league)</th><th>Pts/gm</th><th>ESPN ROS proj/gm</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr class="hl"><td class="who">[Subject]</td><td>[..]</td><td class="num">[..]</td><td class="num">[..]</td><td>[..]</td></tr>
+      <tr><td class="who">[Best free agent]</td><td>Free agent ([x]%)</td><td class="num">[..]</td><td class="num">[..]</td><td>[Replacement level]</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- ===== 4 · MATCHUP CALENDAR (compare: Wk | D League opp | A opp+rank | B opp+rank) ===== -->
+  <h2>4 · Matchups, week by week</h2>
+  <div class="def"><b>How to read this:</b> [defense-vs-position source, season, scoring, rank direction, caveat].</div>
+  <div class="tscroll"><table>
+    <thead><tr><th>Wk</th><th>NFL opponent</th><th>Def rank</th><th>Read</th><th>Man Wolf plays</th></tr></thead>
+    <tbody>
+      <tr><td class="num">[3]</td><td>[vs LV (NO −3, O/U 43.5)]</td><td class="num">[4]</td><td><span class="chip down">Tough</span></td><td>[ALI]</td></tr>
+      <tr><td class="num">[7]</td><td>[vs PIT]</td><td class="num">[24]</td><td><span class="chip up">Good</span></td><td>[..]</td></tr>
+      <tr class="hl"><td class="num">[8]</td><td colspan="3"><strong>BYE</strong> · [other Man Wolf players off this week]</td><td>[..]</td></tr>
+      <tr class="hl"><td class="num">15</td><td>[..]</td><td class="num">[..]</td><td><span class="chip">Neutral</span></td><td>Playoffs, round 1</td></tr>
+    </tbody>
+  </table></div>
+  <div class="why"><h3>What the calendar means</h3><p>[Stretches, playoff weeks, collisions with teammates returning.]</p></div>
+
+  <!-- ===== 5 · UPSIDE / RISK ===== -->
+  <h2>5 · Upside and risk</h2>
+  <div class="cols">
+    <div class="card"><h3>Upside drivers</h3><ul><li>[..]</li></ul></div>
+    <div class="card risk"><h3>Risk drivers</h3><ul><li>[..]</li></ul></div>
+  </div>
+
+  <!-- ===== 6 · FIT WITH THE MAN WOLF ===== -->
+  <h2>6 · Fit with The Man Wolf and our strategy</h2>
+  <div class="why"><p><strong>Strategy check:</strong> [strategy.md principle(s) that apply].</p><ul style="color:var(--ink-2);font-size:15px"><li>[Usage plan / cut consequence / bye clustering / league angle.]</li></ul></div>
+
+  <!-- ===== 7 · EXPERT CONSENSUS (compare: add a column per player) ===== -->
+  <h2>7 · Expert consensus vs our read</h2>
+  <div class="tscroll"><table>
+    <thead><tr><th>Source</th><th>Rank / value / grade</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td class="who">[FantasyPros ROS ECR]</td><td class="num">[..]</td><td>[..]</td></tr>
+      <tr><td class="who">[Yahoo · Boone trade value]</td><td class="num">[..]</td><td>[..]</td></tr>
+      <tr><td class="who">[PFF / NGS / advanced]</td><td class="num">[..]</td><td>[..]</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>Agreement:</strong> [tight / wide spread]. <strong>Our read:</strong> <span class="agree">AGREE</span> or <span class="diverge">DIVERGE ↑/↓</span>: [reason, labeled as a judgment call].</p>
+
+  <!-- ===== 8 · THIS WEEK ===== -->
+  <h2>8 · This week</h2>
+  <div class="week"><strong>W[N] [@/vs] [OPP]</strong> · [spread/total] · <span class="tag">ACTIVE</span> · consensus [POS##] · lean <strong>[start/sit]</strong>. [One line on why.] [Our player: confirm in /weekly-lineup.]</div>
+
+  <h2>Sources</h2>
+  <ul class="sources">
+    <li><a href="[url]">[Source: what it supports]</a></li>
+    <li>ESPN scoreboard/summary API: [team] box scores, schedule</li>
+    <li>League data: <code>data/teams.json</code>, <code>week_stats.json</code>, <code>free_agents.json</code> (synced [date])</li>
+  </ul>
+
+  <div class="foot">Fantasy Professor · player-eval · generated [YYYY-MM-DD] · [stats-completeness note]</div>
+</main>
+</body>
+</html>

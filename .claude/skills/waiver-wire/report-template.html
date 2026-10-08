@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Waiver Wire · Week [N]</title>
+<style>
+  :root { color-scheme:light; --bg:#f5f5f3; --surface:#fff; --surface-2:#f0efec; --border:#e3e2de; --text:#0b0b0b; --text-2:#52514e; --text-3:#8a8985;
+    --wolf:#2a78d6; --wolf-soft:#cde2fb; --good:#008300; --warn:#c98500; --bad:#e34948;
+    --shadow:0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.05); --radius:14px; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { color-scheme:dark; --bg:#121211; --surface:#1a1a19; --surface-2:#242423; --border:#2f2f2d; --text:#fff; --text-2:#c3c2b7; --text-3:#8d8c85;
+    --wolf:#3987e5; --wolf-soft:#1c3a62; --good:#3fbf3f; --warn:#e0a021; --bad:#e66767; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3); } }
+  :root[data-theme="dark"] { color-scheme:dark; --bg:#121211; --surface:#1a1a19; --surface-2:#242423; --border:#2f2f2d; --text:#fff; --text-2:#c3c2b7; --text-3:#8d8c85;
+    --wolf:#3987e5; --wolf-soft:#1c3a62; --good:#3fbf3f; --warn:#e0a021; --bad:#e66767; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3); }
+  *{box-sizing:border-box} html{scroll-behavior:smooth;scroll-padding-top:64px}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.55}
+  a{color:var(--wolf);text-decoration:none} a:hover{text-decoration:underline}
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  nav .inner{max-width:1100px;margin:0 auto;padding:0 16px} nav .row{display:flex;align-items:center;gap:4px;overflow-x:auto;height:48px}
+  nav .brand{font-weight:700;margin-right:12px;white-space:nowrap} nav a{color:var(--text-2);font-size:13px;padding:5px 9px;border-radius:8px;white-space:nowrap} nav a:hover{background:var(--surface-2);text-decoration:none;color:var(--text)}
+  main{max-width:1100px;margin:0 auto;padding:24px 16px 80px}
+  .eyebrow{color:var(--text-3);font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+  h1{font-size:clamp(28px,4vw,40px);margin:6px 0 4px;line-height:1.15;letter-spacing:-.01em} h2{font-size:22px;margin:0 0 12px} h3{font-size:16px;margin:16px 0 8px}
+  .sub{color:var(--text-2);margin:0} section{margin-top:36px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+  .muted{color:var(--text-2)} .small{font-size:13px} p{margin:8px 0} ul{padding-left:20px;margin:8px 0} li{margin:4px 0}
+  .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+  .pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--text-2);vertical-align:middle;white-space:nowrap}
+  .pill.wolf{background:var(--wolf-soft);color:var(--text)}
+  /* status tags (mandatory on every player) */
+  .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 7px;border-radius:6px;vertical-align:middle}
+  .tag.ok{background:color-mix(in srgb,var(--good) 14%,var(--surface));color:var(--good)}
+  .tag.q{background:color-mix(in srgb,var(--warn) 16%,var(--surface));color:var(--warn)}
+  .tag.out{background:color-mix(in srgb,var(--bad) 14%,var(--surface));color:var(--bad)}
+  /* acquisition + priority labels */
+  .acq{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;border:1px solid var(--border);color:var(--text-2)}
+  .acq.wv{border-color:var(--warn);color:var(--warn)}
+  .prio{display:inline-block;font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px}
+  .prio.use{background:var(--wolf);color:#fff} .prio.wait{background:var(--surface-2);color:var(--text-2);border:1px solid var(--border)}
+  .ctag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--surface-2);color:var(--text-2)}
+  .ctag.up{color:var(--good)} .ctag.down{color:var(--bad)}
+  .pos{display:inline-block;min-width:34px;text-align:center;font-size:11px;font-weight:800;padding:2px 6px;border-radius:6px;background:var(--surface-2);color:var(--text)}
+  /* the call */
+  .call{border-radius:var(--radius);padding:18px 20px;margin-top:20px;border:1px solid var(--border);border-left:6px solid var(--wolf);background:color-mix(in srgb,var(--wolf-soft) 40%,var(--surface))}
+  .call.hold{border-left-color:var(--text-3);background:var(--surface)}
+  .call .lbl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-2)} .call .what{font-size:20px;font-weight:700;margin:4px 0}
+  .call ol{margin:6px 0 0;padding-left:22px}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:14px} .tile{background:var(--surface-2);border-radius:10px;padding:12px 14px} .tile .l{font-size:12px;color:var(--text-2)} .tile .v{font-size:20px;font-weight:600;margin-top:2px} .tile .d{font-size:12px;color:var(--text-3)}
+  /* candidate cards */
+  .cands{display:grid;gap:14px}
+  .cand{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px}
+  .cand .top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+  .cand .rk{font-size:28px;font-weight:800;color:var(--text-3);line-height:1;min-width:30px}
+  .cand .nm{font-size:19px;font-weight:700} .cand .sub2{font-size:13px;color:var(--text-2)}
+  .cand .labels{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .cand .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin:12px 0}
+  .cand .kpis div{background:var(--surface-2);border-radius:8px;padding:8px 10px} .cand .kpis .l{display:block;font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em} .cand .kpis .v{font-weight:600;font-size:14px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .drop{margin-top:10px;font-size:14px;padding:8px 12px;border-radius:8px;background:var(--surface-2);border-left:4px solid var(--bad)}
+  .reason{font-size:13px;color:var(--text-2);margin-top:6px}
+  table{width:100%;border-collapse:collapse;font-size:14px} th{text-align:left;font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;padding:8px;border-bottom:1px solid var(--border)}
+  td{padding:9px 8px;border-bottom:1px solid var(--border);vertical-align:top} tr:last-child td{border-bottom:0} td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  tr.top-cut td{background:color-mix(in srgb,var(--bad) 7%,var(--surface))} .tablewrap{overflow-x:auto}
+  .def{font-size:13px;background:var(--surface-2);border-radius:8px;padding:8px 12px;margin:10px 0;color:var(--text-2)} .def b{color:var(--text)}
+  details{margin-top:8px} summary{cursor:pointer;font-weight:600}
+  footer{margin-top:48px;color:var(--text-3);font-size:13px}
+  @media (max-width:640px){ .two{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<nav><div class="inner"><div class="row"><span class="brand">🐺 Waiver Wire · Week [N]</span>
+<a href="#roster">Roster</a><a href="#shortlist">Shortlist</a><a href="#thisweek">This week</a><a href="#dst">D/ST</a><a href="#qb">QB</a><a href="#stash">Stashes</a><a href="#league">League angle</a><a href="#cuts">Cut order</a><a href="#watch">Watch list</a></div></div></nav>
+<main>
+<div class="eyebrow">D League · Waiver Wire · Week [N] · [YYYY-MM-DD]</div>
+<h1>[Headline: the call in plain words]</h1>
+<p class="sub">[One sentence framing: ROS-led, what the roster needs most.]</p>
+<div class="meta"><span class="pill">Synced [time]</span><span class="pill">The Man Wolf [W-L] · [n]th</span><span class="pill wolf">Waiver priority #[N]</span><span class="pill">Claims process Wed [date]</span><span class="pill">[n] open roster spots</span></div>
+
+<!-- 1 · THE CALL. Use class="call" for claims, class="call hold" for a hold. -->
+<div class="call">
+  <div class="lbl">The call</div>
+  <div class="what">[Claim X with #N, drop Y]  — or —  [Hold: no claim this week, save #N]</div>
+  <ol><li>[Claim 1: player → drop · USE #N / WAIT FOR FA · one-line reason]</li><li>[Claim 2 …]</li></ol>
+</div>
+
+<!-- 2 · ROSTER -->
+<section id="roster" class="card">
+<h2>Where the roster stands</h2>
+<div class="tiles">
+  <div class="tile"><div class="l">Weakest slot ROS</div><div class="v">[FLEX]</div><div class="d">[why]</div></div>
+  <div class="tile"><div class="l">Depth hole</div><div class="v">[WR]</div><div class="d">[why]</div></div>
+  <div class="tile"><div class="l">Next byes</div><div class="v">[W6: X, Y]</div><div class="d">[impact]</div></div>
+  <div class="tile"><div class="l">Unhandcuffed starters</div><div class="v">[name]</div><div class="d">[backup on his team]</div></div>
+</div>
+<p class="muted small">[Injured starters + timelines; IR-slot validity warning if any.]</p>
+</section>
+
+<!-- 3 · SHORTLIST (3–5 cards, ROS-ranked) -->
+<section id="shortlist">
+<h2>Shortlist · rest-of-season ranked</h2>
+<div class="cands">
+  <div class="cand">
+    <div class="top">
+      <div style="display:flex;gap:12px">
+        <div class="rk">1</div>
+        <div><div class="nm"><span class="pos">WR</span> [Player]</div><div class="sub2">[TEAM] · bye W[x] · age [x] · [y]% rostered (ESPN)</div></div>
+      </div>
+      <div class="labels"><span class="tag ok">ACTIVE</span><span class="acq wv">WAIVERS (inferred)</span><span class="prio use">USE #[N]</span></div>
+    </div>
+    <div class="kpis">
+      <div><span class="l">Target share W[a]–W[b]</span><span class="v">[12% → 18% → 24%]</span></div>
+      <div><span class="l">Expected ppg (our scoring)</span><span class="v">[9–13] <span class="muted small">judgment</span></span></div>
+      <div><span class="l">Consensus ROS</span><span class="v">[WR38 FP · WR42 ESPN]</span></div>
+      <div><span class="l">Next 3 / playoffs</span><span class="v">[soft / tough]</span></div>
+    </div>
+    <p><b>Path to starting:</b> [what has to happen, how likely]</p>
+    <div class="two">
+      <div><b>Why</b><ul><li>[evidence]</li></ul></div>
+      <div><b>Risks</b><ul><li>[risk; regression flags]</li></ul></div>
+    </div>
+    <p class="small"><span class="ctag up">DIVERGE ↑</span> [reason — or AGREE / DIVERGE ↓]</p>
+    <div class="reason"><b>Priority:</b> [why USE #N or WAIT FOR FA]</div>
+    <div class="drop"><b>Drop:</b> [Player] — [one-line ROS value; why him]</div>
+  </div>
+</div>
+<div class="def"><b>Target share</b> — [plain-language definition the first time a stat appears].</div>
+</section>
+
+<!-- 4 · THIS WEEK ONLY -->
+<section id="thisweek" class="card">
+<h2>This week only</h2>
+<p class="muted small">Bye/injury fill-ins for Week [N]. Start/sit decisions stay with /weekly-lineup.</p>
+<div class="tablewrap"><table>
+<tr><th>Player</th><th>Fills</th><th>Status</th><th>Acq.</th><th>Priority</th><th>Why this week</th></tr>
+<tr><td><span class="pos">RB</span> [Player]</td><td>[Barkley's slot]</td><td><span class="tag q">Q</span></td><td><span class="acq">FA</span></td><td><span class="prio wait">WAIT FOR FA</span></td><td>[reason]</td></tr>
+</table></div>
+</section>
+
+<!-- 5 · D/ST STREAM -->
+<section id="dst" class="card">
+<h2>D/ST stream</h2>
+<div class="tablewrap"><table>
+<tr><th>#</th><th>Defense</th><th>Opponent</th><th class="num">Opp sacks allowed/g</th><th class="num">Opp TO/g</th><th class="num">Opp implied total</th><th>Consensus</th><th>Acq.</th></tr>
+<tr><td>1</td><td>[Team D/ST]</td><td>[vs X]</td><td class="num">[3.1]</td><td class="num">[1.8]</td><td class="num">[17.5]</td><td>[DST4 FP]</td><td><span class="acq">FA</span></td></tr>
+</table></div>
+<p class="muted small">Ranked on matchup and consensus, never ESPN projection. Next week: [early stream lean].</p>
+</section>
+
+<!-- 6 · QB NOTE -->
+<section id="qb" class="card"><h2>QB note</h2><p>[No action / backup for bye W[x] / breakout to watch — with status tag.]</p></section>
+
+<!-- 7 · STASHES -->
+<section id="stash" class="card">
+<h2>Stashes &amp; handcuffs</h2>
+<div class="tablewrap"><table>
+<tr><th>Player</th><th>Status</th><th>Acq.</th><th>What unlocks him</th><th>Keeper angle</th></tr>
+<tr><td><span class="pos">RB</span> [Player]</td><td><span class="tag ok">ACTIVE</span></td><td><span class="acq">FA</span></td><td>[starter injury / depth move]</td><td>[age, flat-cost keeper note]</td></tr>
+</table></div>
+</section>
+
+<!-- 8 · LEAGUE ANGLE -->
+<section id="league" class="card">
+<h2>League angle</h2>
+<h3>Competing claims (teams ahead of #[N])</h3>
+<div class="tablewrap"><table>
+<tr><th>Priority</th><th>Team</th><th>Record</th><th>Need at target's position?</th><th>Threat to</th></tr>
+<tr><td>#1</td><td>[Team]</td><td>[W-L]</td><td>[Yes — WR2 on bye]</td><td>[Player]</td></tr>
+</table></div>
+<h3>Opponent blocking</h3><p>[Free agents who mainly help this week's or the next two opponents — tiebreak only.]</p>
+<h3>Recent league activity</h3><ul><li>[Team] added [X] / dropped [Y] — [signal]</li></ul>
+</section>
+
+<!-- 9 · CUT ORDER (first cut at top; class="top-cut" on the first row) -->
+<section id="cuts" class="card">
+<h2>Bench cut order</h2>
+<div class="tablewrap"><table>
+<tr><th>#</th><th>Player</th><th>Status</th><th>ROS value</th><th>Keeper</th><th>Change vs last</th></tr>
+<tr class="top-cut"><td>1</td><td><span class="pos">WR</span> [Player]</td><td><span class="tag ok">ACTIVE</span></td><td>[one line]</td><td>[—]</td><td>[new / ↑ / ↓ / =]</td></tr>
+</table></div>
+</section>
+
+<!-- 10 · WATCH LIST -->
+<section id="watch" class="card">
+<h2>Watch list</h2>
+<ul><li><b>[Player]</b> ([POS], [TEAM]) — add if: [trigger, e.g. ≥ 6 targets again in W[n]]</li></ul>
+</section>
+
+<!-- 11 · GLOSSARY + SOURCES -->
+<section class="card">
+<details><summary>Glossary</summary><ul><li><b>[Term]</b> — [definition]</li></ul></details>
+</section>
+<footer>Data: ESPN league 394766, synced [time]; usage from ESPN public box scores. Sources: <a href="#">[source]</a> · <a href="#">[source]</a></footer>
+</main>
+</body>
+</html>

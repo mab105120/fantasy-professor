@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Malik Washington Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#E9EAEC; --card:#FFFFFF; --ink:#15181D; --ink-2:#3A4049; --muted:#6B727D;
+  --rule:#C7CAD0; --rule-hard:#15181D; --navy:#173A5C; --navy-soft:#E2E8EF;
+  --up:#0E7A5F; --up-soft:#DCEDE7; --down:#B23A33; --down-soft:#F3E0DE;
+  --flag:#B87814; --flag-soft:#F6E9D2; --chip:#DFE1E5;
+  --a:#2F5E9E; --a-soft:#E0E8F4; --b:#8A4FA0; --b-soft:#EEE3F2;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+    --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+    --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+    --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+    --a:#8DB6EC; --a-soft:#18243A; --b:#CFA0E0; --b-soft:#2A1C31;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+  --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+  --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+  --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+  --a:#8DB6EC; --a-soft:#18243A; --b:#CFA0E0; --b-soft:#2A1C31;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:"Barlow","Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.5;margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px 56px}
+a{color:var(--navy)}
+.mast{background:#0B0D11;color:#E9EBEF;padding:26px 16px 22px;border-bottom:4px solid var(--flag)}
+.mast-inner{max-width:928px;margin:0 auto;display:flex;flex-wrap:wrap;gap:14px 28px;align-items:flex-end;justify-content:space-between}
+.mast h1{font-family:"Oswald",Impact,sans-serif;font-weight:700;font-size:clamp(32px,6.6vw,52px);line-height:.94;margin:0;text-transform:uppercase}
+.mast h1 em{font-style:normal;color:var(--flag);display:block;font-size:.55em;margin-top:6px}
+.mast-meta{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:#9AA3B0;line-height:1.9}
+h2{font-family:"Oswald",sans-serif;font-weight:600;font-size:22px;letter-spacing:.02em;text-transform:uppercase;margin:40px 0 14px;padding-bottom:6px;border-bottom:2px solid var(--rule-hard)}
+h3{font-family:"Oswald",sans-serif;font-weight:500;font-size:19px;margin:0 0 6px}
+p{margin:0 0 12px;color:var(--ink-2)}
+strong{color:var(--ink)}
+/* KPI grid */
+.grid{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+@media(min-width:760px){.grid{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px 16px}
+.stat .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.stat .v{font-family:"Oswald",sans-serif;font-size:28px;font-weight:600;line-height:1.1;margin:4px 0}
+.stat .s{font-size:13px;color:var(--muted);line-height:1.35}
+/* frames, status, definitions */
+.frame{margin-top:26px;background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:18px 22px}
+.frame p{font-size:15px;margin-bottom:6px}
+.frame ul{margin:6px 0 0;padding-left:20px;color:var(--ink-2);font-size:15px}
+.status{background:var(--navy-soft);border-radius:8px;padding:14px 18px;margin-top:14px;font-size:15px}
+.status b{color:var(--navy)}
+.why{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:20px 22px;margin-bottom:14px}
+.why p:last-child{margin-bottom:0}
+.def{border-left:3px solid var(--flag);background:var(--flag-soft);padding:8px 14px;border-radius:0 6px 6px 0;font-size:14.5px;margin:10px 0 14px}
+.def b{color:var(--flag)}
+.small{font-size:13px;color:var(--muted)}
+/* chips / tags */
+.chip{font-family:"IBM Plex Mono",monospace;font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--chip);color:var(--ink-2);white-space:nowrap}
+.chip.up{background:var(--up-soft);color:var(--up)}
+.chip.down{background:var(--down-soft);color:var(--down)}
+.chip.flag{background:var(--flag-soft);color:var(--flag)}
+/* status tags: ACTIVE / Q / D / O / IR / SUSP / UNCONFIRMED */
+.tag{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.06em;padding:2px 7px;border-radius:4px;background:var(--up-soft);color:var(--up);white-space:nowrap}
+.tag.q{background:var(--flag-soft);color:var(--flag)}
+.tag.o{background:var(--down-soft);color:var(--down)}
+/* consensus verdict tags */
+.agree{color:var(--up);font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600}
+.diverge{color:var(--flag);font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600}
+/* tables */
+.tscroll{overflow-x:auto;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--rule);border-radius:8px;overflow:hidden;font-size:14.5px}
+th{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;text-align:left;color:var(--muted);padding:9px 12px;border-bottom:2px solid var(--rule-hard);background:var(--navy-soft)}
+td{padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+td.num{font-family:"IBM Plex Mono",monospace;white-space:nowrap}
+td.who{color:var(--ink);font-weight:600;white-space:nowrap}
+tr.hl td{background:var(--flag-soft)}
+/* upside / risk */
+.cols{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:720px){.cols{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:16px 20px;border-top:5px solid var(--up)}
+.card.risk{border-top-color:var(--down)}
+.card ul{margin:0;padding-left:18px;font-size:15px;color:var(--ink-2)}
+.card li{margin-bottom:8px}
+/* scoring ranges */
+.range{display:grid;gap:10px;grid-template-columns:1fr}
+@media(min-width:720px){.range{grid-template-columns:repeat(3,1fr)}}
+.range .stat .v{font-size:32px}
+/* this-week note */
+.week{background:var(--card);border:1px solid var(--rule);border-left:6px solid var(--navy);border-radius:8px;padding:14px 18px;font-size:15px}
+/* ===== COMPARE MODE ===== */
+.verdict{margin-top:26px;background:var(--card);border:1px solid var(--rule);border-left:8px solid var(--up);border-radius:8px;padding:18px 22px}
+.verdict .lbl{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.verdict .call{font-family:"Oswald",sans-serif;font-size:30px;font-weight:600;line-height:1.1;margin:4px 0 8px}
+.pcards{display:grid;gap:14px;grid-template-columns:1fr;margin-top:18px}
+@media(min-width:680px){.pcards{grid-template-columns:1fr 1fr}}
+.pcard{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:16px 20px;border-top:5px solid var(--a)}
+.pcard.b{border-top-color:var(--b)}
+.pcard .name{font-family:"Oswald",sans-serif;font-size:26px;font-weight:600;line-height:1.05;margin:0 0 4px}
+.pcard .meta{font-size:14px;color:var(--muted);margin-bottom:8px}
+th.a,td.a{border-top:3px solid var(--a)} th.b,td.b{border-top:3px solid var(--b)}
+th.a{color:var(--a)} th.b{color:var(--b)}
+.win-a,.win-b,.push{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.05em;white-space:nowrap;padding:2px 8px;border-radius:4px}
+.win-a{background:var(--a-soft);color:var(--a)}
+.win-b{background:var(--b-soft);color:var(--b)}
+.push{background:var(--chip);color:var(--muted)}
+/* multi mode divider */
+.player-head{margin-top:48px;padding:14px 18px;background:#0B0D11;color:#E9EBEF;border-radius:8px;border-left:6px solid var(--flag);font-family:"Oswald",sans-serif;font-size:26px;text-transform:uppercase}
+.sources{font-size:13.5px;color:var(--muted);columns:1}
+@media(min-width:680px){.sources{columns:2}}
+.sources li{margin-bottom:4px;break-inside:avoid}
+.foot{margin-top:40px;padding-top:14px;border-top:1px solid var(--rule);font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);letter-spacing:.04em}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-inner">
+    <h1>Malik Washington<em>WR · Miami Dolphins · Player Report</em></h1>
+    <div class="mast-meta">
+      The Man Wolf · D League (394766)<br>
+      Fri 2026-09-25 · ESPN sync 23:23 · Week 3 pre-kickoff (MIA plays Sun)<br>
+      Rostered by The Man Wolf (bench) · FA add 09-19, no pick spent
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="grid" style="margin-top:26px">
+    <div class="stat"><div class="k">League points / game</div><div class="v">7.5</div><div class="s">6.3 (W1, incl. −2 lost fumble) + 8.7 (W2). WR44 of 65 rostered by pts/gm; WR51 by ESPN ROS projection.</div></div>
+    <div class="stat"><div class="k">Route participation</div><div class="v">92%</div><div class="s">Season (DK Network). Snaps fell from 55 (~98%) in W1 to 43/59 (73%) in W2.</div></div>
+    <div class="stat"><div class="k">Target share</div><div class="v">26%</div><div class="s">13 of 50 MIA targets, the team lead. Big share, tiny pie: Miami throws ~25 times a game.</div></div>
+    <div class="stat"><div class="k">Consensus ROS</div><div class="v">WR68</div><div class="s">FantasyPros ECR (range WR68–73, tight). Boone 9. W3 weekly WR50 (C−).</div></div>
+  </section>
+
+  <section class="frame">
+    <h3>The short version</h3>
+    <p><strong>WR6 / replacement level: a roster-spot placeholder with a one-week bump.</strong> Washington has a real role. He leads Miami with a 26% target share and runs a route on 92% of dropbacks from the slot. But he's the leading receiver on one of the NFL's smallest passing offenses (27 and 23 targets in two games, 13 points each week). His skill set is short and underneath (6.9 yards per catch in 2025), so his weekly ceiling is low. In our scoring he was a 6.5-point player in 2025. With Caleb Douglas out this week, he's Miami's de facto No. 1 receiver against KC, and a trailing game script (MIA +10.5) should push his targets up. That's a single-week lift, not a new tier.</p>
+    <p><strong>For The Man Wolf:</strong> he's our least valuable receiver, and he doesn't start over anyone. He <strong>isn't in the ledger's cut order at all</strong> (Allgeier → Harvey → Worthy → Pittman). By every consensus measure he ranks below both Worthy and Pittman, so he belongs at the front of it, <strong>right after Allgeier</strong>. A healthy <strong>Courtland Sutton</strong> is also sitting on our wire, and experts rate him 28 spots higher (FP ROS WR40).</p>
+    <div class="status"><b>Status (checked live 2026-09-25):</b> <span class="tag">ACTIVE</span> Not on any of the Dolphins' Week 3 injury reports (no practice limitation listed). No legal or suspension issues found. He's 25, a 2024 6th-round pick on his rookie contract, so he's cheap. His job security comes from a thin WR room, not from investment. Teammates: <strong>Caleb Douglas</strong> (rookie, ankle, left SF game in a boot) is <span class="tag o">OUT</span> for W3 with no timeline beyond that <em>(UNCONFIRMED)</em>. <strong>Chris Bell</strong> (knee) has no game designation. RB/KR Jaylen Wright is doubtful.</div>
+  </section>
+
+  <h2>1 · Role and volume</h2>
+  <div class="def"><b>Snap %</b> is the share of offensive plays he's on the field for. <b>Route participation</b> is the share of pass plays he runs a route on; 85%+ means an every-down receiver. <b>Target share</b> is his share of the team's pass targets: 20%+ is a No. 1 option, 15–20% a solid No. 2. But a share only matters multiplied by how often the team throws.</div>
+  <div class="tscroll"><table>
+    <thead><tr><th>Week</th><th>Opp</th><th>Snaps</th><th>Tgt</th><th>Team share</th><th>Line</th><th>League pts</th></tr></thead>
+    <tbody>
+      <tr><td class="who">W1</td><td>@ LV (L 13–27)</td><td class="num">55 (~98%)</td><td class="num">8</td><td class="num">29.6% (8/27)</td><td class="num">3-53-0, 1 fum lost</td><td class="num">6.3</td></tr>
+      <tr><td class="who">W2</td><td>@ SF (L 13–35)</td><td class="num">43 (73%)</td><td class="num">5</td><td class="num">21.7% (5/23)</td><td class="num">4-43-0; 1-4 rush</td><td class="num">8.7</td></tr>
+      <tr class="hl"><td class="who">Total</td><td></td><td class="num">—</td><td class="num">13</td><td class="num">26.0% (13/50)</td><td class="num">7-96-0</td><td class="num">7.5/gm</td></tr>
+      <tr><td class="who">2025</td><td>17 games</td><td class="num">—</td><td class="num">65</td><td class="num">—</td><td class="num">46-317-3; 17-110-1 rush</td><td class="num">6.5/gm</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">Targets, lines, fumble: ESPN box scores (the W1 lost fumble came on a 26-yd catch, recovered by LV). Snaps: Yahoo (W2), ledger 09-19 (W1 ~98%). Route rate/share: DK Network. League pts: <code>week_stats.json</code> / <code>teams.json</code>. Kick and punt return yards (125 kickoff yards so far) <strong>don't score in our league</strong>.</p>
+
+  <div class="tscroll"><table>
+    <thead><tr><th>MIA pass-catcher</th><th>W1</th><th>W2</th><th>Share</th><th>W3 status</th></tr></thead>
+    <tbody>
+      <tr class="hl"><td class="who">Malik Washington</td><td class="num">8</td><td class="num">5</td><td class="num">26.0%</td><td><span class="tag">ACTIVE</span> slot</td></tr>
+      <tr><td class="who">Caleb Douglas</td><td class="num">7</td><td class="num">3</td><td class="num">20.0%</td><td><span class="tag o">OUT</span> ankle. Free agent in our league.</td></tr>
+      <tr><td class="who">De'Von Achane (RB)</td><td class="num">5</td><td class="num">6</td><td class="num">22.0%</td><td><span class="tag">ACTIVE</span></td></tr>
+      <tr><td class="who">Greg Dulcich (TE)</td><td class="num">2</td><td class="num">3</td><td class="num">10.0%</td><td>—</td></tr>
+      <tr><td class="who">Chris Bell / K. Coleman Jr. / DJ Herman</td><td class="num">4</td><td class="num">4</td><td class="num">16.0%</td><td>Bell: knee, no designation</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="why"><h3>A real role in an offense that throws ~25 times a game</h3>
+  <p>His role is secure. He leads Miami in targets, runs nearly every route, and has no veteran competition. Waddle went to DEN and Hill is gone, and the other receivers are rookies (Douglas, Bell) and depth players (Coleman, Tolbert, Miller). The W2 snap dip (73%) reflects more two-TE and run sets in a game Miami chased from behind on the ground (29 carries). His route rate held up.</p>
+  <p>What caps him is volume. A 26% share of 25 targets is ~6.5 targets, and Malik Willis has thrown only 50 passes in two games. Experts agree: DK Network calls him Miami's No. 1 option this week and projects "double-digit targets" possible, but steers redraft managers to "very deep leagues." 4for4 and others list him as a W3 sit.</p>
+  <p><strong>Watch next:</strong> W3 without Douglas is the best-case test: 30%+ share and a trailing script. If that produces fewer than 8 targets / 12 points, his ceiling in this offense is confirmed.</p></div>
+
+  <h2>2 · Efficiency</h2>
+  <div class="def"><b>Yards per catch</b> and <b>yards per target</b> measure how much each look is worth. For a slot WR, ~11 yds/catch and ~8 yds/target is average. <b>Catch rate</b> is catches ÷ targets, typically ~65%. <b>YAC</b> is yards after the catch. For a screen/gadget receiver it's most of his yardage.</div>
+  <div class="grid">
+    <div class="stat"><div class="k">Yds / catch · 2026</div><div class="v">13.7</div><div class="s">7-96, boosted by two 30-and-23-yard catches. 2025: 6.9; 2024: 8.6.</div></div>
+    <div class="stat"><div class="k">Yds / target · 2026</div><div class="v">7.4</div><div class="s">96 / 13. 2025: 4.9 (317 / 65). Well below average.</div></div>
+    <div class="stat"><div class="k">Catch rate · 2026</div><div class="v">54%</div><div class="s">7 / 13 (2025: 71%). Expect regression <em>up</em>.</div></div>
+    <div class="stat"><div class="k">YAC share · W2</div><div class="v">47%</div><div class="s">20 of 43 yds after the catch. Screens and jet-sweep concepts.</div></div>
+  </div>
+  <div class="why" style="margin-top:14px"><h3>Two regressions that cancel out</h3><p>His 13.7 yards per catch will fall back toward the 7–9 range of his career. His career is built on jet sweeps, quick screens and gadget looks (CBS/RotoWire), so he doesn't get downfield. His 54% catch rate will climb back toward his 71% 2025 rate. The net: expect roughly <strong>4–5 catches for 35–45 yards</strong> on a typical 6-target day, about 8–9 points in our scoring. That matches ESPN's 9.73 projection.</p></div>
+
+  <h2>3 · What it's worth in our scoring</h2>
+  <p>In our PPR 0.1/yd scoring his baselines are <strong>4.1/gm (2024)</strong> and <strong>6.5/gm (2025</strong>, 46-317-3 receiving + 17-110-1 rushing, −2 lost fumble). In 2025, <strong>22% of his points came from TDs</strong> (4 total). This year he's at 7.5/gm with 0 TDs. Catches carry his floor. The lack of yards per catch caps his ceiling.</p>
+  <div class="range">
+    <div class="stat" style="border-top:5px solid var(--down)"><div class="k">Floor week (~30%)</div><div class="v">≤ 5</div><div class="s">3 catches, 20 yds; Achane and the run game carry the day.</div></div>
+    <div class="stat" style="border-top:5px solid var(--navy)"><div class="k">Median week (~55%)</div><div class="v">7–10</div><div class="s">4–5 catches, 35–50 yds, no TD. Both his 2026 games so far.</div></div>
+    <div class="stat" style="border-top:5px solid var(--up)"><div class="k">Ceiling week (~15%)</div><div class="v">14–18</div><div class="s">7 catches, 60 yds + a TD. Needs a blowout script and Douglas out.</div></div>
+  </div>
+  <p class="small" style="margin-top:8px">Ranges are judgment calls built from his 2025–26 lines, MIA's ~25 targets/game and league scoring. They are not model output.</p>
+
+  <div class="tscroll"><table>
+    <thead><tr><th>Player</th><th>Team (league)</th><th>Pts/gm</th><th>ESPN ROS proj/gm</th><th>FP ROS</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr class="hl"><td class="who">Malik Washington <span class="tag">ACTIVE</span></td><td>Man Wolf (BE)</td><td class="num">7.50</td><td class="num">9.73</td><td class="num">WR68</td><td>WR51 of 65 rostered by ESPN proj</td></tr>
+      <tr><td class="who">Xavier Worthy <span class="tag">ACTIVE</span></td><td>Man Wolf (BE)</td><td class="num">9.15</td><td class="num">11.01</td><td class="num">WR53</td><td>In the cut order ahead of Pittman</td></tr>
+      <tr><td class="who">Michael Pittman Jr. <span class="tag q">Q</span></td><td>Man Wolf (IR)</td><td class="num">8.80</td><td class="num">11.89</td><td class="num">WR55</td><td>Last in the cut order</td></tr>
+      <tr><td class="who">Courtland Sutton <span class="tag">ACTIVE</span></td><td>Free agent (85.8% nat'l)</td><td class="num">4.30</td><td class="num">11.14</td><td class="num">WR40</td><td>Best FA WR. Healthy (Payton). Dropped by Redemption 09-24; may still be on waivers</td></tr>
+      <tr><td class="who">Keenan Allen <span class="tag">ACTIVE</span></td><td>Free agent (23.6%)</td><td class="num">5.35</td><td class="num">9.01</td><td class="num">—</td><td>≈ Washington</td></tr>
+      <tr><td class="who">Caleb Douglas <span class="tag o">OUT</span></td><td>Free agent (25.6%)</td><td class="num">9.15</td><td class="num">8.69</td><td class="num">—</td><td>His teammate; ankle</td></tr>
+    </tbody>
+  </table></div>
+  <div class="why"><h3>Value over replacement: roughly zero</h3><p>ESPN projects him <strong>1.4 pts/gm below</strong> the best free-agent WR (Sutton) and level with Keenan Allen. FantasyPros ranks Sutton 28 spots higher. In a 10-team league this is exactly the high waiver floor. Washington is the floor, so any roster spot he holds is worth only what the wire already offers. A Washington → Sutton swap is a judgment-call upgrade on consensus. Sutton's own risk is real, though: 4.3/gm so far with Waddle in Denver, and he's been dropped twice in this league. Our rolling waiver priority is <strong>#2</strong> if he's still on waivers.</p></div>
+
+  <h2>4 · Matchups, week by week</h2>
+  <div class="def"><b>How to read this:</b> each defense's rank in <strong>2025 full-PPR fantasy points allowed to WRs</strong> per game (EDSFootball), <strong>1 = fewest allowed (toughest)</strong>, 32 = softest. This is last season's data at Week 3, so treat it as a rough guide. It will be blended with 2026 data from ~W5. For example, KC is allowing only 6.6 yards per pass so far in 2026 (DK Network), tougher than its 2025 rank. Chips: 1–10 tough, 11–22 neutral, 23–32 good.</div>
+  <div class="tscroll"><table>
+    <thead><tr><th>Wk</th><th>NFL opponent</th><th>Def rank</th><th>Read</th><th>Man Wolf plays</th></tr></thead>
+    <tbody>
+      <tr><td class="num">3</td><td>vs KC (KC −10.5, O/U 45.5)</td><td class="num">12</td><td><span class="chip">Neutral</span></td><td>🥊ALI🥊 · Douglas OUT</td></tr>
+      <tr><td class="num">4</td><td>@ MIN</td><td class="num">1</td><td><span class="chip down">Tough</span></td><td>Redemption team</td></tr>
+      <tr><td class="num">5</td><td>vs CIN</td><td class="num">2</td><td><span class="chip down">Tough</span></td><td>Imad · Worthy on bye (KC)</td></tr>
+      <tr class="hl"><td class="num">6</td><td colspan="3"><strong>BYE</strong> · Jameson Williams (DET) also off</td><td>Playoff Chase</td></tr>
+      <tr><td class="num">7</td><td>@ NYJ</td><td class="num">16</td><td><span class="chip">Neutral</span></td><td>Get Hooked</td></tr>
+      <tr><td class="num">8</td><td>vs NE</td><td class="num">13</td><td><span class="chip">Neutral</span></td><td>Lamar n Order · <strong>Olave, Collins, Kittle, Kamara on bye</strong></td></tr>
+      <tr><td class="num">9</td><td>vs DET</td><td class="num">30</td><td><span class="chip up">Good</span></td><td>Bower Outage · Pittman on bye</td></tr>
+      <tr><td class="num">10</td><td>@ IND</td><td class="num">31</td><td><span class="chip up">Good</span></td><td>Texas Two Step</td></tr>
+      <tr><td class="num">11</td><td>@ BUF</td><td class="num">6</td><td><span class="chip down">Tough</span></td><td>Steel Giants</td></tr>
+      <tr><td class="num">12</td><td>vs NYJ</td><td class="num">16</td><td><span class="chip">Neutral</span></td><td>🥊ALI🥊</td></tr>
+      <tr><td class="num">13</td><td>@ DEN</td><td class="num">8</td><td><span class="chip down">Tough</span></td><td>Redemption team</td></tr>
+      <tr><td class="num">14</td><td>vs CHI</td><td class="num">28</td><td><span class="chip up">Good</span></td><td>Imad</td></tr>
+      <tr class="hl"><td class="num">15</td><td>@ GB</td><td class="num">18</td><td><span class="chip">Neutral</span></td><td>Playoffs, round 1</td></tr>
+      <tr class="hl"><td class="num">16</td><td>vs LAC</td><td class="num">10</td><td><span class="chip down">Tough</span></td><td>Playoffs, round 2</td></tr>
+      <tr class="hl"><td class="num">17</td><td>vs BUF</td><td class="num">6</td><td><span class="chip down">Tough</span></td><td>Championship</td></tr>
+    </tbody>
+  </table></div>
+  <div class="why"><h3>What the calendar means</h3><p>After this week comes his worst stretch: <strong>MIN (#1) and CIN (#2)</strong> in W4–5, right as Douglas may return. His useful window is <strong>W8–W10</strong> (NE, DET #30, IND #31). That includes the W8 bye crunch, when he'd actually be startable for us. The <strong>fantasy playoffs are poor</strong> (GB, LAC, BUF). His W6 bye lands on the same week as Jameson Williams', so he can't cover that one.</p></div>
+
+  <h2>5 · Upside and risk</h2>
+  <div class="cols">
+    <div class="card"><h3>Upside drivers</h3><ul>
+      <li>Target leader (26%) with a 92% route rate and no veteran competition in Miami's WR room.</li>
+      <li>Douglas out W3 (and possibly longer; timeline <em>UNCONFIRMED</em>) could push him to ~30% share (DK Network).</li>
+      <li>Miami should be trailing often (0-2, +10.5 in W3), which means more pass attempts than the first two weeks.</li>
+      <li>Age 25 on a rookie deal. That's youth on paper, but not a keeper-caliber profile.</li>
+    </ul></div>
+    <div class="card risk"><h3>Risk drivers</h3><ul>
+      <li><strong>Volume:</strong> Miami has thrown 50 passes in two games, and the offense has scored 13 points each week.</li>
+      <li><strong>Profile:</strong> short-area/gadget receiver. 6.9 yds/catch and 4.9 yds/target in 2025 mean no path to a big week without a TD.</li>
+      <li><strong>Ball security:</strong> a lost fumble in W1 (−2 in our scoring) and one lost on a rush in 2025.</li>
+      <li><strong>Schedule:</strong> MIN/CIN next, and the playoff weeks are neutral-to-tough.</li>
+    </ul></div>
+  </div>
+
+  <h2>6 · Fit with The Man Wolf and our strategy</h2>
+  <div class="why"><p><strong>Strategy check:</strong> "WR: volume over ceiling" fits his archetype. He earns targets, but at 26% of a tiny pass game it isn't real volume. "Youth as a bench tiebreaker" only applies to a player with keeper-worthy upside, and nothing in his profile suggests one. "RB depth is the lever" means a bench RB with a real path to touches outranks him, but Allgeier doesn't have one.</p>
+  <ul style="color:var(--ink-2);font-size:15px">
+    <li><strong>Where he fits:</strong> WR6. Behind Olave, Collins (IR, ~W4), Jameson Williams, Pittman (IR) and Worthy. He starts for us only in a bye crunch, and W8 is the one realistic week (Olave, Collins, Kittle and Kamara all off; Washington vs NE, neutral).</li>
+    <li><strong>Revised cut order</strong> (spots needed: Pittman off IR, Collins off IR ~W4, +1 if the Kittle 2-for-1 goes through): <strong>Allgeier → Washington → Harvey → Worthy → Pittman.</strong> Washington goes ahead of Harvey (a judgment call) because WR is our deeper position, and strategy says RB depth is the lever.</li>
+    <li><strong>Upgrade option:</strong> swapping Washington for Courtland Sutton is a consensus upgrade (FP WR40 vs WR68; ESPN 11.14 vs 9.73). Sutton's usage has been poor since Waddle arrived, so run a <code>/player-eval</code> compare before claiming if you want it checked properly.</li>
+    <li><strong>League angle:</strong> no opponent is chasing him (11.9% rostered nationally). He has no trade value (Boone 9), so he's only a throw-in at most.</li>
+  </ul></div>
+
+  <h2>7 · Expert consensus vs our read</h2>
+  <div class="tscroll"><table>
+    <thead><tr><th>Source</th><th>Rank / value / grade</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td class="who">FantasyPros ROS ECR (5 experts, 9/24)</td><td class="num">WR68</td><td>Best WR68, worst WR73, std dev 2.1: tight agreement. Worthy WR53, Pittman WR55, Sutton WR40.</td></tr>
+      <tr><td class="who">Yahoo · Boone trade value W3</td><td class="num">9</td><td>Full PPR. Below Worthy (12), Pittman (14), Metcalf (22).</td></tr>
+      <tr><td class="who">ESPN ROS projection</td><td class="num">9.73/gm</td><td>WR51 of 65 rostered in D League; below FA Sutton (11.14).</td></tr>
+      <tr><td class="who">DK Network (usage, W3)</td><td class="num">26% tgt · 92% routes</td><td>Could reach ~30% share with Douglas out; KC allows 6.6 YPA (6th-fewest). "DFS play… very deep leagues" for redraft.</td></tr>
+      <tr><td class="who">FantasyPros W3 weekly (44 experts)</td><td class="num">WR50 · C−</td><td>Range WR36–59.</td></tr>
+      <tr><td class="who">4for4 / DK start-sit W3</td><td class="num">Sit / deep-league flex</td><td>Punchless pass game vs strong KC pass D.</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>Agreement:</strong> <strong>tight.</strong> Every source puts him in bench/replacement territory ROS. <strong>Our read:</strong> <span class="agree">AGREE</span> on the ROS tier. Our one difference is a narrow W3 bump (DIVERGE ↑ for this week only, a judgment call): Douglas being out plus a trailing script should give him 8+ targets. That doesn't change his tier, and he isn't in our W3 lineup anyway.</p>
+
+  <h2>8 · This week</h2>
+  <div class="week"><strong>W3 vs KC</strong> · KC −10.5, O/U 45.5 (MIA implied ~17.5) · <span class="tag">ACTIVE</span> · consensus WR50 (FP) · lean <strong>sit (bench)</strong>. Jameson Williams (FP WR26) and the Kittle/Tuten FLEX pair all rank well ahead. His Douglas-out bump is real but lands in the 9–12 range, not starter territory. Kickoff 12:00 CT. Confirm in <code>/weekly-lineup</code>.</div>
+
+  <h2>Sources</h2>
+  <ul class="sources">
+    <li><a href="https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/dolphins-rule-out-wr-caleb-douglas-for-week-3">NBC/PFT: Dolphins rule out Douglas for W3</a></li>
+    <li><a href="https://sports.yahoo.com/articles/dolphins-announce-major-caleb-douglas-205015540.html">Yahoo: Douglas ankle, boot, Hafley quotes</a></li>
+    <li><a href="https://sports.yahoo.com/articles/final-dolphins-chiefs-week-3-203206185.html">Yahoo/SI: final Dolphins–Chiefs W3 injury report</a></li>
+    <li><a href="https://sports.yahoo.com/articles/dolphins-snap-counts-week-2-160107716.html">Yahoo: Dolphins W2 snap counts</a></li>
+    <li><a href="https://www.nbcsports.com/fantasy/football/player-news/2026-09-20/washington-leads-dolphins-receivers-in-targets">NBC Sports: Washington leads MIA WRs in targets</a></li>
+    <li><a href="https://www.cbssports.com/fantasy/football/news/dolphins-malik-washington-does-it-all-in-loss/">CBS: Washington "does it all" (W2)</a></li>
+    <li><a href="https://dknetwork.draftkings.com/2026/09/24/does-malik-washington-have-fantasy-value-in-week-3-with-caleb-douglas-and-chris-bell-injured/">DK Network: Washington W3 value, target/route share</a></li>
+    <li><a href="https://www.4for4.com/2026/w3/fantasy-football-week-3-start-em-sit-em-every-game-previewed-hoopes-there-it">4for4: W3 start 'em, sit 'em</a></li>
+    <li><a href="https://www.fanduel.com/research/chiefs-vs-dolphins-predictions-odds-picks-best-bets-for-nfl-week-3-2026">FanDuel Research: KC @ MIA odds</a></li>
+    <li><a href="https://www.fantasypros.com/nfl/rankings/ros-ppr-wr.php">FantasyPros: ROS PPR WR ECR</a></li>
+    <li><a href="https://www.fantasypros.com/nfl/rankings/ppr-wr.php">FantasyPros: W3 PPR WR ECR</a></li>
+    <li><a href="https://sports.yahoo.com/fantasy/article/2026-trade-value-charts--justin-boones-fantasy-football-wide-receiver-breakdown-for-week-3-142746855.html">Yahoo: Boone WR trade values W3</a></li>
+    <li><a href="https://sports.yahoo.com/articles/sean-payton-shares-injury-courtland-033151802.html">Yahoo: Payton on Sutton (not injured)</a></li>
+    <li><a href="https://eatdrinkandsleepfootball.com/fantasy/points-allowed/wr-ppr.html">EDSFootball: 2025 PPR WR points allowed</a></li>
+    <li>ESPN athlete stats API: Washington 2024–26 receiving/rushing</li>
+    <li>ESPN scoreboard/summary API: MIA W1–W2 box scores, play-by-play (fumble), 2026 schedule (scratchpad only)</li>
+    <li>League data: <code>data/teams.json</code>, <code>week_stats.json</code>, <code>free_agents.json</code>, <code>transactions.json</code> (synced 2026-09-25)</li>
+  </ul>
+
+  <div class="foot">Fantasy Professor · player-eval · generated 2026-09-25 · W1–W2 complete; W3 not yet played for MIA (Sun 1:00 ET) · Malik Washington ESPN id 4569603</div>
+</main>
+</body>
+</html>

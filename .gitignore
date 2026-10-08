@@ -1,0 +1,7 @@
+config/league_config.json
+data/*.json
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
+.claude/settings.local.json

@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 2 Waiver Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#E9EAEC; --card:#FFFFFF; --ink:#15181D; --ink-2:#3A4049; --muted:#6B727D;
+  --rule:#C7CAD0; --rule-hard:#15181D; --navy:#173A5C; --navy-soft:#E2E8EF;
+  --up:#0E7A5F; --up-soft:#DCEDE7; --down:#B23A33; --down-soft:#F3E0DE;
+  --flag:#B87814; --flag-soft:#F6E9D2; --chip:#DFE1E5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+    --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+    --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+    --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+  --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+  --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+  --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:"Barlow","Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.5;margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px 56px}
+a{color:var(--navy)}
+
+.mast{background:#0B0D11;color:#E9EBEF;padding:26px 16px 22px;border-bottom:4px solid var(--flag)}
+.mast-inner{max-width:928px;margin:0 auto;display:flex;flex-wrap:wrap;gap:14px 28px;align-items:flex-end;justify-content:space-between}
+.mast h1{font-family:"Oswald",Impact,sans-serif;font-weight:700;font-size:clamp(32px,6.6vw,52px);line-height:.94;margin:0;text-transform:uppercase}
+.mast h1 em{font-style:normal;color:var(--flag);display:block}
+.mast-meta{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:#9AA3B0;line-height:1.9}
+
+h2{font-family:"Oswald",sans-serif;font-weight:600;font-size:22px;letter-spacing:.02em;text-transform:uppercase;margin:40px 0 14px;padding-bottom:6px;border-bottom:2px solid var(--rule-hard)}
+h3{font-family:"Oswald",sans-serif;font-weight:500;font-size:19px;margin:0 0 6px}
+p{margin:0 0 12px;color:var(--ink-2)}
+strong{color:var(--ink)}
+
+.frame{margin-top:26px;background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:18px 22px}
+.frame h3{margin-bottom:8px}
+.frame p{font-size:15px;margin-bottom:6px}
+.frame ul{margin:6px 0 0;padding-left:20px;color:var(--ink-2);font-size:15px}
+.frame li{margin-bottom:4px}
+
+.lede{margin-top:18px;display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:680px){.lede{grid-template-columns:1fr 1fr}}
+.pick{background:var(--card);border:1px solid var(--rule);border-left:6px solid var(--up);border-radius:8px;padding:18px 20px}
+.pick.alt{border-left-color:var(--flag)}
+.pick .slot{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.pick .name{font-family:"Oswald",sans-serif;font-size:28px;font-weight:600;line-height:1.05;margin:0}
+.pick .tag{color:var(--muted);font-size:14px;margin-bottom:10px}
+.pick p{font-size:15px;margin-bottom:6px}
+
+.status{background:var(--navy-soft);border-radius:8px;padding:14px 18px;margin-top:14px;font-size:15px}
+.status b{color:var(--navy)}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+.chip{font-family:"IBM Plex Mono",monospace;font-size:11.5px;padding:3px 9px;border-radius:999px;background:var(--chip);color:var(--ink-2)}
+.chip.up{background:var(--up-soft);color:var(--up)}
+.chip.down{background:var(--down-soft);color:var(--down)}
+.chip.flag{background:var(--flag-soft);color:var(--flag)}
+
+.why{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:20px 22px;margin-bottom:14px}
+.def{border-left:3px solid var(--flag);background:var(--flag-soft);padding:8px 14px;border-radius:0 6px 6px 0;font-size:14.5px;margin:10px 0 14px}
+.def b{color:var(--flag)}
+
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--rule);border-radius:8px;overflow:hidden;font-size:15px}
+th{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-align:left;color:var(--muted);padding:10px 14px;border-bottom:2px solid var(--rule-hard);background:var(--navy-soft)}
+td{padding:11px 14px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+td.who{white-space:nowrap;color:var(--ink);font-weight:600}
+td.who span{display:block;font-weight:400;font-size:12.5px;color:var(--muted)}
+.verdict{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.verdict.pass{color:var(--down)}.verdict.taken{color:var(--muted)}.verdict.maybe{color:var(--flag)}.verdict.next{color:var(--up)}
+@media(max-width:640px){table,thead,tbody,tr,th,td{display:block}thead{display:none}tr{border-bottom:2px solid var(--rule)}td{border:0;padding:4px 14px}td.who{padding-top:12px}tr td:last-child{padding-bottom:12px}}
+
+.notes{display:grid;gap:12px}
+.note{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px 18px;display:flex;gap:14px;align-items:flex-start}
+.note .n{font-family:"Oswald",sans-serif;font-size:26px;font-weight:700;color:var(--flag);line-height:1}
+.note p{margin:0;font-size:15px}
+
+.sources{font-size:13.5px;color:var(--muted);columns:1}
+@media(min-width:680px){.sources{columns:2}}
+.sources li{margin-bottom:4px;break-inside:avoid}
+.foot{margin-top:40px;padding-top:14px;border-top:1px solid var(--rule);font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);letter-spacing:.04em}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-inner">
+    <h1>Waiver Wire<em>Rest-of-Season Adds · One Spot Left</em></h1>
+    <div class="mast-meta">
+      The Man Wolf · D League (394766)<br>
+      Sat 2026-09-19 · Week 2 · re-synced after Kamara add · 1-0, 5th
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="frame">
+    <h3>The question, reframed</h3>
+    <p>Not "who scores most this Sunday" but "who on this wire has a realistic path to being a weekly starter for The Man Wolf between now and Week 14." That changes the weighting: role security and ceiling matter more than a Week 2 matchup, and youth counts because a cheap breakout is nearly free to keep under this league's flat-cost keeper rule.</p>
+    <p><strong>Where the roster stands (re-synced 2026-09-19 evening):</strong> Kamara is already added, Pittman moved to IR alongside Collins, so <strong>one bench spot is open and both IR slots are full</strong>. Healthy, the lineup is WR Collins (grade-1 hamstring, back ~Week 4) / Olave / Jameson Williams / Worthy · RB Barkley / Henry / Kamara / Tuten / Harvey · QB Dak · TE Fannin + Kittle. So the remaining add only earns the spot if it can:</p>
+    <ul>
+      <li>beat Worthy or Tuten for a FLEX slot on merit, or</li>
+      <li>step straight into a starting role if one of the top guys goes down.</li>
+    </ul>
+    <p>That rules out three positions: <strong>QB</strong> (Dak is a top-12 QB; the best wire QB, Tyler Shough, is QB20 rest-of-season), <strong>TE</strong> (already carrying three), and <strong>D/ST</strong> (stream weekly, never a roster investment). All four positions were considered; the answers come out RB and WR.</p>
+  </section>
+
+  <section class="lede">
+    <div class="pick">
+      <div class="slot">Spot 1 · Done — already added</div>
+      <p class="name">Alvin Kamara</p>
+      <div class="tag">RB · New Orleans · 36.6% rostered · age 31</div>
+      <div class="chips"><span class="chip up">On roster ✓</span><span class="chip up">Off injury report</span><span class="chip up">PPR floor</span><span class="chip flag">Age / re-injury risk</span></div>
+      <p>Already on your bench — good. The only player who was on the wire as a starting-caliber flex in this format. Passing-down back in an offense that threw 56 times in Week 1. Your RB4 the moment you add him.</p>
+    </div>
+    <div class="pick alt">
+      <div class="slot">Spot 2 · The open spot — add now</div>
+      <p class="name">Travis Hunter</p>
+      <div class="tag">WR · Jacksonville · 54.1% rostered · 2nd year</div>
+      <div class="chips"><span class="chip up">Healthy</span><span class="chip up">Keeper-cheap</span><span class="chip flag">CB-heavy role right now</span></div>
+      <p>Elite pedigree, one injury ahead of him from a full-time WR role, and a near-free keeper if he hits. Malik Washington (MIA volume play) is the safer-floor alternative for the same spot; Reed third.</p>
+    </div>
+  </section>
+
+  <div class="status">
+    <b>Status checks (live, 2026-09-19):</b> Kamara was removed from the Saints' injury report and is "good to go" Sunday at Baltimore after an August MCL sprain — no suspension involved. Hunter carries no injury designation in ESPN or in any report found; the only question is snap share, not health. Hunter is an unrestricted free agent — <b>first-come, not a waiver claim</b>, so your #5 priority stays intact. No drop needed.
+  </div>
+
+  <h2>Why these two</h2>
+
+  <div class="why">
+    <h3>Kamara — the one wire player who doesn't need anything to break his way</h3>
+    <p>Every other candidate below needs an injury or a coaching change to become a starter. Kamara is one now: co-starter with Travis Etienne, handling third downs and passing downs in Kellen Moore's top-five-pace offense.</p>
+    <div class="def"><b>Why PPR matters here:</b> this league awards 1 point per reception. A pass-catching RB gets 5 points from 5 catches before he gains a yard, which gives him a high weekly floor even in a split backfield — exactly what a FLEX slot wants.</div>
+    <p><strong>Consensus</strong> (CBS, RotoBaller, FantasyPros): volatile RB3/flex while New Orleans eases him back. Agreed — and "RB3/flex" is what your 2-FLEX format pays for. Strategy doc says RB depth is the lineup lever; with Harvey in a three-way committee and Allgeier a matchup play, Kamara is your RB4 immediately.</p>
+    <p><strong>The rest-of-season caveat:</strong> he's 31, coming off a knee sprain, and aging pass-catching RBs lose work fast. Zero keeper value. Treat him as a win-now piece with a shelf life, not a building block — if a younger RB emerges on the wire mid-season, Kamara is the spot you cut.</p>
+  </div>
+
+  <div class="why">
+    <h3>Hunter — the bet on ceiling, and why he edges Reed</h3>
+    <p>Both Hunter and Jayden Reed need one injury ahead of them to become a fantasy starter. When two stashes have the same path, take the higher ceiling and the younger player — that's the strategy doc's tiebreaker, and the keeper math makes it nearly free.</p>
+    <p><strong>Hunter:</strong> 2nd year, generational college talent, 6.4 targets/game as a rookie. The problem is Jacksonville wants him at cornerback more in 2026 — he's currently a package player (third downs, two-minute, red zone) behind Brian Thomas Jr., Jakobi Meyers (33) and Parker Washington. Rostered in 54% of leagues, started in 6%: the market agrees he's a stash. Path to starting: any injury in that WR room, or the Jaguars tilting his snaps back to offense when the games matter.</p>
+    <p><strong>Reed:</strong> proven PPR producer when healthy, but Week 1 was 3 catches for 20 yards behind Christian Watson and Matthew Golden, with Wicks and Doubs also in the room — that's five WRs competing. RotoBaller has him at WR37, benchable. Older (26), lower ceiling, similar dependence on injury luck.</p>
+    <p><strong>Where I'd diverge from consensus:</strong> ESPN projects Reed (10.2/gm) well above Hunter (6.1/gm), and the projection systems are probably right about the next few weeks. This is a rest-of-season and keeper-value call, clearly labeled as a judgment: Hunter's realistic best case is a top-25 WR who costs you a Round-1 skip to keep; Reed's is a WR3. If you'd rather have the floor, Reed is a fine answer — you would not be wrong.</p>
+  </div>
+
+  <h2>Full board — every position, rest-of-season lens</h2>
+
+  <table>
+    <thead><tr><th>Player</th><th>Path to becoming a starter for The Man Wolf</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td class="who">Tank Bigsby<span>RB · PHI · 15.5% · Barkley's handcuff</span></td><td>One touch in Week 1, but the clear #2 behind Barkley: in the one game Barkley missed in 2025, Bigsby had 106 yards and a TD on 18 touches. If Barkley goes down, Bigsby is a top-24 RB — and you'd have him instead of your opponent. <strong>Would need a drop now (Stafford or Gesicki) — worth it in my view, but it's beyond the open-spot question.</strong></td><td class="verdict next">Next up</td></tr>
+      <tr><td class="who">Tank Dell<span>WR · HOU · 30.8% · on IR</span></td><td>Eligible to return Week 5 from an ACL/MCL/LCL/meniscus injury that cost him all of 2025. Pre-injury he was a legit WR2. Would need an IR slot, and <strong>both of yours are now full</strong> (Collins, Pittman). Not a bench-spot player. Revisit if Collins comes off IR before Week 5.</td><td class="verdict pass">No IR room</td></tr>
+      <tr><td class="who">Malik Washington<span>WR · MIA · 7.4% · age 25</span></td><td>Led Miami with 8 targets in Week 1 on 98% of snaps and an 84% route rate — the de facto WR1 after Hill and Waddle left. The volume is real and PPR pays for it. The efficiency isn't: 3-53 on those targets, 1.47 yards per route run (yards gained per route — under 1.5 is bottom-tier), and a Malik Willis offense caps the ceiling at a 4-catch/45-yard flex. Higher floor than Hunter, much lower ceiling. Close second for the open spot; ahead of Reed.</td><td class="verdict maybe">Alt to Hunter</td></tr>
+      <tr><td class="who">Jayden Reed<span>WR · GB · 65.6%</span></td><td>Needs a Watson or Golden injury in a five-deep GB room. Now behind Washington on floor and behind Hunter on ceiling.</td><td class="verdict maybe">Third option</td></tr>
+      <tr><td class="who">Justice Hill<span>RB · BAL · 16.2% · Henry's backup</span></td><td>Passing-down back behind your RB1. Standalone value is thin (7.1 proj/gm), but he's the contingency if Henry misses time. Behind Bigsby because Barkley's workload is heavier and Bigsby's contingent role bigger.</td><td class="verdict maybe">Handcuff #2</td></tr>
+      <tr><td class="who">Braelon Allen<span>RB · NYJ · 14.3%</span></td><td>40% of snaps and 10 carries behind a healthy Breece Hall (22-102-1). Real #2 role, but Hall is the lead and not on your roster — a handcuff to someone else's player.</td><td class="verdict pass">Pass</td></tr>
+      <tr><td class="who">Adonai Mitchell<span>WR · NYJ · 17.0% · 3rd year</span></td><td>3-60 on 3 targets as the Jets' starting deep threat opposite Garrett Wilson; 21 routes on 26 dropbacks. Boom/bust WR2 on his own team. Watch-list — one more good week and he passes Reed.</td><td class="verdict maybe">Watch</td></tr>
+      <tr><td class="who">Tyler Shough<span>QB · NO · 49.8% · 2nd year</span></td><td>410 yards in Week 1, QB10 in total points from Week 8–18 last season. The one young QB with keeper appeal — but consensus has him QB20 rest-of-season and you have Dak. Not worth a bench spot in a 1-QB league; would only make sense as Stafford's replacement.</td><td class="verdict pass">Pass (no need)</td></tr>
+      <tr><td class="who">Bryce Young<span>QB · CAR · 33.6%</span></td><td>31.4 points in Week 1. Same answer: no QB need, no bench spot for a QB2.</td><td class="verdict pass">Pass (no need)</td></tr>
+      <tr><td class="who">Jerry Jeudy<span>WR · CLE · 22.4%</span></td><td>Starting, but with first-rounder KC Concepcion and second-rounder Denzel Boston also starting, and 2 catches on 82 red-zone routes over his last 24 games. Not a rest-of-season starter.</td><td class="verdict pass">Pass</td></tr>
+      <tr><td class="who">Jonah Coleman<span>RB · DEN · 21.9% · rookie</span></td><td>3 offensive snaps in Week 1 behind Harvey (26) and Dobbins (22). Third in a committee. Not yet.</td><td class="verdict pass">Pass</td></tr>
+      <tr><td class="who">Calvin Ridley<span>WR · TEN · 17.9%</span></td><td>Zero targets on 32 snaps in Week 1. A starter in name only.</td><td class="verdict pass">Pass</td></tr>
+      <tr><td class="who">Rashid Shaheed<span>WR · SEA · 37.3%</span></td><td>Deep threat behind Smith-Njigba; 12% target-per-route rate last year. Boom/bust is the profile the strategy doc keeps out of WR slots.</td><td class="verdict pass">Pass</td></tr>
+      <tr><td class="who">Strange · Freiermuth · Schultz<span>TE</span></td><td>All viable TE2s nationally, but you roster three TEs already. Nothing here beats Fannin or Kittle.</td><td class="verdict pass">No need</td></tr>
+      <tr><td class="who">Lions D/ST<span>51.8%</span></td><td>Best D/ST available if the Eagles disappoint, but D/ST is a weekly stream, not a rest-of-season roster spot.</td><td class="verdict pass">Stream only</td></tr>
+      <tr><td class="who">Black · Doubs · E. Johnson · Vele · Mayer</td><td>The national consensus pickups — all already rostered in D League.</td><td class="verdict taken">Taken</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Roster mechanics</h2>
+
+  <div class="notes">
+    <div class="note"><div class="n">1</div><p><strong>One bench spot open, no drop required.</strong> Add Hunter (or Reed, if you prefer floor) and you're done with the ask.</p></div>
+    <div class="note"><div class="n">2</div><p><strong>Both IR slots are full</strong> (Collins, Pittman), so Tank Dell is off the table for now. When Collins returns (~Week 4), that IR slot reopens — Dell is eligible Week 5, so the timing could line up. Check the wire then.</p></div>
+    <div class="note"><div class="n">3</div><p><strong>Optional, beyond the ask:</strong> Stafford (backup QB) and Gesicki (third TE) are both against the strategy doc's bench rules. Dropping one for Bigsby gives you Barkley's handcuff — real insurance for your RB1. Your call.</p></div>
+    <div class="note"><div class="n">4</div><p><strong>Before Sunday lock:</strong> Olave (questionable) is on your bench while Worthy starts. That's a <code>/weekly-lineup</code> call, but don't let it slip.</p></div>
+  </div>
+
+  <h2>Sources</h2>
+  <ul class="sources">
+    <li><a href="https://www.fantasypros.com/2026/09/fantasy-football-waiver-wire-rankings-pickups-week-2-2026/">FantasyPros — Week 2 waiver rankings</a></li>
+    <li><a href="https://www.rotoballer.com/must-have-bench-stashes-sneaky-fantasy-football-waiver-adds-week-2-2026/1933232">RotoBaller — Week 2 bench stashes</a></li>
+    <li><a href="https://www.cbssports.com/fantasy/football/news/saints-alvin-kamara-good-to-go-for-week-2/">CBS — Kamara good to go</a></li>
+    <li><a href="https://www.rotoballer.com/player-news/alvin-kamara-set-to-make-2026-debut-in-week-2-vs-ravens/1944980">RotoBaller — Kamara Week 2 outlook</a></li>
+    <li><a href="https://www.fantasypros.com/nfl/notes/419016/travis-hunter-2026-outlook.php">FantasyPros (Erickson) — Travis Hunter 2026 outlook</a></li>
+    <li><a href="https://www.si.com/onsi/fantasy/trade-analysis/fantasy-football-buy-sell-hold-travis-hunter">SI — Hunter rest-of-season buy/sell/hold</a></li>
+    <li><a href="https://www.rotoballer.com/player-news/jayden-reed-falling-out-of-favor-in-green-bays-offense/1934026">RotoBaller — Reed falling out of favor</a></li>
+    <li><a href="https://www.fantasypros.com/nfl/news/608196/tank-bigsby-sees-one-touch-week-1.php">FantasyPros — Bigsby one touch in Week 1</a></li>
+    <li><a href="https://www.si.com/nfl/eagles/onsi/eagles-rb-tank-bigsby-crucial-role-behind-saquon-barkley-for-no-25-player-in-2026-01kw9j0zzg3f">SI — Bigsby's role behind Barkley</a></li>
+    <li><a href="https://www.espn.com/nfl/story/_/id/49777386/texans-place-tank-dell-ir-wr-least-4-weeks">ESPN — Dell to IR, out at least 4 weeks</a></li>
+    <li><a href="https://www.cbssports.com/fantasy/football/news/texans-tank-dell-progressing-but-return-timeline-tbd">CBS — Dell timeline TBD</a></li>
+    <li><a href="https://bleacherreport.com/articles/25500826-nico-collins-injury-update-latest-rumors-texans-wrs-timeline-return-hamstring-issue">B/R — Collins hamstring timeline</a></li>
+    <li><a href="https://www.nbcsports.com/fantasy/football/player-news/2026-09-19/michael-pittman-downgraded-to-out-for-week-2">NBC — Pittman out for Week 2</a></li>
+    <li><a href="https://www.si.com/nfl/jets/onsi/braelon-allen-big-winner-frank-reich-teases-jets-rb-rotation-week-1-01m264dpv4pa">SI — Jets RB rotation</a></li>
+    <li><a href="https://gazette.com/2026/09/18/broncos-rookie-jonah-coleman-jaguars/">Gazette — Jonah Coleman nine snaps</a></li>
+    <li><a href="https://www.profootballnetwork.com/fantasy-football/tyler-shough-fantasy-projection-2026/">PFN — Shough 2026 projection</a></li>
+    <li><a href="https://dknetwork.draftkings.com/2026/09/15/is-adonai-mitchell-worth-a-week-2-waiver-claim/">DraftKings — Adonai Mitchell waiver claim?</a></li>
+    <li><a href="https://www.rotoballer.com/player-news/malik-washington-is-a-high-risk-play-even-in-starting-role/1944859">RotoBaller — Malik Washington high-risk even as a starter</a></li>
+    <li><a href="https://sports.yahoo.com/articles/dolphins-wr-depth-chart-reveals-170357766.html">Yahoo — Dolphins WR depth chart</a></li>
+    <li><a href="https://sports.yahoo.com/articles/updated-jerry-jeudy-fantasy-outlook-121832467.html">Yahoo — Jeudy outlook</a></li>
+    <li><a href="https://www.rotowire.com/football/headlines/calvin-ridley-news-zero-targets-in-week-1-loss-637326">RotoWire — Ridley zero targets</a></li>
+  </ul>
+
+  <div class="foot">Fantasy Professor · generated 2026-09-19 (rest-of-season revision) · data re-synced 2026-09-19 evening (Kamara on roster, Pittman on IR) · Week 2 in progress</div>
+
+</main>
+</body>
+</html>

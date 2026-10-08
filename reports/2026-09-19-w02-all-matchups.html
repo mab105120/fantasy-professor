@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 2 — Every Matchup, Graded</title>
+<style>
+  :root { color-scheme:light; --bg:#f5f5f3; --surface:#fff; --surface-2:#f0efec; --border:#e3e2de; --text:#0b0b0b; --text-2:#52514e; --text-3:#8a8985;
+    --wolf:#2a78d6; --wolf-soft:#cde2fb; --off:#2a78d6; --dfn:#eb6834; --good:#008300; --warn:#c98500; --bad:#e34948;
+    --ga:#1c5cab; --gb:#3987e5; --gc:#86b6ef; --gd:#cde2fb; --gf:#f0efec; --ga-ink:#fff; --gb-ink:#fff; --gc-ink:#0b0b0b; --gd-ink:#0b0b0b; --gf-ink:#52514e;
+    --shadow:0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.05); --radius:14px; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { color-scheme:dark; --bg:#121211; --surface:#1a1a19; --surface-2:#242423; --border:#2f2f2d; --text:#fff; --text-2:#c3c2b7; --text-3:#8d8c85; --wolf:#3987e5; --wolf-soft:#1c3a62; --off:#3987e5; --dfn:#d95926; --good:#3fbf3f; --warn:#e0a021; --bad:#e66767;
+    --ga:#5598e7; --gb:#2a78d6; --gc:#1c5cab; --gd:#104281; --gf:#2f2f2d; --ga-ink:#0b0b0b; --gb-ink:#fff; --gc-ink:#fff; --gd-ink:#c3c2b7; --gf-ink:#8d8c85; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3); } }
+  :root[data-theme="dark"] { color-scheme:dark; --bg:#121211; --surface:#1a1a19; --surface-2:#242423; --border:#2f2f2d; --text:#fff; --text-2:#c3c2b7; --text-3:#8d8c85; --wolf:#3987e5; --wolf-soft:#1c3a62; --off:#3987e5; --dfn:#d95926; --good:#3fbf3f; --warn:#e0a021; --bad:#e66767;
+    --ga:#5598e7; --gb:#2a78d6; --gc:#1c5cab; --gd:#104281; --gf:#2f2f2d; --ga-ink:#0b0b0b; --gb-ink:#fff; --gc-ink:#fff; --gd-ink:#c3c2b7; --gf-ink:#8d8c85; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3); }
+  *{box-sizing:border-box} html{scroll-behavior:smooth;scroll-padding-top:100px}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.55}
+  a{color:var(--wolf);text-decoration:none} a:hover{text-decoration:underline}
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  nav .inner{max-width:1100px;margin:0 auto;padding:0 16px} nav .row{display:flex;align-items:center;gap:4px;overflow-x:auto;height:48px} nav .row.games{height:40px;border-top:1px solid var(--border)}
+  nav .brand{font-weight:700;margin-right:12px;white-space:nowrap} nav a{color:var(--text-2);font-size:13px;padding:5px 9px;border-radius:8px;white-space:nowrap} nav a:hover{background:var(--surface-2);text-decoration:none;color:var(--text)}
+  main{max-width:1100px;margin:0 auto;padding:24px 16px 80px}
+  .eyebrow{color:var(--text-3);font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+  h1{font-size:clamp(28px,4vw,40px);margin:6px 0 4px;line-height:1.15;letter-spacing:-.01em} h2{font-size:22px;margin:0 0 12px} h3{font-size:16px;margin:16px 0 8px}
+  .sub{color:var(--text-2);margin:0} section{margin-top:36px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+  .muted{color:var(--text-2)} .small{font-size:13px} p{margin:8px 0} ul{padding-left:20px;margin:8px 0} li{margin:4px 0}
+  .pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--text-2);vertical-align:middle}
+  .pill.wolf{background:var(--wolf-soft);color:var(--text)} .pill.warn{color:var(--warn)} .pill.bad{color:var(--bad)} .pill.good{color:var(--good)}
+  table{width:100%;border-collapse:collapse;font-size:14px} th{text-align:left;font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;padding:8px;border-bottom:1px solid var(--border)}
+  td{padding:9px 8px;border-bottom:1px solid var(--border);vertical-align:top} tr:last-child td{border-bottom:0} td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .chg{background:color-mix(in srgb,var(--wolf-soft) 45%,var(--surface))} .tablewrap{overflow-x:auto} .slot{font-weight:600;color:var(--text-2);font-size:12px}
+  .lggrid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))} .lg{padding:16px} .lgrow{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+  .side{text-align:center;padding:6px;border-radius:10px} .side.me{background:color-mix(in srgb,var(--wolf-soft) 45%,var(--surface))}
+  .side .nm{font-weight:700} .side .rec{font-size:12px;color:var(--text-2)} .side .pj{font-size:30px;font-weight:700;line-height:1.1;margin-top:4px;font-variant-numeric:tabular-nums} .side .lb{font-size:11px;color:var(--text-3)}
+  .mid{text-align:center} .spread{font-size:13px;font-weight:600;background:var(--surface-2);border-radius:999px;padding:3px 10px;white-space:nowrap}
+  .game{margin-top:16px} .ghead{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  .teams{font-size:22px;font-weight:700;letter-spacing:-.01em} .teams .at{font-weight:400;color:var(--text-3);font-size:15px} .when{color:var(--text-2);font-size:13px}
+  .odds{display:flex;gap:10px;flex-wrap:wrap} .odds>div{background:var(--surface-2);border-radius:10px;padding:6px 12px;min-width:84px} .odds .l{display:block;font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em} .odds .v{font-weight:600;font-size:14px}
+  .story{margin:12px 0 10px}
+  /* unit grade cards */
+  .unitgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px;margin:12px 0}
+  .tcard{border:1px solid var(--border);border-radius:12px;padding:12px 14px;background:var(--surface)}
+  .th{display:flex;align-items:baseline;gap:8px;margin-bottom:8px} .tab{font-weight:800;font-size:18px;letter-spacing:.02em} .tfull{color:var(--text-2)}
+  .grow{display:grid;grid-template-columns:1fr 1fr;gap:12px} .gbox{background:var(--surface-2);border-radius:10px;padding:10px 12px}
+  .glab{font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+  .gline{display:flex;align-items:center;gap:10px;margin:4px 0 6px} .grank{font-size:13px;color:var(--text-2);font-variant-numeric:tabular-nums}
+  .grade{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:34px;padding:0 8px;border-radius:8px;font-weight:800;font-size:18px;letter-spacing:.02em}
+  .grade.sm{min-width:34px;height:26px;font-size:14px;padding:0 6px}
+  .grade.ga{background:var(--ga);color:var(--ga-ink)} .grade.gb{background:var(--gb);color:var(--gb-ink)} .grade.gc{background:var(--gc);color:var(--gc-ink)} .grade.gd{background:var(--gd);color:var(--gd-ink)} .grade.gf{background:var(--gf);color:var(--gf-ink);border:1px solid var(--border)}
+  .strip{position:relative;height:22px;margin:2px 0 4px} .strip .track{position:absolute;left:0;right:0;top:9px;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--ga),var(--gd))}
+  .strip .mark{position:absolute;top:4px;width:14px;height:14px;border-radius:50%;transform:translateX(-50%);border:2px solid var(--surface-2);box-shadow:0 0 0 1px var(--text-3)} .strip .mark.off{background:var(--off)} .strip .mark.dfn{background:var(--dfn)}
+  .strip .s1,.strip .s32{position:absolute;top:14px;font-size:10px;color:var(--text-3)} .strip .s1{left:0} .strip .s32{right:0}
+  .gstats{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--text-2);flex-wrap:wrap;margin-top:6px}
+  .edge{margin-top:10px;font-size:13px;padding:6px 10px;border-radius:8px;background:var(--surface-2);border-left:4px solid var(--text-3)} .edge.good{border-left-color:var(--good)} .edge.bad{border-left-color:var(--bad)}
+  .mwline{margin-top:6px;font-size:13px;background:color-mix(in srgb,var(--wolf-soft) 55%,var(--surface));border-radius:8px;padding:5px 10px}
+  .impact{border-top:1px solid var(--border);padding-top:10px} .ihead{font-size:13px;font-weight:600;color:var(--text-2);margin-bottom:6px}
+  .teams-list{list-style:none;padding:0;margin:0;display:grid;gap:6px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+  .teams-list .team{background:var(--surface-2);border-radius:10px;padding:8px 12px;font-size:14px} .teams-list .team.me{background:color-mix(in srgb,var(--wolf-soft) 55%,var(--surface));border:1px solid var(--wolf)}
+  .tname{font-weight:700} .cnt{float:right;font-size:12px;color:var(--text-3)} .st{margin-top:2px} .be{margin-top:2px}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:14px} .tile{background:var(--surface-2);border-radius:10px;padding:12px 14px} .tile .l{font-size:12px;color:var(--text-2)} .tile .v{font-size:20px;font-weight:600;margin-top:2px} .tile .d{font-size:12px;color:var(--text-3)}
+  /* scatter */
+  .scatter{width:100%;height:auto;max-width:760px;display:block;margin:0 auto;font-family:inherit}
+  .scatter .q{fill:var(--wolf-soft);opacity:.35} .scatter .ql{font-size:11px;fill:var(--text-3)} .scatter .grid{stroke:var(--border);stroke-width:1} .scatter .ax{font-size:12px;fill:var(--text-2)}
+  .scatter .pt circle{stroke:var(--surface);stroke-width:2} .scatter .pt.nm circle{fill:var(--text-3)} .scatter .pt.mw circle{fill:var(--wolf)}
+  .scatter .pt text{font-size:11px;fill:var(--text-2)} .scatter .pt.mw text{font-weight:700;fill:var(--text)}
+  .scatter .pt:hover circle{r:8}
+  .legend{display:flex;gap:18px;font-size:13px;color:var(--text-2);margin:8px 0;flex-wrap:wrap;justify-content:center} .legend .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .gkey{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--text-2)}
+  footer{margin-top:48px;color:var(--text-3);font-size:13px}
+  @media (max-width:640px){ .lgrow{grid-template-columns:1fr} .cnt{float:none;display:block} .grow{grid-template-columns:1fr} }
+</style></head>
+<body>
+<nav><div class="inner">
+  <div class="row"><span class="brand">🐺 Week 2 · graded</span><a href="#mw">Man Wolf</a><a href="#league">League matchups</a><a href="#units">All 32 units</a><a href="#where">Where the points are</a><a href="#nfl">NFL games</a><a href="#method">Method</a></div>
+  <div class="row games"><a href='#g-buf-det'>BUF@DET</a><a href='#g-chi-min'>MIN@CHI</a><a href='#g-cle-tb'>CLE@TB</a><a href='#g-phi-ten'>PHI@TEN</a><a href='#g-atl-car'>CAR@ATL</a><a href='#g-gb-nyj'>GB@NYJ</a><a href='#g-ne-pit'>PIT@NE</a><a href='#g-bal-no'>NO@BAL</a><a href='#g-cin-hou'>CIN@HOU</a><a href='#g-lac-lv'>LV@LAC</a><a href='#g-den-jax'>JAX@DEN</a><a href='#g-mia-sf'>MIA@SF</a><a href='#g-ari-sea'>SEA@ARI</a><a href='#g-dal-wsh'>WSH@DAL</a><a href='#g-ind-kc'>IND@KC</a><a href='#g-lar-nyg'>NYG@LAR</a></div>
+</div></nav>
+<main>
+<header>
+  <div class="eyebrow">D League · Week 2 · Sept 17–21, 2026 · The Man Wolf</div>
+  <h1>Every matchup, with offense &amp; defense grades</h1>
+  <p class="sub">Five league matchups, then all 16 NFL games — line, expected winner, what to watch, an <b>offense and defense grade for both teams ranked against the other 31</b>, and which league teams have starters in the game. Regenerated Sat Sept 19, ~23:15 CT from the 21:04 ESPN sync; grades from ESPN box scores and 2025 season totals (method at the bottom).</p>
+</header>
+
+<section id="mw">
+  <div class="card">
+    <h2>The Man Wolf: the environments your starters walk into</h2>
+    <p class="muted small">Your recommended lineup (Olave in for Worthy — see the <a href="2026-09-19-w02-matchup.html">matchup report</a>), each starter's offense graded against the defense he faces. "Favorable" = the offense ranks ≥10 spots better than the defense it faces; "Tough" = the reverse.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Slot</th><th>Player</th><th>Unit vs unit</th><th>Read</th></tr></thead>
+      <tbody><tr><td class='slot'>QB</td><td>Dak Prescott</td><td>DAL offense #10 (C+) vs WSH defense #25 (D)</td><td><span class='pill good'>Favorable</span></td></tr><tr><td class='slot'>RB</td><td>Saquon Barkley</td><td>PHI offense #16 (C) vs TEN defense #28 (D-)</td><td><span class='pill good'>Favorable</span></td></tr><tr><td class='slot'>RB</td><td>Derrick Henry</td><td>BAL offense #4 (B+) vs NO defense #17 (C)</td><td><span class='pill good'>Favorable</span></td></tr><tr><td class='slot'>WR</td><td>Chris Olave</td><td>NO offense #26 (D) vs BAL defense #16 (C)</td><td><span class='pill bad'>Tough</span></td></tr><tr><td class='slot'>WR</td><td>Jameson Williams</td><td>DET offense #5 (B+) vs BUF defense #15 (C)</td><td><span class='pill good'>Favorable</span></td></tr><tr><td class='slot'>TE</td><td>Harold Fannin Jr.</td><td>CLE offense #30 (F) vs TB defense #23 (D+)</td><td><span class='pill bad'>Lean tough</span></td></tr><tr><td class='slot'>FLEX</td><td>Bhayshul Tuten</td><td>JAX offense #3 (A-) vs DEN defense #6 (B)</td><td><span class='pill '>Neutral</span></td></tr><tr><td class='slot'>FLEX</td><td>George Kittle</td><td>SF offense #8 (B-) vs MIA defense #19 (C-)</td><td><span class='pill good'>Favorable</span></td></tr><tr><td class='slot'>D/ST</td><td>Eagles D/ST</td><td>PHI defense #3 (A-) vs TEN offense #31 (F)</td><td><span class='pill good'>Favorable</span></td></tr></tbody>
+    </table></div>
+    <div class="tiles">
+      <div class="tile"><div class="l">Best spot</div><div class="v">Barkley / Eagles D</div><div class="d">PHI vs TEN: Titans offense is F (#31), Titans defense D- (#28). Both ends of that game favor you.</div></div>
+      <div class="tile"><div class="l">Toughest spot</div><div class="v">Olave</div><div class="d">NO offense D (#26) into a BAL defense that's middling (C, #16) — the concern is the Saints' offense, not the Ravens' D. Volume carries him.</div></div>
+      <div class="tile"><div class="l">Shootout exposure</div><div class="v">Dak</div><div class="d">DAL defense is F (#32) and WSH's is D (#25): the 50.5 total is earned. Dak throws all day.</div></div>
+      <div class="tile"><div class="l">Steel Giants' engine</div><div class="v">CHI offense A+</div><div class="d">Caleb/Swift/Loveland face MIN's B- defense (#8). Their ceiling is real; their Kincaid mistake is your cushion.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="league">
+  <h2>League matchups</h2>
+  <p class="muted small">"Proj" = sum of ESPN projections for each team's set starters, with Thursday actuals substituted in. Spreads here are projection gaps, not betting lines — a 10-point projected gap is roughly a 60/40 game.</p>
+  <div class="lggrid"><div class='lg card'><div class='lgrow'><div class='side'><div class='nm'>🥊ALI🥊</div><div class='rec'>1–0 · #1 · PF 165.2</div><div class='pj'>132.9</div><div class='lb'>proj · 23.3 banked</div></div><div class='mid'><div class='spread'>Get Hooked by 17.4</div><div class='small muted'>ESPN proj</div></div><div class='side'><div class='nm'>Get Hooked</div><div class='rec'>1–0 · #2 · PF 150.1</div><div class='pj'>150.3</div><div class='lb'>proj · 35.2 banked</div></div></div></div><div class='lg card'><div class='lgrow'><div class='side'><div class='nm'>Redemption team</div><div class='rec'>1–0 · #4 · PF 142.0</div><div class='pj'>133.0</div><div class='lb'>proj · 40.7 banked</div></div><div class='mid'><div class='spread'>Texas Two Step by 0.9</div><div class='small muted'>ESPN proj</div></div><div class='side'><div class='nm'>Texas Two Step</div><div class='rec'>0–1 · #7 · PF 126.0</div><div class='pj'>133.8</div><div class='lb'>proj · 0.0 banked</div></div></div></div><div class='lg card'><div class='lgrow'><div class='side'><div class='nm'>Steel Giants</div><div class='rec'>0–1 · #6 · PF 142.6</div><div class='pj'>121.0</div><div class='lb'>proj · 0.0 banked</div></div><div class='mid'><div class='spread'>Steel Giants by 11.8</div><div class='small muted'>ESPN proj</div></div><div class='side me'><div class='nm'>The Man Wolf</div><div class='rec'>1–0 · #5 · PF 135.5</div><div class='pj'>109.3</div><div class='lb'>proj · 5.3 banked</div></div></div><div class='small muted'>Man Wolf with recommended lineup (Olave in for Worthy): 114.1</div></div><div class='lg card'><div class='lgrow'><div class='side'><div class='nm'>Lamar n Order</div><div class='rec'>1–0 · #3 · PF 148.0</div><div class='pj'>124.2</div><div class='lb'>proj · 0.0 banked</div></div><div class='mid'><div class='spread'>Playoff Chase by 10.1</div><div class='small muted'>ESPN proj</div></div><div class='side'><div class='nm'>Playoff Chase</div><div class='rec'>0–1 · #9 · PF 90.5</div><div class='pj'>134.4</div><div class='lb'>proj · 44.9 banked</div></div></div></div><div class='lg card'><div class='lgrow'><div class='side'><div class='nm'>Bower Outage</div><div class='rec'>0–1 · #10 · PF 68.3</div><div class='pj'>111.0</div><div class='lb'>proj · 0.0 banked</div></div><div class='mid'><div class='spread'>Imad by 14.5</div><div class='small muted'>ESPN proj</div></div><div class='side'><div class='nm'>Imad</div><div class='rec'>0–1 · #8 · PF 125.0</div><div class='pj'>125.4</div><div class='lb'>proj · 0.0 banked</div></div></div></div></div>
+</section>
+
+<section id="units">
+  <div class="card">
+    <h2>All 32 units at a glance</h2>
+    <p class="muted small">Every NFL team plotted by offense rank (left = better) and defense rank (top = better). Blue dots are the teams your recommended starters play for; hover any dot for its grades. The top-left quadrant is "good at both"; bottom-left is where shootouts live — good offense, bad defense.</p>
+    <svg viewBox='0 0 720 520' class='scatter' role='img' aria-label='All 32 NFL teams plotted by offense rank (x) and defense rank (y)'>
+
+<rect x='44' y='44' width='316.0' height='216.0' class='q qa'/>
+<text x='52' y='60' class='ql'>Good offense · good defense</text>
+<text x='668' y='60' class='ql' text-anchor='end'>Weak offense · good defense</text>
+<text x='52' y='468' class='ql'>Good offense · weak defense (shootouts)</text>
+<text x='668' y='468' class='ql' text-anchor='end'>Weak both</text>
+<line x1='44' y1='260.0' x2='676' y2='260.0' class='grid'/><line x1='360.0' y1='44' x2='360.0' y2='476' class='grid'/>
+<text x='360.0' y='514' class='ax' text-anchor='middle'>Offense rank → (1 = best, left)</text>
+<text x='12' y='260.0' class='ax' transform='rotate(-90 12 260.0)' text-anchor='middle'>Defense rank → (1 = best, top)</text>
+<g class='pt nm'><circle cx='451.7' cy='392.4' r='5'><title>ARI — offense #21 (C-), defense #26 (D)</title></circle><text x='460.7' y='396.4'>ARI</text></g><g class='pt nm'><circle cx='594.5' cy='225.2' r='5'><title>ATL — offense #28 (D-), defense #14 (C)</title></circle><text x='603.5' y='229.2'>ATL</text></g><g class='pt mw'><circle cx='105.2' cy='253.0' r='7'><title>BAL — offense #4 (B+), defense #16 (C) — 🐺 Derrick Henry</title></circle><text x='114.2' y='257.0'>BAL</text></g><g class='pt nm'><circle cx='64.4' cy='239.1' r='5'><title>BUF — offense #2 (A), defense #15 (C)</title></circle><text x='73.4' y='243.1'>BUF</text></g><g class='pt nm'><circle cx='411.0' cy='448.1' r='5'><title>CAR — offense #19 (C-), defense #30 (F)</title></circle><text x='420.0' y='452.1'>CAR</text></g><g class='pt nm'><circle cx='44.0' cy='406.3' r='5'><title>CHI — offense #1 (A+), defense #27 (D)</title></circle><text x='53.0' y='410.3'>CHI</text></g><g class='pt nm'><circle cx='247.9' cy='462.1' r='5'><title>CIN — offense #11 (C+), defense #31 (F)</title></circle><text x='256.9' y='466.1'>CIN</text></g><g class='pt mw'><circle cx='635.2' cy='308.8' r='7'><title>CLE — offense #30 (F), defense #20 (C-) — 🐺 Harold Fannin Jr.</title></circle><text x='644.2' y='312.8'>CLE</text></g><g class='pt mw'><circle cx='227.5' cy='476.0' r='7'><title>DAL — offense #10 (C+), defense #32 (F) — 🐺 Dak Prescott</title></circle><text x='236.5' y='480.0'>DAL</text></g><g class='pt nm'><circle cx='512.9' cy='113.7' r='5'><title>DEN — offense #24 (D+), defense #6 (B)</title></circle><text x='521.9' y='117.7'>DEN</text></g><g class='pt mw'><circle cx='125.5' cy='336.6' r='7'><title>DET — offense #5 (B+), defense #22 (D+) — 🐺 Jameson Williams</title></circle><text x='134.5' y='340.6'>DET</text></g><g class='pt nm'><circle cx='309.0' cy='211.2' r='5'><title>GB — offense #14 (C), defense #13 (C)</title></circle><text x='318.0' y='215.2'>GB</text></g><g class='pt nm'><circle cx='288.6' cy='197.3' r='5'><title>HOU — offense #13 (C), defense #12 (C+)</title></circle><text x='297.6' y='201.3'>HOU</text></g><g class='pt nm'><circle cx='207.1' cy='434.2' r='5'><title>IND — offense #9 (B-), defense #29 (D-)</title></circle><text x='216.1' y='438.2'>IND</text></g><g class='pt mw'><circle cx='84.8' cy='99.7' r='7'><title>JAX — offense #3 (A-), defense #5 (B+) — 🐺 Bhayshul Tuten</title></circle><text x='93.8' y='103.7'>JAX</text></g><g class='pt nm'><circle cx='370.2' cy='57.9' r='5'><title>KC — offense #17 (C), defense #2 (A)</title></circle><text x='379.2' y='61.9'>KC</text></g><g class='pt nm'><circle cx='472.1' cy='155.5' r='5'><title>LAC — offense #22 (D+), defense #9 (B-)</title></circle><text x='481.1' y='159.5'>LAC</text></g><g class='pt nm'><circle cx='145.9' cy='183.4' r='5'><title>LAR — offense #6 (B), defense #11 (C+)</title></circle><text x='154.9' y='187.4'>LAR</text></g><g class='pt nm'><circle cx='676.0' cy='280.9' r='5'><title>LV — offense #32 (F), defense #18 (C)</title></circle><text x='685.0' y='284.9'>LV</text></g><g class='pt nm'><circle cx='574.1' cy='294.8' r='5'><title>MIA — offense #27 (D), defense #19 (C-)</title></circle><text x='583.1' y='298.8'>MIA</text></g><g class='pt nm'><circle cx='492.5' cy='141.5' r='5'><title>MIN — offense #23 (D+), defense #8 (B-)</title></circle><text x='501.5' y='145.5'>MIN</text></g><g class='pt nm'><circle cx='268.3' cy='85.8' r='5'><title>NE — offense #12 (C+), defense #4 (B+)</title></circle><text x='277.3' y='89.8'>NE</text></g><g class='pt mw'><circle cx='553.7' cy='267.0' r='7'><title>NO — offense #26 (D), defense #17 (C) — 🐺 Chris Olave</title></circle><text x='562.7' y='271.0'>NO</text></g><g class='pt nm'><circle cx='329.4' cy='322.7' r='5'><title>NYG — offense #15 (C), defense #21 (C-)</title></circle><text x='338.4' y='326.7'>NYG</text></g><g class='pt nm'><circle cx='614.8' cy='364.5' r='5'><title>NYJ — offense #29 (D-), defense #24 (D+)</title></circle><text x='623.8' y='368.5'>NYJ</text></g><g class='pt mw'><circle cx='349.8' cy='71.9' r='7'><title>PHI — offense #16 (C), defense #3 (A-) — 🐺 Eagles D/ST</title></circle><text x='358.8' y='75.9'>PHI</text></g><g class='pt nm'><circle cx='431.4' cy='169.4' r='5'><title>PIT — offense #20 (C-), defense #10 (C+)</title></circle><text x='440.4' y='173.4'>PIT</text></g><g class='pt nm'><circle cx='166.3' cy='44.0' r='5'><title>SEA — offense #7 (B), defense #1 (A+)</title></circle><text x='175.3' y='48.0'>SEA</text></g><g class='pt mw'><circle cx='186.7' cy='127.6' r='7'><title>SF — offense #8 (B-), defense #7 (B) — 🐺 George Kittle</title></circle><text x='195.7' y='131.6'>SF</text></g><g class='pt nm'><circle cx='390.6' cy='350.6' r='5'><title>TB — offense #18 (C), defense #23 (D+)</title></circle><text x='399.6' y='354.6'>TB</text></g><g class='pt nm'><circle cx='655.6' cy='420.3' r='5'><title>TEN — offense #31 (F), defense #28 (D-)</title></circle><text x='664.6' y='424.3'>TEN</text></g><g class='pt nm'><circle cx='533.3' cy='378.5' r='5'><title>WSH — offense #25 (D), defense #25 (D)</title></circle><text x='542.3' y='382.5'>WSH</text></g>
+</svg>
+    <div class="legend"><span><span class="dot" style="background:var(--wolf)"></span>Has a Man Wolf starter</span><span><span class="dot" style="background:var(--text-3)"></span>Other teams</span></div>
+    <h3>Grade table</h3>
+    <div class="gkey">Grade scale by rank: <span class="grade sm ga">A</span> 1–3 <span class="grade sm gb">B</span> 4–9 <span class="grade sm gc">C</span> 10–21 <span class="grade sm gd">D</span> 22–29 <span class="grade sm gf">F</span> 30–32 &nbsp;·&nbsp; sorted by combined rank</div>
+    <div class="tablewrap" style="margin-top:8px"><table>
+      <thead><tr><th>Team</th><th>Offense</th><th class="num">Pts/g '25</th><th class="num">W1 pts</th><th class="num">W1 yds/play</th><th>Defense</th><th class="num">Allowed/g '25</th><th class="num">W1 allowed</th><th class="num">W1 yds/play allowed</th><th>Man Wolf players</th></tr></thead>
+      <tbody><tr class=chg><td><b>JAX</b> <span class='muted small'>Jaguars</span></td><td><span class='grade sm ga'>A-</span> <span class='muted'>#3</span></td><td class='num'>27.9</td><td class='num'>34</td><td class='num'>6.4</td><td><span class='grade sm gb'>B+</span> <span class='muted'>#5</span></td><td class='num'>19.8</td><td class='num'>10</td><td class='num'>5.6</td><td class='small'>Bhayshul Tuten</td></tr><tr><td><b>SEA</b> <span class='muted small'>Seahawks</span></td><td><span class='grade sm gb'>B</span> <span class='muted'>#7</span></td><td class='num'>28.4</td><td class='num'>13</td><td class='num'>5.9</td><td><span class='grade sm ga'>A+</span> <span class='muted'>#1</span></td><td class='num'>17.2</td><td class='num'>10</td><td class='num'>4.1</td><td class='small'>—</td></tr><tr class=chg><td><b>SF</b> <span class='muted small'>49ers</span></td><td><span class='grade sm gb'>B-</span> <span class='muted'>#8</span></td><td class='num'>25.7</td><td class='num'>27</td><td class='num'>5.9</td><td><span class='grade sm gb'>B</span> <span class='muted'>#7</span></td><td class='num'>21.8</td><td class='num'>7</td><td class='num'>5.1</td><td class='small'>George Kittle</td></tr><tr><td><b>NE</b> <span class='muted small'>Patriots</span></td><td><span class='grade sm gc'>C+</span> <span class='muted'>#12</span></td><td class='num'>28.8</td><td class='num'>10</td><td class='num'>4.1</td><td><span class='grade sm gb'>B+</span> <span class='muted'>#4</span></td><td class='num'>18.8</td><td class='num'>13</td><td class='num'>5.9</td><td class='small'>—</td></tr><tr><td><b>BUF</b> <span class='muted small'>Bills</span></td><td><span class='grade sm ga'>A</span> <span class='muted'>#2</span></td><td class='num'>28.3</td><td class='num'>36</td><td class='num'>7.9</td><td><span class='grade sm gc'>C</span> <span class='muted'>#15</span></td><td class='num'>21.5</td><td class='num'>31</td><td class='num'>5.2</td><td class='small'>—</td></tr><tr><td><b>LAR</b> <span class='muted small'>Rams</span></td><td><span class='grade sm gb'>B</span> <span class='muted'>#6</span></td><td class='num'>30.5</td><td class='num'>7</td><td class='num'>5.1</td><td><span class='grade sm gc'>C+</span> <span class='muted'>#11</span></td><td class='num'>20.4</td><td class='num'>27</td><td class='num'>5.9</td><td class='small'>Matthew Stafford (bench)</td></tr><tr><td><b>KC</b> <span class='muted small'>Chiefs</span></td><td><span class='grade sm gc'>C</span> <span class='muted'>#17</span></td><td class='num'>21.3</td><td class='num'>31</td><td class='num'>5.9</td><td><span class='grade sm ga'>A</span> <span class='muted'>#2</span></td><td class='num'>19.3</td><td class='num'>10</td><td class='num'>3.7</td><td class='small'>Xavier Worthy</td></tr><tr class=chg><td><b>PHI</b> <span class='muted small'>Eagles</span></td><td><span class='grade sm gc'>C</span> <span class='muted'>#16</span></td><td class='num'>22.3</td><td class='num'>24</td><td class='num'>6.0</td><td><span class='grade sm ga'>A-</span> <span class='muted'>#3</span></td><td class='num'>19.1</td><td class='num'>22</td><td class='num'>4.4</td><td class='small'>Saquon Barkley, Eagles D/ST, Tank Bigsby (bench)</td></tr><tr class=chg><td><b>BAL</b> <span class='muted small'>Ravens</span></td><td><span class='grade sm gb'>B+</span> <span class='muted'>#4</span></td><td class='num'>24.9</td><td class='num'>41</td><td class='num'>7.9</td><td><span class='grade sm gc'>C</span> <span class='muted'>#16</span></td><td class='num'>23.4</td><td class='num'>23</td><td class='num'>4.7</td><td class='small'>Derrick Henry</td></tr><tr><td><b>HOU</b> <span class='muted small'>Texans</span></td><td><span class='grade sm gc'>C</span> <span class='muted'>#13</span></td><td class='num'>23.8</td><td class='num'>31</td><td class='num'>5.2</td><td><span class='grade sm gc'>C+</span> <span class='muted'>#12</span></td><td class='num'>17.4</td><td class='num'>36</td><td class='num'>7.9</td><td class='small'>Nico Collins (bench)</td></tr><tr class=chg><td><b>DET</b> <span class='muted small'>Lions</span></td><td><span class='grade sm gb'>B+</span> <span class='muted'>#5</span></td><td class='num'>28.3</td><td class='num'>31</td><td class='num'>5.1</td><td><span class='grade sm gd'>D+</span> <span class='muted'>#22</span></td><td class='num'>24.3</td><td class='num'>30</td><td class='num'>5.5</td><td class='small'>Jameson Williams</td></tr><tr><td><b>GB</b> <span class='muted small'>Packers</span></td><td><span class='grade sm gc'>C</span> <span class='muted'>#14</span></td><td class='num'>23.0</td><td class='num'>22</td><td class='num'>6.3</td><td><span class='grade sm gc'>C</span> <span class='muted'>#13</span></td><td class='num'>21.2</td><td class='num'>39</td><td class='num'>3.9</td><td class='small'>—</td></tr><tr><td><b>CHI</b> <span class='muted small'>Bears</span></td><td><span class='grade sm ga'>A+</span> <span class='muted'>#1</span></td><td class='num'>25.9</td><td class='num'>59</td><td class='num'>7.9</td><td><span class='grade sm gd'>D</span> <span class='muted'>#27</span></td><td class='num'>24.4</td><td class='num'>37</td><td class='num'>7.7</td><td class='small'>—</td></tr><tr><td><b>DEN</b> <span class='muted small'>Broncos</span></td><td><span class='grade sm gd'>D+</span> <span class='muted'>#24</span></td><td class='num'>23.6</td><td class='num'>10</td><td class='num'>3.7</td><td><span class='grade sm gb'>B</span> <span class='muted'>#6</span></td><td class='num'>18.3</td><td class='num'>31</td><td class='num'>5.9</td><td class='small'>RJ Harvey (bench)</td></tr><tr><td><b>PIT</b> <span class='muted small'>Steelers</span></td><td><span class='grade sm gc'>C-</span> <span class='muted'>#20</span></td><td class='num'>23.4</td><td class='num'>20</td><td class='num'>4.1</td><td><span class='grade sm gc'>C+</span> <span class='muted'>#10</span></td><td class='num'>22.8</td><td class='num'>13</td><td class='num'>4.2</td><td class='small'>Michael Pittman Jr. (bench)</td></tr><tr><td><b>LAC</b> <span class='muted small'>Chargers</span></td><td><span class='grade sm gd'>D+</span> <span class='muted'>#22</span></td><td class='num'>21.6</td><td class='num'>14</td><td class='num'>5.3</td><td><span class='grade sm gb'>B-</span> <span class='muted'>#9</span></td><td class='num'>20.0</td><td class='num'>26</td><td class='num'>5.5</td><td class='small'>—</td></tr><tr><td><b>MIN</b> <span class='muted small'>Vikings</span></td><td><span class='grade sm gd'>D+</span> <span class='muted'>#23</span></td><td class='num'>20.2</td><td class='num'>39</td><td class='num'>3.9</td><td><span class='grade sm gb'>B-</span> <span class='muted'>#8</span></td><td class='num'>19.6</td><td class='num'>22</td><td class='num'>6.3</td><td class='small'>—</td></tr><tr><td><b>NYG</b> <span class='muted small'>Giants</span></td><td><span class='grade sm gc'>C</span> <span class='muted'>#15</span></td><td class='num'>22.4</td><td class='num'>28</td><td class='num'>5.8</td><td><span class='grade sm gc'>C-</span> <span class='muted'>#21</span></td><td class='num'>25.8</td><td class='num'>20</td><td class='num'>4.7</td><td class='small'>—</td></tr><tr><td><b>IND</b> <span class='muted small'>Colts</span></td><td><span class='grade sm gb'>B-</span> <span class='muted'>#9</span></td><td class='num'>27.4</td><td class='num'>23</td><td class='num'>4.7</td><td><span class='grade sm gd'>D-</span> <span class='muted'>#29</span></td><td class='num'>24.2</td><td class='num'>41</td><td class='num'>7.9</td><td class='small'>—</td></tr><tr><td><b>TB</b> <span class='muted small'>Buccaneers</span></td><td><span class='grade sm gc'>C</span> <span class='muted'>#18</span></td><td class='num'>22.4</td><td class='num'>27</td><td class='num'>5.4</td><td><span class='grade sm gd'>D+</span> <span class='muted'>#23</span></td><td class='num'>24.2</td><td class='num'>33</td><td class='num'>5.6</td><td class='small'>—</td></tr><tr><td><b>ATL</b> <span class='muted small'>Falcons</span></td><td><span class='grade sm gd'>D-</span> <span class='muted'>#28</span></td><td class='num'>20.8</td><td class='num'>13</td><td class='num'>4.2</td><td><span class='grade sm gc'>C</span> <span class='muted'>#14</span></td><td class='num'>23.6</td><td class='num'>20</td><td class='num'>4.1</td><td class='small'>—</td></tr><tr><td><b>CIN</b> <span class='muted small'>Bengals</span></td><td><span class='grade sm gc'>C+</span> <span class='muted'>#11</span></td><td class='num'>24.4</td><td class='num'>33</td><td class='num'>5.6</td><td><span class='grade sm gf'>F</span> <span class='muted'>#31</span></td><td class='num'>28.9</td><td class='num'>27</td><td class='num'>5.4</td><td class='small'>—</td></tr><tr class=chg><td><b>DAL</b> <span class='muted small'>Cowboys</span></td><td><span class='grade sm gc'>C+</span> <span class='muted'>#10</span></td><td class='num'>27.7</td><td class='num'>20</td><td class='num'>4.7</td><td><span class='grade sm gf'>F</span> <span class='muted'>#32</span></td><td class='num'>30.1</td><td class='num'>28</td><td class='num'>5.8</td><td class='small'>Dak Prescott</td></tr><tr class=chg><td><b>NO</b> <span class='muted small'>Saints</span></td><td><span class='grade sm gd'>D</span> <span class='muted'>#26</span></td><td class='num'>18.0</td><td class='num'>30</td><td class='num'>5.5</td><td><span class='grade sm gc'>C</span> <span class='muted'>#17</span></td><td class='num'>22.5</td><td class='num'>31</td><td class='num'>5.1</td><td class='small'>Chris Olave (bench), Alvin Kamara (bench)</td></tr><tr><td><b>MIA</b> <span class='muted small'>Dolphins</span></td><td><span class='grade sm gd'>D</span> <span class='muted'>#27</span></td><td class='num'>20.4</td><td class='num'>13</td><td class='num'>5.2</td><td><span class='grade sm gc'>C-</span> <span class='muted'>#19</span></td><td class='num'>24.9</td><td class='num'>27</td><td class='num'>4.3</td><td class='small'>Malik Washington (bench)</td></tr><tr><td><b>ARI</b> <span class='muted small'>Cardinals</span></td><td><span class='grade sm gc'>C-</span> <span class='muted'>#21</span></td><td class='num'>20.9</td><td class='num'>26</td><td class='num'>5.5</td><td><span class='grade sm gd'>D</span> <span class='muted'>#26</span></td><td class='num'>28.7</td><td class='num'>14</td><td class='num'>5.3</td><td class='small'>Tyler Allgeier (bench)</td></tr><tr><td><b>CAR</b> <span class='muted small'>Panthers</span></td><td><span class='grade sm gc'>C-</span> <span class='muted'>#19</span></td><td class='num'>18.3</td><td class='num'>37</td><td class='num'>7.7</td><td><span class='grade sm gf'>F</span> <span class='muted'>#30</span></td><td class='num'>22.4</td><td class='num'>59</td><td class='num'>7.9</td><td class='small'>—</td></tr><tr class=chg><td><b>CLE</b> <span class='muted small'>Browns</span></td><td><span class='grade sm gf'>F</span> <span class='muted'>#30</span></td><td class='num'>16.4</td><td class='num'>10</td><td class='num'>5.6</td><td><span class='grade sm gc'>C-</span> <span class='muted'>#20</span></td><td class='num'>22.3</td><td class='num'>34</td><td class='num'>6.4</td><td class='small'>Harold Fannin Jr.</td></tr><tr><td><b>LV</b> <span class='muted small'>Raiders</span></td><td><span class='grade sm gf'>F</span> <span class='muted'>#32</span></td><td class='num'>14.2</td><td class='num'>27</td><td class='num'>4.3</td><td><span class='grade sm gc'>C</span> <span class='muted'>#18</span></td><td class='num'>25.4</td><td class='num'>13</td><td class='num'>5.2</td><td class='small'>—</td></tr><tr><td><b>WSH</b> <span class='muted small'>Commanders</span></td><td><span class='grade sm gd'>D</span> <span class='muted'>#25</span></td><td class='num'>20.9</td><td class='num'>22</td><td class='num'>4.4</td><td><span class='grade sm gd'>D</span> <span class='muted'>#25</span></td><td class='num'>26.5</td><td class='num'>24</td><td class='num'>6.0</td><td class='small'>—</td></tr><tr><td><b>NYJ</b> <span class='muted small'>Jets</span></td><td><span class='grade sm gd'>D-</span> <span class='muted'>#29</span></td><td class='num'>17.6</td><td class='num'>23</td><td class='num'>5.8</td><td><span class='grade sm gd'>D+</span> <span class='muted'>#24</span></td><td class='num'>29.6</td><td class='num'>10</td><td class='num'>4.0</td><td class='small'>—</td></tr><tr><td><b>TEN</b> <span class='muted small'>Titans</span></td><td><span class='grade sm gf'>F</span> <span class='muted'>#31</span></td><td class='num'>16.7</td><td class='num'>10</td><td class='num'>4.0</td><td><span class='grade sm gd'>D-</span> <span class='muted'>#28</span></td><td class='num'>28.1</td><td class='num'>23</td><td class='num'>5.8</td><td class='small'>—</td></tr></tbody>
+    </table></div>
+  </div>
+</section>
+
+<section id="where">
+  <div class="card">
+    <h2>Where each league team's points are coming from</h2>
+    <p class="muted small">Projected total, points banked, the three NFL games carrying the most remaining projection, starters by kickoff window, and flagged starters — for reading when each league matchup is effectively decided.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Team</th><th class="num">Proj</th><th class="num">Banked</th><th>Biggest games (proj pts)</th><th>Starters by window</th><th>Flagged starters</th></tr></thead>
+      <tbody><tr><td>🥊ALI🥊</td><td class='num'>132.9</td><td class='num'>23.3</td><td>LAR–NYG (29), CLE–TB (22), LAC–LV (18)</td><td>Sun 12:00 CT: 5, Sun 3:05 CT: 1, Mon 7:15 CT: 2</td><td>—</td></tr><tr><td>Get Hooked</td><td class='num'>150.3</td><td class='num'>35.2</td><td>NE–PIT (37), ATL–CAR (23), DAL–WSH (18)</td><td>Sun 12:00 CT: 5, Sun 3:05 CT: 1, Sun 3:25 CT: 1, Sun 7:20 CT: 1</td><td>—</td></tr><tr><td>Lamar n Order</td><td class='num'>124.2</td><td class='num'>0.0</td><td>ARI–SEA (46), BAL–NO (22), CIN–HOU (14)</td><td>Sun 12:00 CT: 4, Sun 3:25 CT: 4, Mon 7:15 CT: 1</td><td>—</td></tr><tr><td>Redemption team</td><td class='num'>133.0</td><td class='num'>40.7</td><td>MIA–SF (40), DAL–WSH (29), BAL–NO (12)</td><td>Sun 12:00 CT: 2, Sun 3:25 CT: 5</td><td>DJ Moore</td></tr><tr class=chg><td>The Man Wolf</td><td class='num'>109.3</td><td class='num'>5.3</td><td>PHI–TEN (25), DAL–WSH (20), BAL–NO (18)</td><td>Sun 12:00 CT: 4, Sun 3:05 CT: 1, Sun 3:25 CT: 2, Sun 7:20 CT: 1</td><td>—</td></tr><tr><td>Steel Giants</td><td class='num'>121.0</td><td class='num'>0.0</td><td>CHI–MIN (44), MIA–SF (17), LAR–NYG (15)</td><td>Sun 12:00 CT: 5, Sun 3:05 CT: 1, Sun 3:25 CT: 2, Mon 7:15 CT: 1</td><td>—</td></tr><tr><td>Texas Two Step</td><td class='num'>133.8</td><td class='num'>0.0</td><td>LAC–LV (30), LAR–NYG (21), DAL–WSH (20)</td><td>Sun 12:00 CT: 5, Sun 3:05 CT: 2, Sun 3:25 CT: 1, Mon 7:15 CT: 1</td><td>Puka Nacua, Ladd McConkey</td></tr><tr><td>Imad</td><td class='num'>125.4</td><td class='num'>0.0</td><td>MIA–SF (34), IND–KC (33), GB–NYJ (23)</td><td>Sun 12:00 CT: 3, Sun 3:25 CT: 3, Sun 7:20 CT: 2, Mon 7:15 CT: 1</td><td>—</td></tr><tr><td>Playoff Chase</td><td class='num'>134.4</td><td class='num'>44.9</td><td>PHI–TEN (20), CIN–HOU (19), IND–KC (18)</td><td>Sun 12:00 CT: 3, Sun 3:05 CT: 2, Sun 7:20 CT: 1</td><td>—</td></tr><tr><td>Bower Outage</td><td class='num'>111.0</td><td class='num'>0.0</td><td>CIN–HOU (16), GB–NYJ (16), LAR–NYG (14)</td><td>Sun 12:00 CT: 5, Sun 3:25 CT: 2, Sun 7:20 CT: 1, Mon 7:15 CT: 1</td><td>Joe Burrow</td></tr></tbody>
+    </table></div>
+  </div>
+</section>
+
+<section id="nfl">
+  <h2>NFL games — line, storyline, unit grades, who's exposed</h2>
+  <p class="muted small">Ordered by kickoff. Lines are ESPN's Saturday-evening numbers. Each team card shows its offense and defense grade, its rank among 32 on a strip (dot further left = better), the numbers behind the grade, and the offense-vs-opposing-defense read. <b>Bold</b> players are in a starting lineup; Man Wolf rows are outlined.</p>
+  
+<article class="game card" id="g-buf-det">
+  <div class="ghead">
+    <div><div class="teams">BUF <span class="at">at</span> DET</div><div class="when">Thu 7:15 CT · FINAL</div></div>
+    <div class="odds"><div><span class="l">Line</span><span class="v">BUF 41, DET 31</span></div><div><span class="l">O/U</span><span class="v">—</span></div><div><span class="l">Expected</span><span class="v">Bills (final)</span></div></div>
+  </div>
+  <p class="story">Shootout, as billed. Josh Allen went for 40.8 fantasy points, Amon-Ra St. Brown 35.2, and Detroit&#x27;s ground game (Gibbs 23.3) kept pace until it didn&#x27;t. Kincaid&#x27;s 22.5 came off Steel Giants&#x27; bench — the most expensive lineup mistake in the league this week.</p>
+  <div class="unitgrid">
+<div class='tcard'>
+  <div class='th'><span class='tab'>BUF</span> <span class='tfull'>Bills</span> <span class='small muted'>2025: 12-5</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade ga'>A</span><span class='grank'>#2 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:3.2%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>28.3 pts/g '25</span><span>W1: 36 pts · 7.9 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gc'>C</span><span class='grank'>#15 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:45.2%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>21.5 allowed/g '25</span><span>W1: 31 allowed · 5.2 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge good'>BUF offense (#2) vs DET defense (#22): <b>Big edge for this offense</b></div>
+  
+</div>
+<div class='tcard'>
+  <div class='th'><span class='tab'>DET</span> <span class='tfull'>Lions</span> <span class='small muted'>2025: 9-8</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gb'>B+</span><span class='grank'>#5 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:12.9%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>28.3 pts/g '25</span><span>W1: 31 pts · 5.1 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gd'>D+</span><span class='grank'>#22 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:67.7%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>24.3 allowed/g '25</span><span>W1: 30 allowed · 5.5 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge good'>DET offense (#5) vs BUF defense (#15): <b>Big edge for this offense</b></div>
+  <div class='mwline'>🐺 Jameson Williams</div>
+</div></div>
+  <div class="impact">
+    <div class="ihead">Fantasy impact <span class="pill">8 starters across 6 league teams</span> <span class='pill wolf'>🐺 1 starter</span></div>
+    <ul class="teams-list"><li class='team me'><span class='tname'>The Man Wolf</span><span class='cnt'>1 starter</span><div class='st'><b>Jameson Williams</b> <span class='muted'>WR 5.3 ✓</span></div></li><li class='team'><span class='tname'>Playoff Chase</span><span class='cnt'>3 starters</span><div class='st'><b>James Cook III</b> <span class='muted'>RB 20.9 ✓</span>, <b>Sam LaPorta</b> <span class='muted'>TE 17.2 ✓</span>, <b>Khalil Shakir</b> <span class='muted'>WR 6.8 ✓</span></div></li><li class='team'><span class='tname'>Redemption team</span><span class='cnt'>2 starters</span><div class='st'><b>Josh Allen</b> <span class='muted'>QB 40.8 ✓</span>, <b>DJ Moore</b> <span class='muted'>WR -0.1 ✓</span> <span class="pill warn">Q</span></div></li><li class='team'><span class='tname'>Get Hooked</span><span class='cnt'>1 starter</span><div class='st'><b>Amon-Ra St. Brown</b> <span class='muted'>WR 35.2 ✓</span></div><div class='be small muted'>Bench: Jared Goff <span class='muted'>QB</span></div></li><li class='team'><span class='tname'>🥊ALI🥊</span><span class='cnt'>1 starter</span><div class='st'><b>Jahmyr Gibbs</b> <span class='muted'>RB 23.3 ✓</span></div></li><li class='team'><span class='tname'>Steel Giants</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Dalton Kincaid <span class='muted'>TE</span></div></li></ul>
+  </div>
+</article>
+<article class="game card" id="g-chi-min">
+  <div class="ghead">
+    <div><div class="teams">MIN <span class="at">at</span> CHI</div><div class="when">Sun 12:00 CT · FOX</div></div>
+    <div class="odds"><div><span class="l">Line</span><span class="v">CHI −4.5</span></div><div><span class="l">O/U</span><span class="v">48.5</span></div><div><span class="l">Expected</span><span class="v">Bears</span></div></div>
+  </div>
+  <p class="story">Ben Johnson&#x27;s offense vs Brian Flores&#x27; blitz scheme is the chess match of the week. Caleb Williams (37.3 in W1) and Swift (32.4, two TDs) are the engine of Steel Giants&#x27; week; Luther Burden III is the consensus bounce-back pick against a vulnerable MIN secondary. Vikings RB Jordan Mason is out (thumb surgery).</p>
+  <div class="unitgrid">
+<div class='tcard'>
+  <div class='th'><span class='tab'>MIN</span> <span class='tfull'>Vikings</span> <span class='small muted'>2025: 9-8</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gd'>D+</span><span class='grank'>#23 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:71.0%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>20.2 pts/g '25</span><span>W1: 39 pts · 3.9 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gb'>B-</span><span class='grank'>#8 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:22.6%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>19.6 allowed/g '25</span><span>W1: 22 allowed · 6.3 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge good'>MIN offense (#23) vs CHI defense (#27): <b>Edge to this offense</b></div>
+  
+</div>
+<div class='tcard'>
+  <div class='th'><span class='tab'>CHI</span> <span class='tfull'>Bears</span> <span class='small muted'>2025: 11-6</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade ga'>A+</span><span class='grank'>#1 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:0.0%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>25.9 pts/g '25</span><span>W1: 59 pts · 7.9 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gd'>D</span><span class='grank'>#27 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:83.9%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>24.4 allowed/g '25</span><span>W1: 37 allowed · 7.7 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge good'>CHI offense (#1) vs MIN defense (#8): <b>Edge to this offense</b></div>
+  
+</div></div>
+  <div class="impact">
+    <div class="ihead">Fantasy impact <span class="pill">6 starters across 7 league teams</span> </div>
+    <ul class="teams-list"><li class='team'><span class='tname'>Steel Giants</span><span class='cnt'>3 starters</span><div class='st'><b>Caleb Williams</b> <span class='muted'>QB 19.4</span>, <b>D&#x27;Andre Swift</b> <span class='muted'>RB 13.5</span>, <b>Colston Loveland</b> <span class='muted'>TE 11.4</span></div><div class='be small muted'>Bench: Jordan Addison <span class='muted'>WR</span></div></li><li class='team'><span class='tname'>Bower Outage</span><span class='cnt'>1 starter</span><div class='st'><b>Luther Burden III</b> <span class='muted'>WR 12.5</span></div><div class='be small muted'>Bench: Jordan Mason <span class='muted'>RB</span> <span class="pill bad">OUT</span></div></li><li class='team'><span class='tname'>Texas Two Step</span><span class='cnt'>1 starter</span><div class='st'><b>Justin Jefferson</b> <span class='muted'>WR 18.4</span></div><div class='be small muted'>Bench: Aaron Jones Sr. <span class='muted'>RB</span></div></li><li class='team'><span class='tname'>🥊ALI🥊</span><span class='cnt'>1 starter</span><div class='st'><b>Rome Odunze</b> <span class='muted'>WR 11.7</span></div></li><li class='team'><span class='tname'>Get Hooked</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Kyle Monangai <span class='muted'>RB</span>, T.J. Hockenson <span class='muted'>TE</span></div></li><li class='team'><span class='tname'>Lamar n Order</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Kalif Raymond <span class='muted'>WR</span></div></li><li class='team'><span class='tname'>Playoff Chase</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Kyler Murray <span class='muted'>QB</span> <span class="pill bad">OUT</span></div></li></ul>
+  </div>
+</article>
+<article class="game card" id="g-cle-tb">
+  <div class="ghead">
+    <div><div class="teams">CLE <span class="at">at</span> TB</div><div class="when">Sun 12:00 CT · CBS</div></div>
+    <div class="odds"><div><span class="l">Line</span><span class="v">TB −8.5</span></div><div><span class="l">O/U</span><span class="v">41.5</span></div><div><span class="l">Expected</span><span class="v">Buccaneers</span></div></div>
+  </div>
+  <p class="story">Baker Mayfield revenge game against a Browns defense that produced four pressures in W1 (fewest in the league). Tampa&#x27;s passing game (Egbuka, Godwin) and Bucky Irving are the fantasy plays; Cleveland&#x27;s side is a game-script question — Fannin&#x27;s targets should rise if the Browns are chasing.</p>
+  <div class="unitgrid">
+<div class='tcard'>
+  <div class='th'><span class='tab'>CLE</span> <span class='tfull'>Browns</span> <span class='small muted'>2025: 5-12</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gf'>F</span><span class='grank'>#30 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:93.5%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>16.4 pts/g '25</span><span>W1: 10 pts · 5.6 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gc'>C-</span><span class='grank'>#20 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:61.3%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>22.3 allowed/g '25</span><span>W1: 34 allowed · 6.4 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge bad'>CLE offense (#30) vs TB defense (#23): <b>Edge to the defense</b></div>
+  <div class='mwline'>🐺 Harold Fannin Jr.</div>
+</div>
+<div class='tcard'>
+  <div class='th'><span class='tab'>TB</span> <span class='tfull'>Buccaneers</span> <span class='small muted'>2025: 8-9</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gc'>C</span><span class='grank'>#18 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:54.8%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>22.4 pts/g '25</span><span>W1: 27 pts · 5.4 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gd'>D+</span><span class='grank'>#23 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:71.0%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>24.2 allowed/g '25</span><span>W1: 33 allowed · 5.6 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge '>TB offense (#18) vs CLE defense (#20): <b>Even matchup</b></div>
+  
+</div></div>
+  <div class="impact">
+    <div class="ihead">Fantasy impact <span class="pill">4 starters across 6 league teams</span> <span class='pill wolf'>🐺 1 starter</span></div>
+    <ul class="teams-list"><li class='team me'><span class='tname'>The Man Wolf</span><span class='cnt'>1 starter</span><div class='st'><b>Harold Fannin Jr.</b> <span class='muted'>TE 10.0</span></div></li><li class='team'><span class='tname'>🥊ALI🥊</span><span class='cnt'>2 starters</span><div class='st'><b>Emeka Egbuka</b> <span class='muted'>WR 13.8</span>, <b>Buccaneers D/ST</b> <span class='muted'>D/ST 8.2</span></div><div class='be small muted'>Bench: KC Concepcion <span class='muted'>WR</span></div></li><li class='team'><span class='tname'>Texas Two Step</span><span class='cnt'>1 starter</span><div class='st'><b>Bucky Irving</b> <span class='muted'>RB 14.6</span></div></li><li class='team'><span class='tname'>Bower Outage</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Kenny Gainwell <span class='muted'>RB</span></div></li><li class='team'><span class='tname'>Imad</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Quinshon Judkins <span class='muted'>RB</span></div></li><li class='team'><span class='tname'>Lamar n Order</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Chris Godwin Jr. <span class='muted'>WR</span>, Denzel Boston <span class='muted'>WR</span></div></li></ul>
+  </div>
+</article>
+<article class="game card" id="g-phi-ten">
+  <div class="ghead">
+    <div><div class="teams">PHI <span class="at">at</span> TEN</div><div class="when">Sun 12:00 CT · FOX</div></div>
+    <div class="odds"><div><span class="l">Line</span><span class="v">PHI −7</span></div><div><span class="l">O/U</span><span class="v">39.5</span></div><div><span class="l">Expected</span><span class="v">Eagles</span></div></div>
+  </div>
+  <p class="story">Elite Eagles pass rush vs a struggling Titans offense; the low total (39.5) says grind-it-out, which is Barkley&#x27;s game. DeVonta Smith draws a secondary that leaked yardage in W1. Jalen Carter plays in a wrist cast.</p>
+  <div class="unitgrid">
+<div class='tcard'>
+  <div class='th'><span class='tab'>PHI</span> <span class='tfull'>Eagles</span> <span class='small muted'>2025: 11-6</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gc'>C</span><span class='grank'>#16 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:48.4%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>22.3 pts/g '25</span><span>W1: 24 pts · 6.0 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade ga'>A-</span><span class='grank'>#3 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:6.5%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>19.1 allowed/g '25</span><span>W1: 22 allowed · 4.4 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge good'>PHI offense (#16) vs TEN defense (#28): <b>Big edge for this offense</b></div>
+  <div class='mwline'>🐺 Saquon Barkley, Eagles D/ST, Tank Bigsby (bench)</div>
+</div>
+<div class='tcard'>
+  <div class='th'><span class='tab'>TEN</span> <span class='tfull'>Titans</span> <span class='small muted'>2025: 3-14</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gf'>F</span><span class='grank'>#31 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:96.8%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>16.7 pts/g '25</span><span>W1: 10 pts · 4.0 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gd'>D-</span><span class='grank'>#28 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:87.1%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>28.1 allowed/g '25</span><span>W1: 23 allowed · 5.8 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge bad'>TEN offense (#31) vs PHI defense (#3): <b>Big edge to the defense</b></div>
+  
+</div></div>
+  <div class="impact">
+    <div class="ihead">Fantasy impact <span class="pill">5 starters across 7 league teams</span> <span class='pill wolf'>🐺 2 starters</span></div>
+    <ul class="teams-list"><li class='team me'><span class='tname'>The Man Wolf</span><span class='cnt'>2 starters</span><div class='st'><b>Saquon Barkley</b> <span class='muted'>RB 17.6</span>, <b>Eagles D/ST</b> <span class='muted'>D/ST 7.1</span></div><div class='be small muted'>Bench: Tank Bigsby <span class='muted'>RB</span></div></li><li class='team'><span class='tname'>Playoff Chase</span><span class='cnt'>1 starter</span><div class='st'><b>Jalen Hurts</b> <span class='muted'>QB 20.0</span></div></li><li class='team'><span class='tname'>Redemption team</span><span class='cnt'>1 starter</span><div class='st'><b>Dallas Goedert</b> <span class='muted'>TE 10.8</span></div><div class='be small muted'>Bench: Tony Pollard <span class='muted'>RB</span>, Tyjae Spears <span class='muted'>RB</span></div></li><li class='team'><span class='tname'>🥊ALI🥊</span><span class='cnt'>1 starter</span><div class='st'><b>DeVonta Smith</b> <span class='muted'>WR 14.0</span></div></li><li class='team'><span class='tname'>Get Hooked</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Carnell Tate <span class='muted'>WR</span>, Makai Lemon <span class='muted'>WR</span></div></li><li class='team'><span class='tname'>Imad</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Wan&#x27;Dale Robinson <span class='muted'>WR</span></div></li><li class='team'><span class='tname'>Steel Giants</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Dontayvion Wicks <span class='muted'>WR</span></div></li></ul>
+  </div>
+</article>
+<article class="game card" id="g-atl-car">
+  <div class="ghead">
+    <div><div class="teams">CAR <span class="at">at</span> ATL</div><div class="when">Sun 12:00 CT · FOX</div></div>
+    <div class="odds"><div><span class="l">Line</span><span class="v">CAR −2.5</span></div><div><span class="l">O/U</span><span class="v">43.5</span></div><div><span class="l">Expected</span><span class="v">Panthers (coin flip)</span></div></div>
+  </div>
+  <p class="story">Two 0-1 division rivals. Atlanta&#x27;s QB situation is unsettled (Rush and Tagovailoa both banged up), which is why the road team is favored. Bijan Robinson is still the highest-projected RB on the slate (22.9) regardless of who hands him the ball; Chuba Hubbard gets workhorse carries against a soft ATL run defense.</p>
+  <div class="unitgrid">
+<div class='tcard'>
+  <div class='th'><span class='tab'>CAR</span> <span class='tfull'>Panthers</span> <span class='small muted'>2025: 8-9</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gc'>C-</span><span class='grank'>#19 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:58.1%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>18.3 pts/g '25</span><span>W1: 37 pts · 7.7 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gf'>F</span><span class='grank'>#30 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:93.5%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>22.4 allowed/g '25</span><span>W1: 59 allowed · 7.9 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge bad'>CAR offense (#19) vs ATL defense (#14): <b>Edge to the defense</b></div>
+  
+</div>
+<div class='tcard'>
+  <div class='th'><span class='tab'>ATL</span> <span class='tfull'>Falcons</span> <span class='small muted'>2025: 8-9</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gd'>D-</span><span class='grank'>#28 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:87.1%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>20.8 pts/g '25</span><span>W1: 13 pts · 4.2 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gc'>C</span><span class='grank'>#14 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:41.9%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>23.6 allowed/g '25</span><span>W1: 20 allowed · 4.1 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge '>ATL offense (#28) vs CAR defense (#30): <b>Even matchup</b></div>
+  
+</div></div>
+  <div class="impact">
+    <div class="ihead">Fantasy impact <span class="pill">6 starters across 7 league teams</span> </div>
+    <ul class="teams-list"><li class='team'><span class='tname'>Bower Outage</span><span class='cnt'>1 starter</span><div class='st'><b>Jalen Coker</b> <span class='muted'>WR 11.9</span></div></li><li class='team'><span class='tname'>Get Hooked</span><span class='cnt'>1 starter</span><div class='st'><b>Bijan Robinson</b> <span class='muted'>RB 22.9</span></div></li><li class='team'><span class='tname'>Lamar n Order</span><span class='cnt'>1 starter</span><div class='st'><b>Panthers D/ST</b> <span class='muted'>D/ST 5.6</span></div></li><li class='team'><span class='tname'>Playoff Chase</span><span class='cnt'>1 starter</span><div class='st'><b>Tetairoa McMillan</b> <span class='muted'>WR 13.6</span></div></li><li class='team'><span class='tname'>Texas Two Step</span><span class='cnt'>1 starter</span><div class='st'><b>Kyle Pitts Sr.</b> <span class='muted'>TE 10.4</span></div><div class='be small muted'>Bench: Jonathon Brooks <span class='muted'>RB</span></div></li><li class='team'><span class='tname'>🥊ALI🥊</span><span class='cnt'>1 starter</span><div class='st'><b>Chuba Hubbard</b> <span class='muted'>RB 14.5</span></div></li><li class='team'><span class='tname'>Imad</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Drake London <span class='muted'>WR</span></div></li></ul>
+  </div>
+</article>
+<article class="game card" id="g-gb-nyj">
+  <div class="ghead">
+    <div><div class="teams">GB <span class="at">at</span> NYJ</div><div class="when">Sun 12:00 CT · FOX</div></div>
+    <div class="odds"><div><span class="l">Line</span><span class="v">GB −3.5</span></div><div><span class="l">O/U</span><span class="v">44.5</span></div><div><span class="l">Expected</span><span class="v">Packers</span></div></div>
+  </div>
+  <p class="story">Green Bay&#x27;s pass protection was a problem in W1 and the Jets&#x27; wasn&#x27;t. Josh Jacobs remains on the Commissioner&#x27;s Exempt List, so Lloyd/Golden/Watson carry the Packers&#x27; fantasy load. Breece Hall and Garrett Wilson are the Jets&#x27; anchors; Jets WR Omar Cooper Jr. is on IR.</p>
+  <div class="unitgrid">
+<div class='tcard'>
+  <div class='th'><span class='tab'>GB</span> <span class='tfull'>Packers</span> <span class='small muted'>2025: 9-7</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gc'>C</span><span class='grank'>#14 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:41.9%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>23.0 pts/g '25</span><span>W1: 22 pts · 6.3 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gc'>C</span><span class='grank'>#13 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:38.7%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>21.2 allowed/g '25</span><span>W1: 39 allowed · 3.9 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge good'>GB offense (#14) vs NYJ defense (#24): <b>Big edge for this offense</b></div>
+  
+</div>
+<div class='tcard'>
+  <div class='th'><span class='tab'>NYJ</span> <span class='tfull'>Jets</span> <span class='small muted'>2025: 3-14</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gd'>D-</span><span class='grank'>#29 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:90.3%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>17.6 pts/g '25</span><span>W1: 23 pts · 5.8 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gd'>D+</span><span class='grank'>#24 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:74.2%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>29.6 allowed/g '25</span><span>W1: 10 allowed · 4.0 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge bad'>NYJ offense (#29) vs GB defense (#13): <b>Big edge to the defense</b></div>
+  
+</div></div>
+  <div class="impact">
+    <div class="ihead">Fantasy impact <span class="pill">4 starters across 6 league teams</span> </div>
+    <ul class="teams-list"><li class='team'><span class='tname'>Imad</span><span class='cnt'>2 starters</span><div class='st'><b>Christian Watson</b> <span class='muted'>WR 12.5</span>, <b>Tucker Kraft</b> <span class='muted'>TE 10.6</span></div></li><li class='team'><span class='tname'>Bower Outage</span><span class='cnt'>1 starter</span><div class='st'><b>Garrett Wilson</b> <span class='muted'>WR 15.9</span></div></li><li class='team'><span class='tname'>Get Hooked</span><span class='cnt'>1 starter</span><div class='st'><b>Breece Hall</b> <span class='muted'>RB 15.8</span></div></li><li class='team'><span class='tname'>Lamar n Order</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: MarShawn Lloyd <span class='muted'>RB</span>, Matthew Golden <span class='muted'>WR</span></div></li><li class='team'><span class='tname'>Steel Giants</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Josh Jacobs <span class='muted'>RB</span></div></li><li class='team'><span class='tname'>🥊ALI🥊</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Kenyon Sadiq <span class='muted'>TE</span></div></li></ul>
+  </div>
+</article>
+<article class="game card" id="g-ne-pit">
+  <div class="ghead">
+    <div><div class="teams">PIT <span class="at">at</span> NE</div><div class="when">Sun 12:00 CT · CBS</div></div>
+    <div class="odds"><div><span class="l">Line</span><span class="v">NE −5.5</span></div><div><span class="l">O/U</span><span class="v">41.5</span></div><div><span class="l">Expected</span><span class="v">Patriots</span></div></div>
+  </div>
+  <p class="story">Drake Maye looking to erase a three-INT opener; Pittsburgh&#x27;s pass protection is the weak link against New England&#x27;s pressure. A.J. Brown (ankle) is on IR for the Patriots, which pushes targets to Hunter Henry. DK Metcalf saw 10 targets for 40 yards in W1 — the volume is there, the efficiency wasn&#x27;t.</p>
+  <div class="unitgrid">
+<div class='tcard'>
+  <div class='th'><span class='tab'>PIT</span> <span class='tfull'>Steelers</span> <span class='small muted'>2025: 10-7</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gc'>C-</span><span class='grank'>#20 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:61.3%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>23.4 pts/g '25</span><span>W1: 20 pts · 4.1 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gc'>C+</span><span class='grank'>#10 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:29.0%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>22.8 allowed/g '25</span><span>W1: 13 allowed · 4.2 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge bad'>PIT offense (#20) vs NE defense (#4): <b>Big edge to the defense</b></div>
+  <div class='mwline'>🐺 Michael Pittman Jr. (bench)</div>
+</div>
+<div class='tcard'>
+  <div class='th'><span class='tab'>NE</span> <span class='tfull'>Patriots</span> <span class='small muted'>2025: 14-3</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gc'>C+</span><span class='grank'>#12 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:35.5%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>28.8 pts/g '25</span><span>W1: 10 pts · 4.1 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gb'>B+</span><span class='grank'>#4 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:9.7%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>18.8 allowed/g '25</span><span>W1: 13 allowed · 5.9 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge '>NE offense (#12) vs PIT defense (#10): <b>Even matchup</b></div>
+  
+</div></div>
+  <div class="impact">
+    <div class="ihead">Fantasy impact <span class="pill">6 starters across 7 league teams</span> <span class='pill'>🐺 bench only</span></div>
+    <ul class="teams-list"><li class='team me'><span class='tname'>The Man Wolf</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Michael Pittman Jr. <span class='muted'>WR</span> <span class="pill bad">OUT</span></div></li><li class='team'><span class='tname'>Get Hooked</span><span class='cnt'>3 starters</span><div class='st'><b>Drake Maye</b> <span class='muted'>QB 18.2</span>, <b>DK Metcalf</b> <span class='muted'>WR 12.2</span>, <b>Patriots D/ST</b> <span class='muted'>D/ST 6.6</span></div><div class='be small muted'>Bench: Steelers D/ST <span class='muted'>D/ST</span></div></li><li class='team'><span class='tname'>Bower Outage</span><span class='cnt'>1 starter</span><div class='st'><b>Hunter Henry</b> <span class='muted'>TE 9.4</span></div><div class='be small muted'>Bench: A.J. Brown <span class='muted'>WR</span> <span class="pill bad">OUT</span></div></li><li class='team'><span class='tname'>Lamar n Order</span><span class='cnt'>1 starter</span><div class='st'><b>Rhamondre Stevenson</b> <span class='muted'>RB 12.9</span></div></li><li class='team'><span class='tname'>Steel Giants</span><span class='cnt'>1 starter</span><div class='st'><b>Jaylen Warren</b> <span class='muted'>RB 11.4</span></div></li><li class='team'><span class='tname'>Playoff Chase</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Rico Dowdle <span class='muted'>RB</span>, Romeo Doubs <span class='muted'>WR</span></div></li><li class='team'><span class='tname'>🥊ALI🥊</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: TreVeyon Henderson <span class='muted'>RB</span></div></li></ul>
+  </div>
+</article>
+<article class="game card" id="g-bal-no">
+  <div class="ghead">
+    <div><div class="teams">NO <span class="at">at</span> BAL</div><div class="when">Sun 12:00 CT · CBS</div></div>
+    <div class="odds"><div><span class="l">Line</span><span class="v">BAL −7.5</span></div><div><span class="l">O/U</span><span class="v">46.5</span></div><div><span class="l">Expected</span><span class="v">Ravens</span></div></div>
+  </div>
+  <p class="story">Baltimore hung 506 yards and 41 points on Indy; the Saints&#x27; zone-heavy defense is the next test. Lamar Jackson is the top-projected QB on the slate (21.7), Henry the top RB. On the Saints&#x27; side, Olave (Q, hamstring) is the swing piece; Vele should see an expanded role if New Orleans plays from behind.</p>
+  <div class="unitgrid">
+<div class='tcard'>
+  <div class='th'><span class='tab'>NO</span> <span class='tfull'>Saints</span> <span class='small muted'>2025: 6-11</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gd'>D</span><span class='grank'>#26 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:80.6%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>18.0 pts/g '25</span><span>W1: 30 pts · 5.5 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gc'>C</span><span class='grank'>#17 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:51.6%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>22.5 allowed/g '25</span><span>W1: 31 allowed · 5.1 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge bad'>NO offense (#26) vs BAL defense (#16): <b>Big edge to the defense</b></div>
+  <div class='mwline'>🐺 Chris Olave (bench), Alvin Kamara (bench)</div>
+</div>
+<div class='tcard'>
+  <div class='th'><span class='tab'>BAL</span> <span class='tfull'>Ravens</span> <span class='small muted'>2025: 8-9</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gb'>B+</span><span class='grank'>#4 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:9.7%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>24.9 pts/g '25</span><span>W1: 41 pts · 7.9 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gc'>C</span><span class='grank'>#16 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:48.4%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>23.4 allowed/g '25</span><span>W1: 23 allowed · 4.7 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge good'>BAL offense (#4) vs NO defense (#17): <b>Big edge for this offense</b></div>
+  <div class='mwline'>🐺 Derrick Henry</div>
+</div></div>
+  <div class="impact">
+    <div class="ihead">Fantasy impact <span class="pill">4 starters across 7 league teams</span> <span class='pill wolf'>🐺 1 starter</span></div>
+    <ul class="teams-list"><li class='team me'><span class='tname'>The Man Wolf</span><span class='cnt'>1 starter</span><div class='st'><b>Derrick Henry</b> <span class='muted'>RB 17.6</span></div><div class='be small muted'>Bench: Chris Olave <span class='muted'>WR</span> <span class="pill warn">Q</span>, Alvin Kamara <span class='muted'>RB</span></div></li><li class='team'><span class='tname'>Lamar n Order</span><span class='cnt'>1 starter</span><div class='st'><b>Lamar Jackson</b> <span class='muted'>QB 21.7</span></div></li><li class='team'><span class='tname'>Redemption team</span><span class='cnt'>1 starter</span><div class='st'><b>Travis Etienne Jr.</b> <span class='muted'>RB 12.2</span></div></li><li class='team'><span class='tname'>Texas Two Step</span><span class='cnt'>1 starter</span><div class='st'><b>Ravens D/ST</b> <span class='muted'>D/ST 6.8</span></div></li><li class='team'><span class='tname'>Bower Outage</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Jordyn Tyson <span class='muted'>WR</span> <span class="pill bad">OUT</span></div></li><li class='team'><span class='tname'>Imad</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Juwan Johnson <span class='muted'>TE</span>, Devaughn Vele <span class='muted'>WR</span></div></li><li class='team'><span class='tname'>🥊ALI🥊</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Zay Flowers <span class='muted'>WR</span> <span class="pill bad">OUT</span>, Mark Andrews <span class='muted'>TE</span></div></li></ul>
+  </div>
+</article>
+<article class="game card" id="g-cin-hou">
+  <div class="ghead">
+    <div><div class="teams">CIN <span class="at">at</span> HOU</div><div class="when">Sun 12:00 CT · CBS</div></div>
+    <div class="odds"><div><span class="l">Line</span><span class="v">HOU −2.5</span></div><div><span class="l">O/U</span><span class="v">46.5</span></div><div><span class="l">Expected</span><span class="v">Texans</span></div></div>
+  </div>
+  <p class="story">Houston&#x27;s must-win after an 0-1 start, and they&#x27;re doing it without Nico Collins (hamstring, out). Burrow is managing back tightness against an elite defense. Ja&#x27;Marr Chase (19.0) is the play; David Montgomery draws a Bengals run defense that gave way in W1.</p>
+  <div class="unitgrid">
+<div class='tcard'>
+  <div class='th'><span class='tab'>CIN</span> <span class='tfull'>Bengals</span> <span class='small muted'>2025: 6-11</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gc'>C+</span><span class='grank'>#11 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:32.3%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>24.4 pts/g '25</span><span>W1: 33 pts · 5.6 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gf'>F</span><span class='grank'>#31 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:96.8%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>28.9 allowed/g '25</span><span>W1: 27 allowed · 5.4 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge '>CIN offense (#11) vs HOU defense (#12): <b>Even matchup</b></div>
+  
+</div>
+<div class='tcard'>
+  <div class='th'><span class='tab'>HOU</span> <span class='tfull'>Texans</span> <span class='small muted'>2025: 12-5</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gc'>C</span><span class='grank'>#13 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:38.7%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>23.8 pts/g '25</span><span>W1: 31 pts · 5.2 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gc'>C+</span><span class='grank'>#12 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:35.5%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>17.4 allowed/g '25</span><span>W1: 36 allowed · 7.9 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge good'>HOU offense (#13) vs CIN defense (#31): <b>Big edge for this offense</b></div>
+  <div class='mwline'>🐺 Nico Collins (bench)</div>
+</div></div>
+  <div class="impact">
+    <div class="ihead">Fantasy impact <span class="pill">6 starters across 7 league teams</span> <span class='pill'>🐺 bench only</span></div>
+    <ul class="teams-list"><li class='team me'><span class='tname'>The Man Wolf</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Nico Collins <span class='muted'>WR</span> <span class="pill bad">OUT</span></div></li><li class='team'><span class='tname'>Bower Outage</span><span class='cnt'>1 starter</span><div class='st'><b>Joe Burrow</b> <span class='muted'>QB 16.5</span> <span class="pill warn">Q</span></div></li><li class='team'><span class='tname'>Imad</span><span class='cnt'>1 starter</span><div class='st'><b>Chase Brown</b> <span class='muted'>RB 15.4</span></div></li><li class='team'><span class='tname'>Lamar n Order</span><span class='cnt'>1 starter</span><div class='st'><b>David Montgomery</b> <span class='muted'>RB 14.2</span></div></li><li class='team'><span class='tname'>Playoff Chase</span><span class='cnt'>1 starter</span><div class='st'><b>Ja&#x27;Marr Chase</b> <span class='muted'>WR 19.0</span></div></li><li class='team'><span class='tname'>Steel Giants</span><span class='cnt'>1 starter</span><div class='st'><b>Texans D/ST</b> <span class='muted'>D/ST 6.2</span></div><div class='be small muted'>Bench: Woody Marks <span class='muted'>RB</span></div></li><li class='team'><span class='tname'>Texas Two Step</span><span class='cnt'>1 starter</span><div class='st'><b>Tee Higgins</b> <span class='muted'>WR 12.3</span></div></li></ul>
+  </div>
+</article>
+<article class="game card" id="g-lac-lv">
+  <div class="ghead">
+    <div><div class="teams">LV <span class="at">at</span> LAC</div><div class="when">Sun 3:05 CT · CBS</div></div>
+    <div class="odds"><div><span class="l">Line</span><span class="v">LAC −6.5</span></div><div><span class="l">O/U</span><span class="v">43.5</span></div><div><span class="l">Expected</span><span class="v">Chargers</span></div></div>
+  </div>
+  <p class="story">Ladd McConkey is questionable (ribs) — that&#x27;s Texas Two Step&#x27;s WR2 and it changes Herbert&#x27;s ceiling. Ashton Jeanty vs a Chargers run defense that struggled in W1 is the Raiders&#x27; path; Kirk Cousins was protected well but offers little downfield.</p>
+  <div class="unitgrid">
+<div class='tcard'>
+  <div class='th'><span class='tab'>LV</span> <span class='tfull'>Raiders</span> <span class='small muted'>2025: 3-14</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gf'>F</span><span class='grank'>#32 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:100.0%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>14.2 pts/g '25</span><span>W1: 27 pts · 4.3 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gc'>C</span><span class='grank'>#18 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:54.8%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>25.4 allowed/g '25</span><span>W1: 13 allowed · 5.2 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge bad'>LV offense (#32) vs LAC defense (#9): <b>Big edge to the defense</b></div>
+  
+</div>
+<div class='tcard'>
+  <div class='th'><span class='tab'>LAC</span> <span class='tfull'>Chargers</span> <span class='small muted'>2025: 11-6</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gd'>D+</span><span class='grank'>#22 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:67.7%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>21.6 pts/g '25</span><span>W1: 14 pts · 5.3 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gb'>B-</span><span class='grank'>#9 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:25.8%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>20.0 allowed/g '25</span><span>W1: 26 allowed · 5.5 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge bad'>LAC offense (#22) vs LV defense (#18): <b>Edge to the defense</b></div>
+  
+</div></div>
+  <div class="impact">
+    <div class="ihead">Fantasy impact <span class="pill">4 starters across 5 league teams</span> </div>
+    <ul class="teams-list"><li class='team'><span class='tname'>Texas Two Step</span><span class='cnt'>2 starters</span><div class='st'><b>Omarion Hampton</b> <span class='muted'>RB 15.8</span>, <b>Ladd McConkey</b> <span class='muted'>WR 14.5</span> <span class="pill warn">Q</span></div><div class='be small muted'>Bench: Kimani Vidal <span class='muted'>RB</span></div></li><li class='team'><span class='tname'>Get Hooked</span><span class='cnt'>1 starter</span><div class='st'><b>Quentin Johnston</b> <span class='muted'>WR 9.9</span></div></li><li class='team'><span class='tname'>🥊ALI🥊</span><span class='cnt'>1 starter</span><div class='st'><b>Ashton Jeanty</b> <span class='muted'>RB 18.3</span></div><div class='be small muted'>Bench: Justin Herbert <span class='muted'>QB</span></div></li><li class='team'><span class='tname'>Bower Outage</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Brock Bowers <span class='muted'>TE</span> <span class="pill bad">OUT</span></div></li><li class='team'><span class='tname'>Lamar n Order</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Michael Mayer <span class='muted'>TE</span></div></li></ul>
+  </div>
+</article>
+<article class="game card" id="g-den-jax">
+  <div class="ghead">
+    <div><div class="teams">JAX <span class="at">at</span> DEN</div><div class="when">Sun 3:05 CT · CBS</div></div>
+    <div class="odds"><div><span class="l">Line</span><span class="v">DEN −2.5</span></div><div><span class="l">O/U</span><span class="v">45.5</span></div><div><span class="l">Expected</span><span class="v">Broncos (lean)</span></div></div>
+  </div>
+  <p class="story">Jacksonville has scored 23+ in 12 straight games; Denver&#x27;s offense stalled in Bo Nix&#x27;s opener. Tuten leads the JAX backfield into a run defense Kenneth Walker just shredded; Parker Washington has a track record against Denver. RJ Harvey (Q, hamstring) is a game-time call in a committee with Dobbins.</p>
+  <div class="unitgrid">
+<div class='tcard'>
+  <div class='th'><span class='tab'>JAX</span> <span class='tfull'>Jaguars</span> <span class='small muted'>2025: 13-4</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade ga'>A-</span><span class='grank'>#3 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:6.5%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>27.9 pts/g '25</span><span>W1: 34 pts · 6.4 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gb'>B+</span><span class='grank'>#5 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:12.9%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>19.8 allowed/g '25</span><span>W1: 10 allowed · 5.6 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge '>JAX offense (#3) vs DEN defense (#6): <b>Even matchup</b></div>
+  <div class='mwline'>🐺 Bhayshul Tuten</div>
+</div>
+<div class='tcard'>
+  <div class='th'><span class='tab'>DEN</span> <span class='tfull'>Broncos</span> <span class='small muted'>2025: 14-3</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gd'>D+</span><span class='grank'>#24 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:74.2%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>23.6 pts/g '25</span><span>W1: 10 pts · 3.7 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gb'>B</span><span class='grank'>#6 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:16.1%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>18.3 allowed/g '25</span><span>W1: 31 allowed · 5.9 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge bad'>DEN offense (#24) vs JAX defense (#5): <b>Big edge to the defense</b></div>
+  <div class='mwline'>🐺 RJ Harvey (bench)</div>
+</div></div>
+  <div class="impact">
+    <div class="ihead">Fantasy impact <span class="pill">4 starters across 7 league teams</span> <span class='pill wolf'>🐺 1 starter</span></div>
+    <ul class="teams-list"><li class='team me'><span class='tname'>The Man Wolf</span><span class='cnt'>1 starter</span><div class='st'><b>Bhayshul Tuten</b> <span class='muted'>RB 10.1</span></div><div class='be small muted'>Bench: RJ Harvey <span class='muted'>RB</span> <span class="pill warn">Q</span></div></li><li class='team'><span class='tname'>Playoff Chase</span><span class='cnt'>2 starters</span><div class='st'><b>Jaylen Waddle</b> <span class='muted'>WR 12.2</span>, <b>Broncos D/ST</b> <span class='muted'>D/ST 6.3</span></div><div class='be small muted'>Bench: Jakobi Meyers <span class='muted'>WR</span>, Chris Rodriguez Jr. <span class='muted'>RB</span></div></li><li class='team'><span class='tname'>Steel Giants</span><span class='cnt'>1 starter</span><div class='st'><b>Parker Washington</b> <span class='muted'>WR 12.2</span></div><div class='be small muted'>Bench: Bo Nix <span class='muted'>QB</span>, Jaguars D/ST <span class='muted'>D/ST</span></div></li><li class='team'><span class='tname'>Get Hooked</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: J.K. Dobbins <span class='muted'>RB</span></div></li><li class='team'><span class='tname'>Imad</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Trevor Lawrence <span class='muted'>QB</span></div></li><li class='team'><span class='tname'>Redemption team</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Courtland Sutton <span class='muted'>WR</span></div></li><li class='team'><span class='tname'>🥊ALI🥊</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Brian Thomas Jr. <span class='muted'>WR</span></div></li></ul>
+  </div>
+</article>
+<article class="game card" id="g-mia-sf">
+  <div class="ghead">
+    <div><div class="teams">MIA <span class="at">at</span> SF</div><div class="when">Sun 3:25 CT · FOX</div></div>
+    <div class="odds"><div><span class="l">Line</span><span class="v">SF −12.5</span></div><div><span class="l">O/U</span><span class="v">44.5</span></div><div><span class="l">Expected</span><span class="v">49ers (biggest line of the season)</span></div></div>
+  </div>
+  <p class="story">Malik Willis and a Dolphins line that allowed five sacks in W1 travel to an elite 49ers defense. The blowout script favors McCaffrey, Purdy, and a rising Kittle snap count; for Miami it means Achane&#x27;s receiving floor and Malik Washington&#x27;s volume are the only things that should survive.</p>
+  <div class="unitgrid">
+<div class='tcard'>
+  <div class='th'><span class='tab'>MIA</span> <span class='tfull'>Dolphins</span> <span class='small muted'>2025: 7-10</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gd'>D</span><span class='grank'>#27 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:83.9%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>20.4 pts/g '25</span><span>W1: 13 pts · 5.2 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gc'>C-</span><span class='grank'>#19 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:58.1%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>24.9 allowed/g '25</span><span>W1: 27 allowed · 4.3 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge bad'>MIA offense (#27) vs SF defense (#7): <b>Big edge to the defense</b></div>
+  <div class='mwline'>🐺 Malik Washington (bench)</div>
+</div>
+<div class='tcard'>
+  <div class='th'><span class='tab'>SF</span> <span class='tfull'>49ers</span> <span class='small muted'>2025: 12-5</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gb'>B-</span><span class='grank'>#8 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:22.6%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>25.7 pts/g '25</span><span>W1: 27 pts · 5.9 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gb'>B</span><span class='grank'>#7 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:19.4%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>21.8 allowed/g '25</span><span>W1: 7 allowed · 5.1 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge good'>SF offense (#8) vs MIA defense (#19): <b>Big edge for this offense</b></div>
+  <div class='mwline'>🐺 George Kittle</div>
+</div></div>
+  <div class="impact">
+    <div class="ihead">Fantasy impact <span class="pill">7 starters across 6 league teams</span> <span class='pill wolf'>🐺 1 starter</span></div>
+    <ul class="teams-list"><li class='team me'><span class='tname'>The Man Wolf</span><span class='cnt'>1 starter</span><div class='st'><b>George Kittle</b> <span class='muted'>TE 10.5</span></div><div class='be small muted'>Bench: Malik Washington <span class='muted'>WR</span></div></li><li class='team'><span class='tname'>Redemption team</span><span class='cnt'>3 starters</span><div class='st'><b>Christian McCaffrey</b> <span class='muted'>RB 21.5</span>, <b>Deebo Samuel Sr.</b> <span class='muted'>WR 12.0</span>, <b>49ers D/ST</b> <span class='muted'>D/ST 6.6</span></div></li><li class='team'><span class='tname'>Imad</span><span class='cnt'>2 starters</span><div class='st'><b>Brock Purdy</b> <span class='muted'>QB 20.6</span>, <b>Mike Evans</b> <span class='muted'>WR 13.0</span></div></li><li class='team'><span class='tname'>Steel Giants</span><span class='cnt'>1 starter</span><div class='st'><b>De&#x27;Von Achane</b> <span class='muted'>RB 17.1</span></div><div class='be small muted'>Bench: De&#x27;Zhaun Stribling <span class='muted'>WR</span> <span class="pill bad">OUT</span></div></li><li class='team'><span class='tname'>Texas Two Step</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Kaelon Black <span class='muted'>RB</span> <span class="pill warn">Q</span></div></li><li class='team'><span class='tname'>🥊ALI🥊</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Caleb Douglas <span class='muted'>WR</span></div></li></ul>
+  </div>
+</article>
+<article class="game card" id="g-ari-sea">
+  <div class="ghead">
+    <div><div class="teams">SEA <span class="at">at</span> ARI</div><div class="when">Sun 3:25 CT · FOX</div></div>
+    <div class="odds"><div><span class="l">Line</span><span class="v">SEA −3.5</span></div><div><span class="l">O/U</span><span class="v">40.5</span></div><div><span class="l">Expected</span><span class="v">Seahawks</span></div></div>
+  </div>
+  <p class="story">Drew Lock starts for Seattle with Sam Darnold (glute) out — a real downgrade for Jaxon Smith-Njigba&#x27;s ceiling and a reason Seattle leans on Jeremiyah Love. Arizona scored 26 in a W1 upset; Trey McBride is the safest piece in the game. Jadarian Price gets more touches with the run emphasis.</p>
+  <div class="unitgrid">
+<div class='tcard'>
+  <div class='th'><span class='tab'>SEA</span> <span class='tfull'>Seahawks</span> <span class='small muted'>2025: 14-3</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gb'>B</span><span class='grank'>#7 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:19.4%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>28.4 pts/g '25</span><span>W1: 13 pts · 5.9 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade ga'>A+</span><span class='grank'>#1 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:0.0%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>17.2 allowed/g '25</span><span>W1: 10 allowed · 4.1 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge good'>SEA offense (#7) vs ARI defense (#26): <b>Big edge for this offense</b></div>
+  
+</div>
+<div class='tcard'>
+  <div class='th'><span class='tab'>ARI</span> <span class='tfull'>Cardinals</span> <span class='small muted'>2025: 3-14</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gc'>C-</span><span class='grank'>#21 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:64.5%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>20.9 pts/g '25</span><span>W1: 26 pts · 5.5 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gd'>D</span><span class='grank'>#26 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:80.6%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>28.7 allowed/g '25</span><span>W1: 14 allowed · 5.3 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge bad'>ARI offense (#21) vs SEA defense (#1): <b>Big edge to the defense</b></div>
+  <div class='mwline'>🐺 Tyler Allgeier (bench)</div>
+</div></div>
+  <div class="impact">
+    <div class="ihead">Fantasy impact <span class="pill">5 starters across 6 league teams</span> <span class='pill'>🐺 bench only</span></div>
+    <ul class="teams-list"><li class='team me'><span class='tname'>The Man Wolf</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Tyler Allgeier <span class='muted'>RB</span></div></li><li class='team'><span class='tname'>Lamar n Order</span><span class='cnt'>3 starters</span><div class='st'><b>Jaxon Smith-Njigba</b> <span class='muted'>WR 18.5</span>, <b>Trey McBride</b> <span class='muted'>TE 14.5</span>, <b>Jeremiyah Love</b> <span class='muted'>RB 12.9</span></div></li><li class='team'><span class='tname'>Bower Outage</span><span class='cnt'>1 starter</span><div class='st'><b>Jadarian Price</b> <span class='muted'>RB 13.2</span></div><div class='be small muted'>Bench: Zach Charbonnet <span class='muted'>RB</span> <span class="pill bad">OUT</span></div></li><li class='team'><span class='tname'>Imad</span><span class='cnt'>1 starter</span><div class='st'><b>Seahawks D/ST</b> <span class='muted'>D/ST 7.6</span></div></li><li class='team'><span class='tname'>Playoff Chase</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Michael Wilson <span class='muted'>WR</span></div></li><li class='team'><span class='tname'>Redemption team</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Marvin Harrison Jr. <span class='muted'>WR</span></div></li></ul>
+  </div>
+</article>
+<article class="game card" id="g-dal-wsh">
+  <div class="ghead">
+    <div><div class="teams">WSH <span class="at">at</span> DAL</div><div class="when">Sun 3:25 CT · FOX</div></div>
+    <div class="odds"><div><span class="l">Line</span><span class="v">DAL −3.5</span></div><div><span class="l">O/U</span><span class="v">50.5</span></div><div><span class="l">Expected</span><span class="v">Cowboys</span></div></div>
+  </div>
+  <p class="story">Highest total on the board (50.5): two 0-1 teams with bad W1 defensive tape. Washington ranked 31st vs fantasy QBs last year — Dak&#x27;s matchup; Dallas&#x27;s secondary is the reason Jayden Daniels and McLaurin are in play. Croskey-Merritt led the Commanders&#x27; backfield in W1. Eight league teams have someone in this game.</p>
+  <div class="unitgrid">
+<div class='tcard'>
+  <div class='th'><span class='tab'>WSH</span> <span class='tfull'>Commanders</span> <span class='small muted'>2025: 5-12</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gd'>D</span><span class='grank'>#25 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:77.4%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>20.9 pts/g '25</span><span>W1: 22 pts · 4.4 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gd'>D</span><span class='grank'>#25 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:77.4%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>26.5 allowed/g '25</span><span>W1: 24 allowed · 6.0 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge good'>WSH offense (#25) vs DAL defense (#32): <b>Edge to this offense</b></div>
+  
+</div>
+<div class='tcard'>
+  <div class='th'><span class='tab'>DAL</span> <span class='tfull'>Cowboys</span> <span class='small muted'>2025: 7-9</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gc'>C+</span><span class='grank'>#10 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:29.0%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>27.7 pts/g '25</span><span>W1: 20 pts · 4.7 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gf'>F</span><span class='grank'>#32 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:100.0%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>30.1 allowed/g '25</span><span>W1: 28 allowed · 5.8 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge good'>DAL offense (#10) vs WSH defense (#25): <b>Big edge for this offense</b></div>
+  <div class='mwline'>🐺 Dak Prescott</div>
+</div></div>
+  <div class="impact">
+    <div class="ihead">Fantasy impact <span class="pill">8 starters across 8 league teams</span> <span class='pill wolf'>🐺 1 starter</span></div>
+    <ul class="teams-list"><li class='team me'><span class='tname'>The Man Wolf</span><span class='cnt'>1 starter</span><div class='st'><b>Dak Prescott</b> <span class='muted'>QB 20.0</span></div></li><li class='team'><span class='tname'>Redemption team</span><span class='cnt'>2 starters</span><div class='st'><b>Javonte Williams</b> <span class='muted'>RB 16.7</span>, <b>Terry McLaurin</b> <span class='muted'>WR 12.4</span></div></li><li class='team'><span class='tname'>Bower Outage</span><span class='cnt'>1 starter</span><div class='st'><b>Jacory Croskey-Merritt</b> <span class='muted'>RB 10.2</span></div><div class='be small muted'>Bench: Antonio Williams <span class='muted'>WR</span></div></li><li class='team'><span class='tname'>Get Hooked</span><span class='cnt'>1 starter</span><div class='st'><b>CeeDee Lamb</b> <span class='muted'>WR 18.0</span></div></li><li class='team'><span class='tname'>Lamar n Order</span><span class='cnt'>1 starter</span><div class='st'><b>Stefon Diggs</b> <span class='muted'>WR 10.3</span></div><div class='be small muted'>Bench: Rachaad White <span class='muted'>RB</span></div></li><li class='team'><span class='tname'>Steel Giants</span><span class='cnt'>1 starter</span><div class='st'><b>George Pickens</b> <span class='muted'>WR 14.8</span></div></li><li class='team'><span class='tname'>Texas Two Step</span><span class='cnt'>1 starter</span><div class='st'><b>Jayden Daniels</b> <span class='muted'>QB 19.8</span></div></li><li class='team'><span class='tname'>Playoff Chase</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Jake Ferguson <span class='muted'>TE</span></div></li></ul>
+  </div>
+</article>
+<article class="game card" id="g-ind-kc">
+  <div class="ghead">
+    <div><div class="teams">IND <span class="at">at</span> KC</div><div class="when">Sun 7:20 CT · NBC</div></div>
+    <div class="odds"><div><span class="l">Line</span><span class="v">KC −6.5</span></div><div><span class="l">O/U</span><span class="v">46.5</span></div><div><span class="l">Expected</span><span class="v">Chiefs</span></div></div>
+  </div>
+  <p class="story">Indy&#x27;s defense was historically bad in W1 (they&#x27;ve already changed the defensive play-caller); Kansas City&#x27;s new running game with Kenneth Walker III should feast. Worthy led KC in targets but not production — the Colts&#x27; corners are elite outside, which pushes Mahomes toward the slot. Jonathan Taylor is the Colts&#x27; whole offense.</p>
+  <div class="unitgrid">
+<div class='tcard'>
+  <div class='th'><span class='tab'>IND</span> <span class='tfull'>Colts</span> <span class='small muted'>2025: 8-9</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gb'>B-</span><span class='grank'>#9 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:25.8%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>27.4 pts/g '25</span><span>W1: 23 pts · 4.7 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gd'>D-</span><span class='grank'>#29 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:90.3%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>24.2 allowed/g '25</span><span>W1: 41 allowed · 7.9 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge bad'>IND offense (#9) vs KC defense (#2): <b>Edge to the defense</b></div>
+  
+</div>
+<div class='tcard'>
+  <div class='th'><span class='tab'>KC</span> <span class='tfull'>Chiefs</span> <span class='small muted'>2025: 6-11</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gc'>C</span><span class='grank'>#17 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:51.6%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>21.3 pts/g '25</span><span>W1: 31 pts · 5.9 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade ga'>A</span><span class='grank'>#2 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:3.2%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>19.3 allowed/g '25</span><span>W1: 10 allowed · 3.7 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge good'>KC offense (#17) vs IND defense (#29): <b>Big edge for this offense</b></div>
+  <div class='mwline'>🐺 Xavier Worthy</div>
+</div></div>
+  <div class="impact">
+    <div class="ihead">Fantasy impact <span class="pill">6 starters across 7 league teams</span> <span class='pill wolf'>🐺 1 starter</span></div>
+    <ul class="teams-list"><li class='team me'><span class='tname'>The Man Wolf</span><span class='cnt'>1 starter</span><div class='st'><b>Xavier Worthy</b> <span class='muted'>WR 11.0</span></div></li><li class='team'><span class='tname'>Imad</span><span class='cnt'>2 starters</span><div class='st'><b>Kenneth Walker III</b> <span class='muted'>RB 17.8</span>, <b>Rashee Rice</b> <span class='muted'>WR 15.0</span></div><div class='be small muted'>Bench: Emmett Johnson <span class='muted'>RB</span></div></li><li class='team'><span class='tname'>Bower Outage</span><span class='cnt'>1 starter</span><div class='st'><b>Chiefs D/ST</b> <span class='muted'>D/ST 7.2</span></div><div class='be small muted'>Bench: Alec Pierce <span class='muted'>WR</span></div></li><li class='team'><span class='tname'>Get Hooked</span><span class='cnt'>1 starter</span><div class='st'><b>Tyler Warren</b> <span class='muted'>TE 11.4</span></div></li><li class='team'><span class='tname'>Playoff Chase</span><span class='cnt'>1 starter</span><div class='st'><b>Jonathan Taylor</b> <span class='muted'>RB 18.4</span></div></li><li class='team'><span class='tname'>Redemption team</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Travis Kelce <span class='muted'>TE</span>, Keenan Allen <span class='muted'>WR</span></div></li><li class='team'><span class='tname'>Texas Two Step</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Josh Downs <span class='muted'>WR</span>, Patrick Mahomes <span class='muted'>QB</span></div></li></ul>
+  </div>
+</article>
+<article class="game card" id="g-lar-nyg">
+  <div class="ghead">
+    <div><div class="teams">NYG <span class="at">at</span> LAR</div><div class="when">Mon 7:15 CT · ESPN/ABC</div></div>
+    <div class="odds"><div><span class="l">Line</span><span class="v">LAR −7</span></div><div><span class="l">O/U</span><span class="v">48.5</span></div><div><span class="l">Expected</span><span class="v">Rams</span></div></div>
+  </div>
+  <p class="story">Aaron Donald may un-retire into this game after 981 days. Puka Nacua is questionable (hamstring) — the biggest Monday-night fantasy question, and Texas Two Step&#x27;s WR1. Stafford (Man Wolf bench) gets an extra-rest bounce-back spot; Skattebo stays featured for a run-first Giants team, and Nabers is Steel Giants&#x27; last piece to score.</p>
+  <div class="unitgrid">
+<div class='tcard'>
+  <div class='th'><span class='tab'>NYG</span> <span class='tfull'>Giants</span> <span class='small muted'>2025: 4-13</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gc'>C</span><span class='grank'>#15 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:45.2%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>22.4 pts/g '25</span><span>W1: 28 pts · 5.8 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gc'>C-</span><span class='grank'>#21 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:64.5%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>25.8 allowed/g '25</span><span>W1: 20 allowed · 4.7 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge bad'>NYG offense (#15) vs LAR defense (#11): <b>Edge to the defense</b></div>
+  
+</div>
+<div class='tcard'>
+  <div class='th'><span class='tab'>LAR</span> <span class='tfull'>Rams</span> <span class='small muted'>2025: 12-5</span></div>
+  <div class='grow'>
+    <div class='gbox'>
+      <div class='glab'>Offense</div>
+      <div class='gline'><span class='grade gb'>B</span><span class='grank'>#6 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark off' style='left:16.1%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>30.5 pts/g '25</span><span>W1: 7 pts · 5.1 yds/play</span></div>
+    </div>
+    <div class='gbox'>
+      <div class='glab'>Defense</div>
+      <div class='gline'><span class='grade gc'>C+</span><span class='grank'>#11 of 32</span></div>
+      <div class='strip'><div class='track'></div><div class='mark dfn' style='left:32.3%'></div><span class='s1'>#1</span><span class='s32'>#32</span></div>
+      <div class='gstats'><span>20.4 allowed/g '25</span><span>W1: 27 allowed · 5.9 yds/play</span></div>
+    </div>
+  </div>
+  <div class='edge good'>LAR offense (#6) vs NYG defense (#21): <b>Big edge for this offense</b></div>
+  <div class='mwline'>🐺 Matthew Stafford (bench)</div>
+</div></div>
+  <div class="impact">
+    <div class="ihead">Fantasy impact <span class="pill">7 starters across 8 league teams</span> <span class='pill'>🐺 bench only</span></div>
+    <ul class="teams-list"><li class='team me'><span class='tname'>The Man Wolf</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Matthew Stafford <span class='muted'>QB</span></div></li><li class='team'><span class='tname'>🥊ALI🥊</span><span class='cnt'>2 starters</span><div class='st'><b>Jaxson Dart</b> <span class='muted'>QB 18.2</span>, <b>Isaiah Likely</b> <span class='muted'>TE 11.0</span></div></li><li class='team'><span class='tname'>Bower Outage</span><span class='cnt'>1 starter</span><div class='st'><b>Kyren Williams</b> <span class='muted'>RB 14.2</span></div></li><li class='team'><span class='tname'>Imad</span><span class='cnt'>1 starter</span><div class='st'><b>Cam Skattebo</b> <span class='muted'>RB 12.8</span></div></li><li class='team'><span class='tname'>Lamar n Order</span><span class='cnt'>1 starter</span><div class='st'><b>Davante Adams</b> <span class='muted'>WR 13.7</span></div></li><li class='team'><span class='tname'>Steel Giants</span><span class='cnt'>1 starter</span><div class='st'><b>Malik Nabers</b> <span class='muted'>WR 14.9</span></div></li><li class='team'><span class='tname'>Texas Two Step</span><span class='cnt'>1 starter</span><div class='st'><b>Puka Nacua</b> <span class='muted'>WR 21.3</span> <span class="pill warn">Q</span></div><div class='be small muted'>Bench: Blake Corum <span class='muted'>RB</span></div></li><li class='team'><span class='tname'>Redemption team</span><span class='cnt'>0 starters</span><div class='st muted'>no starters</div><div class='be small muted'>Bench: Rams D/ST <span class='muted'>D/ST</span></div></li></ul>
+  </div>
+</article>
+</section>
+
+<section id="method">
+  <div class="card">
+    <h2>Method &amp; caveats</h2>
+    <ul>
+      <li><b>Grades are a blend, because one 2026 game is not a sample.</b> Offense score = 60% 2025 points per game + 20% Week 1 2026 points + 20% Week 1 yards per play, each standardized across the 32 teams (a z-score: how many standard deviations above or below the league average). Defense is the same with points allowed and yards per play allowed. Teams are then ranked 1–32 on each and lettered by rank (A = top 3, B = 4–9, C = 10–21, D = 22–29, F = bottom 3, with +/− within bands).</li>
+      <li><b>What the prior misses:</b> offseason change. A team with a new quarterback or coordinator (Seattle under Drew Lock this week, Atlanta with Cooper Rush, Denver in Nix's second year) is graded partly on a 2025 that may not describe it. Where the Week 1 number disagrees hard with the 2025 number — Chicago's 59-point W1 on a 25.9 ppg prior, Carolina's 59 allowed — the grade is already moving; by Week 4 the current-season weight should rise to 50%+.</li>
+      <li><b>Yards per play</b> is the most stable one-game stat there is (it's not distorted by a single turnover or a short field the way points are), which is why it gets equal weight with points in the Week 1 component.</li>
+      <li><b>Unit-vs-unit reads are environment, not projections.</b> A "favorable" read raises a player's ceiling and floor a little; it doesn't override role or health. Olave in a bad offense against a middling defense is still a 13-target receiver.</li>
+      <li>Projections are medians: team totals land within ~25 points of the projected sum about two-thirds of the time. Lines move; ESPN's table and reporters differ by a point on three games.</li>
+      <li>Player-to-game mapping and league projections are generated from <code>data/week_stats.json</code> (Week 2, in progress, synced 21:04 CT). Grades are computed from ESPN's public box-score and standings data pulled at ~23:00 CT.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <p>Sources: ESPN betting lines (Week 2); ESPN Week 2 reporter previews; NFL.com Week 2 picks; ESPN scoreboard/summary API (Week 1 2026 box scores) and ESPN standings API (2025 PF/PA); ESPN league 394766 sync 2026-09-19 21:04 CT. Companion: <a href="2026-09-19-w02-matchup.html">The Man Wolf vs Steel Giants matchup report</a>.</p>
+  <p>Fantasy Professor · The Man Wolf brain trust · Mo decides.</p>
+</footer>
+</main></body></html>

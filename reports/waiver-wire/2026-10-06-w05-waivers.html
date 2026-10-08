@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Waiver Wire · Week 5</title>
+<style>
+  :root { color-scheme:light; --bg:#f5f5f3; --surface:#fff; --surface-2:#f0efec; --border:#e3e2de; --text:#0b0b0b; --text-2:#52514e; --text-3:#8a8985;
+    --wolf:#2a78d6; --wolf-soft:#cde2fb; --good:#008300; --warn:#c98500; --bad:#e34948;
+    --shadow:0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.05); --radius:14px; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { color-scheme:dark; --bg:#121211; --surface:#1a1a19; --surface-2:#242423; --border:#2f2f2d; --text:#fff; --text-2:#c3c2b7; --text-3:#8d8c85;
+    --wolf:#3987e5; --wolf-soft:#1c3a62; --good:#3fbf3f; --warn:#e0a021; --bad:#e66767; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3); } }
+  :root[data-theme="dark"] { color-scheme:dark; --bg:#121211; --surface:#1a1a19; --surface-2:#242423; --border:#2f2f2d; --text:#fff; --text-2:#c3c2b7; --text-3:#8d8c85;
+    --wolf:#3987e5; --wolf-soft:#1c3a62; --good:#3fbf3f; --warn:#e0a021; --bad:#e66767; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3); }
+  *{box-sizing:border-box} html{scroll-behavior:smooth;scroll-padding-top:64px}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.55}
+  a{color:var(--wolf);text-decoration:none} a:hover{text-decoration:underline}
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  nav .inner{max-width:1100px;margin:0 auto;padding:0 16px} nav .row{display:flex;align-items:center;gap:4px;overflow-x:auto;height:48px}
+  nav .brand{font-weight:700;margin-right:12px;white-space:nowrap} nav a{color:var(--text-2);font-size:13px;padding:5px 9px;border-radius:8px;white-space:nowrap} nav a:hover{background:var(--surface-2);text-decoration:none;color:var(--text)}
+  main{max-width:1100px;margin:0 auto;padding:24px 16px 80px}
+  .eyebrow{color:var(--text-3);font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+  h1{font-size:clamp(28px,4vw,40px);margin:6px 0 4px;line-height:1.15;letter-spacing:-.01em} h2{font-size:22px;margin:0 0 12px} h3{font-size:16px;margin:16px 0 8px}
+  .sub{color:var(--text-2);margin:0} section{margin-top:36px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+  .muted{color:var(--text-2)} .small{font-size:13px} p{margin:8px 0} ul{padding-left:20px;margin:8px 0} li{margin:4px 0}
+  .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+  .pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--text-2);vertical-align:middle;white-space:nowrap}
+  .pill.wolf{background:var(--wolf-soft);color:var(--text)}
+  /* status tags (mandatory on every player) */
+  .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 7px;border-radius:6px;vertical-align:middle}
+  .tag.ok{background:color-mix(in srgb,var(--good) 14%,var(--surface));color:var(--good)}
+  .tag.q{background:color-mix(in srgb,var(--warn) 16%,var(--surface));color:var(--warn)}
+  .tag.out{background:color-mix(in srgb,var(--bad) 14%,var(--surface));color:var(--bad)}
+  /* acquisition + priority labels */
+  .acq{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;border:1px solid var(--border);color:var(--text-2)}
+  .acq.wv{border-color:var(--warn);color:var(--warn)}
+  .prio{display:inline-block;font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px}
+  .prio.use{background:var(--wolf);color:#fff} .prio.wait{background:var(--surface-2);color:var(--text-2);border:1px solid var(--border)}
+  .ctag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--surface-2);color:var(--text-2)}
+  .ctag.up{color:var(--good)} .ctag.down{color:var(--bad)}
+  .pos{display:inline-block;min-width:34px;text-align:center;font-size:11px;font-weight:800;padding:2px 6px;border-radius:6px;background:var(--surface-2);color:var(--text)}
+  /* the call */
+  .call{border-radius:var(--radius);padding:18px 20px;margin-top:20px;border:1px solid var(--border);border-left:6px solid var(--wolf);background:color-mix(in srgb,var(--wolf-soft) 40%,var(--surface))}
+  .call.hold{border-left-color:var(--text-3);background:var(--surface)}
+  .call .lbl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-2)} .call .what{font-size:20px;font-weight:700;margin:4px 0}
+  .call ol{margin:6px 0 0;padding-left:22px}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:14px} .tile{background:var(--surface-2);border-radius:10px;padding:12px 14px} .tile .l{font-size:12px;color:var(--text-2)} .tile .v{font-size:20px;font-weight:600;margin-top:2px} .tile .d{font-size:12px;color:var(--text-3)}
+  /* candidate cards */
+  .cands{display:grid;gap:14px}
+  .cand{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px}
+  .cand .top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+  .cand .rk{font-size:28px;font-weight:800;color:var(--text-3);line-height:1;min-width:30px}
+  .cand .nm{font-size:19px;font-weight:700} .cand .sub2{font-size:13px;color:var(--text-2)}
+  .cand .labels{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .cand .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin:12px 0}
+  .cand .kpis div{background:var(--surface-2);border-radius:8px;padding:8px 10px} .cand .kpis .l{display:block;font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em} .cand .kpis .v{font-weight:600;font-size:14px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .drop{margin-top:10px;font-size:14px;padding:8px 12px;border-radius:8px;background:var(--surface-2);border-left:4px solid var(--bad)}
+  .reason{font-size:13px;color:var(--text-2);margin-top:6px}
+  table{width:100%;border-collapse:collapse;font-size:14px} th{text-align:left;font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;padding:8px;border-bottom:1px solid var(--border)}
+  td{padding:9px 8px;border-bottom:1px solid var(--border);vertical-align:top} tr:last-child td{border-bottom:0} td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  tr.top-cut td{background:color-mix(in srgb,var(--bad) 7%,var(--surface))} .tablewrap{overflow-x:auto}
+  .def{font-size:13px;background:var(--surface-2);border-radius:8px;padding:8px 12px;margin:10px 0;color:var(--text-2)} .def b{color:var(--text)}
+  details{margin-top:8px} summary{cursor:pointer;font-weight:600}
+  footer{margin-top:48px;color:var(--text-3);font-size:13px}
+  @media (max-width:640px){ .two{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<nav><div class="inner"><div class="row"><span class="brand">🐺 Waiver Wire · Week 5</span>
+<a href="#roster">Roster</a><a href="#shortlist">Shortlist</a><a href="#thisweek">This week</a><a href="#dst">D/ST</a><a href="#qb">QB</a><a href="#stash">Stashes</a><a href="#league">League angle</a><a href="#cuts">Cut order</a><a href="#watch">Watch list</a></div></div></nav>
+<main>
+<div class="eyebrow">D League · Waiver Wire · Week 5 · 2026-10-06 (Tue)</div>
+<h1>Three free claims: Barkley insurance, a better defense, and a WR for the Week 8 bye crunch</h1>
+<p class="sub">This report ranks players on rest-of-season value first. The roster is full (16 of 16), so every add needs a drop. The headline this week: at waiver priority #10 we're already last in line, so putting in a claim costs nothing.</p>
+<div class="meta"><span class="pill">Synced Tue 10-06 (600-player pool)</span><span class="pill">The Man Wolf 4-0 · 1st</span><span class="pill wolf">Waiver priority #10 (last)</span><span class="pill">Claims process ~2:40 AM Wed 10-07</span><span class="pill">0 open roster spots</span></div>
+
+<div class="call">
+  <div class="lbl">The call: submit three claims tonight, in this order</div>
+  <div class="what">Shipley for Pittman · Jaguars D/ST for Eagles D/ST · Keon Coleman for Pittman (backup)</div>
+  <ol>
+    <li><b>Will Shipley (RB, PHI) → drop Michael Pittman Jr.</b> <span class="prio use">USE #10</span> Barkley's handcuff (his backup on the Eagles) while Barkley's hamstring heals. Expect to lose this one to Bower (#3) or Chaseing (#4).</li>
+    <li><b>Jaguars D/ST → drop Eagles D/ST.</b> <span class="prio use">USE #10</span> A consensus top-3 stream this week and a better long-term defense. Bower has no D/ST and will probably claim it first.</li>
+    <li><b>Keon Coleman (WR, BUF) → drop Pittman.</b> <span class="prio use">USE #10</span> A conditional backup: ESPN only processes it if Pittman is still on the roster, which means claim #1 failed. It adds WR depth for the Week 8 bye crunch.</li>
+  </ol>
+  <p class="small muted" style="margin-top:8px">Why every label says USE #10: the spend rule exists because a claim drops you to last. We're already last, so a claim can't cost us anything this week. Waiver status is inferred (all three played in Week 4, so they're on waivers until Wednesday). <b>Confirm in the ESPN app before submitting.</b></p>
+</div>
+
+<section id="roster" class="card">
+<h2>Where the roster stands</h2>
+<div class="tiles">
+  <div class="tile"><div class="l">Injured starter</div><div class="v">Barkley · hamstring</div><div class="d">Week to week (NFL.com); ESPN Q. No handcuff on roster.</div></div>
+  <div class="tile"><div class="l">Weakest slots ROS</div><div class="v">FLEX ×2</div><div class="d">Harvey 12.7/gm, Fannin 12.6/gm</div></div>
+  <div class="tile"><div class="l">Bye crunch</div><div class="v">Week 8</div><div class="d">Collins, Olave, Kittle, Kamara all on bye (HOU/NO/SF)</div></div>
+  <div class="tile"><div class="l">Dead roster spot</div><div class="v">Eagles D/ST</div><div class="d">2.5/gm; 2nd D/ST against a "stream" strategy</div></div>
+</div>
+<p class="muted small">Upcoming byes: W6 J. Williams + M. Washington (DET/MIA) · W7 Tuten (JAX) · W8 Collins, Olave, Kittle, Kamara · W9 Pittman · W10 Barkley, Harvey, Eagles D/ST · W11 Fannin, Stafford, Browns D/ST · W13 Henry · W14 Dak. Opponents: W5 Imad, W6 Chaseing a win, W7 Get Hooked. No IR players, both IR slots open.</p>
+<div class="def"><b>Waiver priority oddity:</b> today's order is exactly the reverse of the standings: Steel Giants (0-4) are #1 and we (4-0) are #10. On 10-03 we were #6 and haven't claimed since 09-30. That points to the league resetting the order to inverse standings each week rather than using a purely rolling order. <b>Unconfirmed; check League Settings → Waivers.</b> If it is a weekly reset, spending priority never costs more than one week.</div>
+</section>
+
+<section id="shortlist">
+<h2>Shortlist · rest-of-season ranked</h2>
+<div class="def"><b>Target share</b>: the percentage of a team's pass targets (throws aimed at a player) that go to this player. It measures how much of the offense runs through him and holds steadier than points. <b>Carry share</b>: the same idea for running plays. Shares below come from ESPN box scores for Weeks 1–4.</div>
+<div class="cands">
+
+  <div class="cand">
+    <div class="top">
+      <div style="display:flex;gap:12px"><div class="rk">1</div>
+        <div><div class="nm"><span class="pos">RB</span> Will Shipley</div><div class="sub2">PHI · bye W10 · 3rd year · 0.8% rostered (ESPN)</div></div></div>
+      <div class="labels"><span class="tag ok">ACTIVE</span><span class="acq wv">WAIVERS (inferred)</span><span class="prio use">USE #10</span></div>
+    </div>
+    <div class="kpis">
+      <div><span class="l">Carry share W1–W4</span><span class="v">8% → 22% → 0% → 22%</span></div>
+      <div><span class="l">Expected ppg (our scoring)</span><span class="v">8–13 while lead back · 2–5 after <span class="muted small">judgment</span></span></div>
+      <div><span class="l">Consensus</span><span class="v">FantasyPros #1 waiver priority</span></div>
+      <div><span class="l">Next 3 / playoffs</span><span class="v">@JAX (London), CAR, DAL / SEA, HOU, @SF</span></div>
+    </div>
+    <p><b>Path to starting:</b> it's already happening. Barkley is week to week with a hamstring injury, and Tank Bigsby, who took 14 of the 27 carries after Barkley left in Week 4 to Shipley's 6, is headed to IR for at least a month. FantasyPros calls Shipley the Eagles' last healthy back, and Philadelphia will likely add Jaydon Blue, Dameon Pierce or Carson Steele from the practice squad.</p>
+    <div class="two">
+      <div><b>Why</b><ul><li>He's Barkley's direct handcuff, and Barkley's injury is the biggest RB risk on our roster (he also left early in Week 2).</li><li>He catches passes, which counts for more in full PPR.</li><li>Spend rule case 2: the handcuff to an injured Man Wolf starter who would take over the starting role.</li></ul></div>
+      <div><b>Risks</b><ul><li>He's shown no lead-back role yet: 0 catches and 6 carries for 23 yards in Week 4.</li><li>He'll likely share work with practice-squad call-ups.</li><li>His value drops to near zero once Barkley returns.</li><li>He'd be our RB5 on a healthy week, so he doesn't start over Henry, Tuten, Harvey or Kamara on evidence.</li></ul></div>
+    </div>
+    <p class="small"><span class="ctag">AGREE</span> Consensus #1 pickup (FantasyPros, Yahoo, Bleacher Report, Fantasy Life). For us he's insurance more than a starter, which is the right reason to claim a player who costs nothing.</p>
+    <div class="reason"><b>Priority:</b> free at #10. The realistic odds are low, since Bower (#3, three RBs injured, an open roster spot) and Chaseing (#4, 2 healthy RBs, an open spot) both rank ahead of us.</div>
+    <div class="drop"><b>Drop:</b> Michael Pittman Jr. (5.3/gm, WR95, 3.5 points in Week 4). He's first on the cut list among skill players.</div>
+  </div>
+
+  <div class="cand">
+    <div class="top">
+      <div style="display:flex;gap:12px"><div class="rk">2</div>
+        <div><div class="nm"><span class="pos">WR</span> Keon Coleman</div><div class="sub2">BUF · bye W7 · 3rd year · 4.3% rostered</div></div></div>
+      <div class="labels"><span class="tag ok">ACTIVE</span><span class="acq wv">WAIVERS (inferred)</span><span class="prio use">USE #10</span></div>
+    </div>
+    <div class="kpis">
+      <div><span class="l">Target share W1–W4</span><span class="v">4% → 21% → 8% → 23%</span></div>
+      <div><span class="l">Expected ppg</span><span class="v">7–11 <span class="muted small">judgment</span> (10.4 so far)</span></div>
+      <div><span class="l">Consensus</span><span class="v">NFL.com, Bleacher Report targets; not FP top 5</span></div>
+      <div><span class="l">Next 3 / playoffs</span><span class="v">@LAR, @LV, BYE / CHI, @DEN, @MIA</span></div>
+    </div>
+    <p><b>Path to starting for us:</b> Week 8, when Collins and Olave are both on bye. On other weeks he only starts if an injury opens a spot. DJ Moore is playing through a shoulder sprain (2.7 points in Week 4), and if that limits Moore, Coleman's share grows.</p>
+    <div class="two">
+      <div><b>Why</b><ul><li>His two most recent full-role games were 6 catches for 63 yards and 6 catches for 116 yards with a TD, both at 21%+ target share.</li><li>His bye is Week 7, so he's available in Week 8 when we need WRs most.</li><li>He's 23, a cheap keeper option under the flat-cost rule (the tiebreaker only).</li></ul></div>
+      <div><b>Risks</b><ul><li>His targets swing week to week (1, 6, 2, 7). That's a boom-or-bust profile, a bench piece under strategy.md's "volume over ceiling" rule.</li><li>He's competing with Palmer and Shakir for targets.</li></ul></div>
+    </div>
+    <p class="small"><span class="ctag">AGREE</span> Experts treat him as a deeper-league add, not a must-have. That matches our use: a WR4/5 with a Week 8 job.</p>
+    <div class="reason"><b>Priority:</b> by the rule he'd be WAIT FOR FA (not a starter, not a handcuff), but a claim is free at #10. Submitting it as a backup claim tied to Pittman just gets him a day earlier at no cost.</div>
+    <div class="drop"><b>Drop:</b> Pittman, if Shipley's claim failed. If Shipley's claim succeeds, Coleman vs. Malik Washington for the next spot is a close call. Run <code>/player-eval Keon Coleman vs Malik Washington</code> before dropping Washington.</div>
+  </div>
+
+  <div class="cand">
+    <div class="top">
+      <div style="display:flex;gap:12px"><div class="rk">3</div>
+        <div><div class="nm"><span class="pos">WR</span> Romeo Doubs</div><div class="sub2">NE · bye W11 · 58.4% rostered</div></div></div>
+      <div class="labels"><span class="tag ok">ACTIVE</span><span class="acq wv">WAIVERS (inferred)</span><span class="prio wait">WAIT FOR FA</span></div>
+    </div>
+    <div class="kpis">
+      <div><span class="l">Target share W1–W4</span><span class="v">10% → 19% → 13% → 25%</span></div>
+      <div><span class="l">Expected ppg</span><span class="v">7–10 <span class="muted small">judgment</span></span></div>
+      <div><span class="l">Consensus</span><span class="v">Not on the Week 5 lists checked</span></div>
+      <div><span class="l">Next 3</span><span class="v">LV, NYJ, @CHI</span></div>
+    </div>
+    <div class="two">
+      <div><b>Why</b><ul><li>A career-high 9 targets in Week 4 (25%).</li><li>He plays in Week 8 (NE bye is W11).</li></ul></div>
+      <div><b>Risks</b><ul><li>12 of his 23.8 Week 4 points (our scoring) came from 2 TDs on 6 catches for 58 yards, which is likely to regress.</li><li>Weeks 1–3 he averaged 3.7 targets.</li></ul></div>
+    </div>
+    <p class="small"><span class="ctag down">DIVERGE ↓</span> vs. his 11.1/gm average: the TDs are carrying it. He's the fallback to Coleman if Coleman is claimed.</p>
+    <div class="reason"><b>Priority:</b> wait. If he's still there Wednesday, he's a free-agent add only if both Shipley and Coleman fall through.</div>
+    <div class="drop"><b>Drop:</b> Pittman (same slot as claim #3).</div>
+  </div>
+</div>
+</section>
+
+<section id="thisweek" class="card">
+<h2>This week only</h2>
+<p class="muted small">Week 5 fill-ins. Start/sit decisions stay with /weekly-lineup.</p>
+<p>No fill-in is needed. Barkley is already on the bench in ESPN, and Henry, Tuten, Harvey and Kamara cover RB and FLEX with no byes among our players (KC and CAR are the Week 5 byes). Shipley would be a Week 5 option only if he's named the lead back. Weigh that in <code>/weekly-lineup</code> if the claim wins.</p>
+</section>
+
+<section id="dst" class="card">
+<h2>D/ST stream · Week 5</h2>
+<div class="tablewrap"><table>
+<tr><th>#</th><th>Defense</th><th>Opponent</th><th>Why</th><th>Consensus</th><th>Available?</th></tr>
+<tr><td>1</td><td>Jaguars D/ST <span class="tag ok">—</span></td><td>vs PHI (London)</td><td>Eagles without Barkley or Bigsby, and RT Lane Johnson has retired (Yahoo). 8.0/gm so far, 5th among D/STs in the season-to-date ranking (posRank).</td><td>Top 1–3 (RotoBaller, NBC, Yahoo, FantasyPros)</td><td><span class="acq wv">WAIVERS (inferred)</span></td></tr>
+<tr><td>2</td><td>Browns D/ST (ours) <span class="tag ok">—</span></td><td>@ NYJ</td><td>5 sacks and 2 INTs in Week 4. The Jets' defense is itself a stream because Cleveland's offense is weak, which doesn't tell us much about the Jets' offense.</td><td>Not on the top-tier lists</td><td>Rostered</td></tr>
+<tr><td>3</td><td>Jets D/ST / Raiders D/ST <span class="tag ok">—</span></td><td>vs CLE / @ NE</td><td>Tier-2 and budget streams on the lists checked.</td><td>Tier 2 / budget</td><td><span class="acq">FA after Wed</span></td></tr>
+</table></div>
+<p class="muted small">Ranked on matchup and consensus, never on ESPN projection. The Texans (@TEN) and Bengals (@MIA) also rank in the top tier but are rostered here (Steel Giants, Chaseing). Rest of season, the Jaguars also play HOU in Week 6, then have a Week 7 bye.</p>
+</section>
+
+<section id="qb" class="card"><h2>QB note</h2><p><b>No action.</b> Dak (ACTIVE) is QB7 on ESPN's season-to-date ranking (posRank), and Stafford (ACTIVE) covers Dak's Week 14 bye. If Stafford is ever traded, the best free agents to stream are Kirk Cousins (LV, 19.7/gm, ACTIVE on ESPN) and Deshaun Watson (CLE, 16.7/gm, ACTIVE on ESPN). With 4-point passing TDs here, don't spend a roster spot on a QB.</p></section>
+
+<section id="stash" class="card">
+<h2>Stashes &amp; handcuffs</h2>
+<p class="muted small">Not adds today. These are what to grab if the trigger happens.</p>
+<div class="tablewrap"><table>
+<tr><th>Player</th><th>Status</th><th>Acq.</th><th>What unlocks him</th><th>Keeper angle</th></tr>
+<tr><td><span class="pos">RB</span> Justice Hill (BAL)</td><td><span class="tag ok">ACTIVE</span></td><td><span class="acq wv">WAIVERS (inferred)</span></td><td>Henry injury. He's a weak handcuff, though: 1–6 carries per game, 3.9/gm, and Henry is taking 65–77% of the carries.</td><td>None</td></tr>
+<tr><td><span class="pos">RB</span> Brian Robinson Jr. (ATL)</td><td><span class="tag ok">ACTIVE</span></td><td><span class="acq wv">WAIVERS (inferred)</span></td><td>A Bijan Robinson injury (Bijan is on Get Hooked). He had 3 TDs on 14 carries in Week 4, a spike that's unlikely to repeat. His carry share is 24–40%.</td><td>None</td></tr>
+<tr><td><span class="pos">RB</span> Jonah Coleman (DEN)</td><td><span class="tag out">IR</span></td><td><span class="acq">FA</span></td><td>His return from IR could cut into RJ Harvey's work (our FLEX). Watch him as a threat to Harvey more than as an add.</td><td>Rookie</td></tr>
+</table></div>
+</section>
+
+<section id="league" class="card">
+<h2>League angle</h2>
+<h3>Competing claims: all 9 teams rank ahead of us</h3>
+<div class="tablewrap"><table>
+<tr><th>Priority</th><th>Team</th><th>Record</th><th>Need for Shipley?</th><th>Need for Jaguars D/ST?</th></tr>
+<tr><td>#1</td><td>Steel Giants</td><td>0-4</td><td>Low (5 healthy RBs)</td><td>Low (Texans, Bears)</td></tr>
+<tr><td>#2</td><td>Texas Two Step</td><td>1-3</td><td>Low (7 healthy RBs)</td><td>Low (Ravens)</td></tr>
+<tr><td>#3</td><td><b>Bower Outage</b></td><td>1-3</td><td><b>High</b>: Achane and Price on IR, Charbonnet OUT, open spot</td><td><b>High</b>: no D/ST, dropped Packers today</td></tr>
+<tr><td>#4</td><td><b>Chaseing a win</b></td><td>1-3</td><td><b>High</b>: 2 healthy RBs, Dowdle Q, open spot</td><td>Low (3 D/STs)</td></tr>
+<tr><td>#5–#7</td><td>Redemption · ALI · Imad</td><td>2-2 · 2-2 · 3-1</td><td>Low (4–5 healthy RBs each)</td><td>Low</td></tr>
+<tr><td>#8</td><td>Lamar n Order</td><td>3-1</td><td>Medium: Love and White Q</td><td>Medium: Chiefs on bye W5</td></tr>
+<tr><td>#9</td><td>Get Hooked</td><td>3-1</td><td>Medium: Hall D, Monangai Q</td><td>Low (Steelers, Patriots)</td></tr>
+</table></div>
+<h3>Opponent blocking</h3><p>Nothing material. Shipley would most help Chaseing (our Week 6 opponent) and Get Hooked (Week 7), but blocking is only a tiebreaker and we're claiming him anyway. Imad (Week 5) lost Rashee Rice to a hamstring, but has the WR depth to cover.</p>
+<h3>Recent league activity</h3><ul>
+<li>Lamar n Order dropped Darren Waller (10-06) and added then dropped Joe Mixon (the Seahawks won't sign Mixon, per Yahoo). They're scrambling at RB/TE, and Lamar Jackson is uncertain for Week 5 with an ankle injury (Yahoo).</li>
+<li>Bower Outage dropped the Packers D/ST today and sits at 17/18 roster spots, which sets up a D/ST and RB claim. They're the most likely team to beat us to both targets.</li>
+<li>ALI and Redemption traded Andrews and Tyreek Hill for Goedert (10-04). ALI keeps churning QBs (Brissett, Love).</li>
+</ul>
+</section>
+
+<section id="cuts" class="card">
+<h2>Bench cut order</h2>
+<div class="tablewrap"><table>
+<tr><th>#</th><th>Player</th><th>Status</th><th>ROS value</th><th>Keeper</th><th>Change vs last</th></tr>
+<tr class="top-cut"><td>1</td><td><span class="pos">D/ST</span> Eagles D/ST</td><td><span class="tag ok">—</span></td><td>2.5/gm; a second D/ST under a stream strategy</td><td>—</td><td>new (D/ST spot)</td></tr>
+<tr class="top-cut"><td>2</td><td><span class="pos">WR</span> Michael Pittman Jr.</td><td><span class="tag ok">ACTIVE</span></td><td>5.3/gm, WR95; PIT bye W9</td><td>No</td><td>new (back from IR)</td></tr>
+<tr><td>3</td><td><span class="pos">WR</span> Malik Washington</td><td><span class="tag ok">ACTIVE</span></td><td>9.5/gm; MIA bye W6 (same week as J. Williams)</td><td>Low</td><td>= (was 2nd behind Worthy)</td></tr>
+<tr><td>4</td><td><span class="pos">QB</span> Matthew Stafford</td><td><span class="tag ok">ACTIVE</span></td><td>15.4/gm; Dak's W14 bye cover and a trade chip</td><td>No</td><td>new to list</td></tr>
+<tr><td>5</td><td><span class="pos">WR</span> Jameson Williams</td><td><span class="tag ok">ACTIVE</span></td><td>9.7/gm, 16.2 in W4; W8 WR starter</td><td>Some</td><td>new to list</td></tr>
+<tr><td>6</td><td><span class="pos">RB</span> Alvin Kamara</td><td><span class="tag ok">ACTIVE</span></td><td>11.7/gm, 22.8 in W4; RB depth</td><td>No</td><td>new to list</td></tr>
+<tr><td>—</td><td><span class="pos">RB</span> Saquon Barkley</td><td><span class="tag q">Q · hamstring</span></td><td>Injured starter. Not cuttable.</td><td>—</td><td>—</td></tr>
+</table></div>
+<p class="muted small">The previous order (ledger 09-30) was Worthy → Washington → Harvey. Worthy has since been dropped (09-30), and Harvey is now a starter (FLEX), so both are off the list.</p>
+</section>
+
+<section id="watch" class="card">
+<h2>Watch list</h2>
+<ul>
+<li><b>Tyquan Thornton</b> (WR, KC): add if he's confirmed healthy and keeps the Rice role after KC's Week 5 bye. He had 5 catches for 111 yards and 2 TDs on 8 targets in Week 4 with Rice hurt. ESPN lists him OUT; <span class="tag q">UNCONFIRMED</span> (reports conflict).</li>
+<li><b>Xavier Worthy</b> (WR, KC): add if he gets 7+ targets again in Week 6 with Rice out (he had 7 in Week 4). We dropped him on 09-30.</li>
+<li><b>Tre' Harris</b> (WR, LAC): add if McConkey's foot keeps him out and Harris's target share stays at 16%+ (he had 5 targets in Week 4).</li>
+<li><b>Mike Gesicki</b> (TE, CIN): only matters if Kittle or Fannin gets hurt. He's FantasyPros' #3 priority this week and has scored TDs in 3 of 4 games.</li>
+</ul>
+</section>
+
+<section class="card">
+<details><summary>Glossary</summary><ul>
+<li><b>Handcuff</b>: the backup to a starting RB on the same NFL team, held as insurance in case the starter gets hurt.</li>
+<li><b>Target share / carry share</b>: a player's percentage of his team's targets or carries.</li>
+<li><b>Rolling waivers</b>: claims are awarded in priority order, and a team that wins a claim drops to last.</li>
+<li><b>Stream (D/ST)</b>: picking up a defense for one good matchup instead of holding one all season.</li>
+<li><b>Regression</b>: a stat pulled up by luck (e.g., 3 TDs on 14 carries) tends to fall back toward normal.</li>
+</ul></details>
+</section>
+<footer>Data: ESPN league 394766 synced 2026-10-06 (600-player free-agent pool, transactions); usage from ESPN public box scores for Weeks 1–4; byes from ESPN scoreboards for Weeks 5–17. Sources:
+<a href="https://www.fantasypros.com/2026/10/top-5-fantasy-football-waiver-wire-priority-pickups-week-5-2026/">FantasyPros: Top 5 priority pickups</a> ·
+<a href="https://www.fantasypros.com/2026/10/saquon-barkley-injury-fantasy-football-week-5-waiver-wire-pickups-2026/">FantasyPros: Barkley injury pickups</a> ·
+<a href="https://www.nfl.com/news/eagles-rb-saquon-barkley-hamstring-considered-week-to-week-avoids-long-term-injury">NFL.com: Barkley week to week</a> ·
+<a href="https://sports.yahoo.com/nfl/live/nfl-news-injury-updates-fantasy-football-lamar-jackson-saquon-barkley-jamarr-chase-120206335.html">Yahoo: news live (Mixon, L. Johnson, Lamar)</a> ·
+<a href="https://www.nfl.com/news/2026-nfl-fantasy-football-waiver-wire-week-5-rb-zach-charbonnet-wr-keon-coleman-among-targets">NFL.com: Week 5 waiver wire</a> ·
+<a href="https://bleacherreport.com/articles/25506693-week-5-waiver-wire-pickups-highlighted-cj-stroud-tank-bigsby-keon-coleman">Bleacher Report: Week 5 pickups</a> ·
+<a href="https://www.rotoballer.com/week-5-defense-def-streamers-starters-and-rankings-2026-fantasy-tiers-rankings/1958775">RotoBaller: Week 5 DEF</a> ·
+<a href="https://www.nbcsports.com/fantasy/football/news/2026-fantasy-football-week-5-defense-dst-rankings-and-streamers">NBC: Week 5 DST</a> ·
+<a href="https://www.fantasypros.com/2026/10/lets-stream-defenses-week-5-2026-fantasy-football/">FantasyPros: stream defenses</a>
+</footer>
+</main>
+</body>
+</html>

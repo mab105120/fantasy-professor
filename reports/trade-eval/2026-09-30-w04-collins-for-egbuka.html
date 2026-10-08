@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Trade: Collins for Egbuka</title>
+<style>
+:root{
+  --bg:#0d1117;--bg2:#11161f;--card:#161c26;--card2:#1c2330;--line:#29313f;
+  --ink:#e8ecf2;--mute:#8b96a8;--faint:#5c6778;
+  --accent:#7aa2ff;--accent-bg:rgba(122,162,255,.12);
+  --good:#4fd18b;--good-bg:rgba(79,209,139,.12);
+  --warn:#f2b64c;--warn-bg:rgba(242,182,76,.12);
+  --bad:#ff6b6b;--bad-bg:rgba(255,107,107,.12);
+  --give:#ff8f70;--get:#4fd18b;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html{color-scheme:dark}
+body{margin:0;background:radial-gradient(1200px 500px at 50% -200px,#1a2340 0%,var(--bg) 60%) no-repeat,var(--bg);color:var(--ink);
+  font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:980px;margin:0 auto;padding:32px 16px 72px}
+a{color:var(--accent)}
+b,strong{color:#fff;font-weight:650}
+
+/* header */
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700}
+h1{font-size:30px;line-height:1.2;margin:6px 0 8px;letter-spacing:-.01em}
+.meta{display:flex;flex-wrap:wrap;gap:8px;color:var(--mute);font-size:13px}
+.meta span{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+
+/* sticky section nav */
+nav.toc{position:sticky;top:0;z-index:5;margin:22px -16px 0;padding:10px 16px;background:rgba(13,17,23,.85);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.toc a{flex:none;font-size:13px;color:var(--mute);text-decoration:none;padding:4px 10px;border-radius:999px}
+nav.toc a:hover{background:var(--card2);color:var(--ink)}
+
+section{scroll-margin-top:60px}
+h2{font-size:19px;margin:40px 0 12px;display:flex;align-items:center;gap:10px}
+h2::before{content:"";width:4px;height:18px;border-radius:2px;background:var(--accent)}
+h3{font-size:15px;margin:0 0 8px}
+p{margin:8px 0}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin:12px 0}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+
+/* verdict banner */
+.verdict{display:flex;gap:18px;align-items:flex-start;border-radius:var(--radius);padding:20px;margin:24px 0 8px;border:1px solid}
+.verdict.accept{background:var(--good-bg);border-color:rgba(79,209,139,.35)}
+.verdict.decline{background:var(--bad-bg);border-color:rgba(255,107,107,.35)}
+.verdict.counter{background:var(--warn-bg);border-color:rgba(242,182,76,.35)}
+.verdict .badge{flex:none;font-weight:800;font-size:14px;letter-spacing:.08em;padding:8px 14px;border-radius:10px;color:#0d1117}
+.verdict.accept .badge{background:var(--good)}.verdict.decline .badge{background:var(--bad)}.verdict.counter .badge{background:var(--warn)}
+.verdict .call{font-size:17px;font-weight:600;margin:0 0 4px}
+.verdict .why{color:var(--mute);margin:0}
+@media (max-width:560px){.verdict{flex-direction:column}}
+
+/* KPI tiles */
+.kpi .label{font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+.kpi .val{font-size:26px;font-weight:750;font-variant-numeric:tabular-nums;margin:2px 0}
+.kpi .sub{font-size:13px;color:var(--mute)}
+.up{color:var(--good)}.down{color:var(--bad)}.flat{color:var(--mute)}
+
+/* give / get sides */
+.side{border-top:3px solid}
+.side.give{border-top-color:var(--give)}.side.get{border-top-color:var(--get)}
+.side-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.side-h .who{font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:800}
+.give .who{color:var(--give)}.get .who{color:var(--get)}
+.side-h .tot{font-size:13px;color:var(--mute)}
+.player{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.player:first-of-type{border-top:0}
+.pos{flex:none;width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:12px;font-weight:800;background:var(--card2);border:1px solid var(--line)}
+.pos.QB{color:#c9a0ff}.pos.RB{color:#4fd1c5}.pos.WR{color:#7aa2ff}.pos.TE{color:#f2b64c}.pos.DST{color:#a0aec0}
+.player .name{font-weight:650}
+.player .info{font-size:13px;color:var(--mute)}
+.player .nums{margin-left:auto;text-align:right;font-variant-numeric:tabular-nums;font-size:13px;color:var(--mute);white-space:nowrap}
+.player .nums b{display:block;font-size:16px}
+
+/* tags */
+.tag{display:inline-block;font-size:11px;font-weight:750;letter-spacing:.03em;padding:2px 7px;border-radius:6px;vertical-align:1px}
+.tag.ok{color:var(--good);background:var(--good-bg)}
+.tag.q{color:var(--warn);background:var(--warn-bg)}
+.tag.o{color:var(--bad);background:var(--bad-bg)}
+.tag.n{color:var(--accent);background:var(--accent-bg)}
+.tag.m{color:var(--mute);background:var(--card2)}
+
+/* value meter: set --give / --get widths as % of the larger side */
+.meter{margin:6px 0 2px}
+.meter .row{display:grid;grid-template-columns:90px 1fr 60px;gap:10px;align-items:center;margin:8px 0;font-size:13px}
+.meter .track{height:12px;background:var(--card2);border-radius:999px;overflow:hidden}
+.meter .fill{height:100%;border-radius:999px}
+.meter .fill.give{background:linear-gradient(90deg,#ff8f70,#ff6b6b)}
+.meter .fill.get{background:linear-gradient(90deg,#3fb67a,#4fd18b)}
+.meter .v{text-align:right;font-variant-numeric:tabular-nums;font-weight:650}
+
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--card)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{background:var(--bg2);color:var(--mute);font-weight:650;font-size:11px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody tr:hover{background:rgba(255,255,255,.02)}
+tr.chg td{background:var(--accent-bg)}
+
+/* lists, callouts */
+ul.clean{list-style:none;padding:0;margin:0}
+ul.clean li{padding:8px 0 8px 26px;position:relative;border-top:1px solid var(--line)}
+ul.clean li:first-child{border-top:0}
+ul.clean li::before{position:absolute;left:0;top:8px;font-weight:800}
+ul.pro li::before{content:"+";color:var(--good)}
+ul.con li::before{content:"−";color:var(--bad)}
+ul.risk li::before{content:"!";color:var(--warn)}
+ul.step li::before{content:"→";color:var(--accent)}
+.note{border-left:3px solid var(--accent);background:var(--accent-bg);padding:12px 14px;border-radius:0 10px 10px 0;margin:12px 0;font-size:14px}
+.note.warn{border-color:var(--warn);background:var(--warn-bg)}
+
+/* proposal packages */
+.pkg{position:relative}
+.pkg .rank{position:absolute;top:14px;right:16px;font-size:30px;font-weight:800;color:var(--faint)}
+.pkg .swap{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin:10px 0}
+.pkg .swap .arrow{color:var(--faint);font-size:20px}
+.pkg .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:750}
+.pkg .give .lbl{color:var(--give)}.pkg .get .lbl{color:var(--get)}
+.dots{display:inline-flex;gap:3px;vertical-align:middle}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--card2);border:1px solid var(--line)}
+.dots i.on{background:var(--accent);border-color:var(--accent)}
+
+details{margin-top:28px;color:var(--mute);font-size:13px}
+summary{cursor:pointer;color:var(--ink);font-weight:600}
+dl.gloss{display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;margin:12px 0}
+dl.gloss dt{font-weight:700;color:var(--ink)}dl.gloss dd{margin:0}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--faint);font-size:12px}
+</style>
+</head>
+<body><main>
+
+<div class="eyebrow">Trade evaluation · Week 4</div>
+<h1>Nico Collins → 🥊ALI🥊 for Emeka Egbuka</h1>
+<div class="meta">
+  <span>Built Wed 2026-09-30</span>
+  <span>ESPN sync Wed 09-30</span>
+  <span>The Man Wolf 3-0 · 2nd</span>
+  <span>Partner: 🥊ALI🥊 (team 1) 1-2 · 6th</span>
+</div>
+
+<nav class="toc">
+  <a href="#verdict">Verdict</a><a href="#deal">The deal</a><a href="#players">Players</a>
+  <a href="#fit">Roster fit</a><a href="#partner">Partner</a><a href="#risks">Risks</a><a href="#counter">Counter</a><a href="#next">Next steps</a>
+</nav>
+
+<section id="verdict">
+<div class="verdict decline">
+  <div class="badge">DECLINE</div>
+  <div>
+    <p class="call">Don't swap Collins for Egbuka straight up. It sells a consensus WR1 at his injury low point for a WR3 who just lost his quarterback.</p>
+    <p class="why">Confidence: <b>high</b> on the straight 1-for-1. Every value source has Collins well ahead. The only real pro is the Week 8 bye, and that isn't worth ~4–5 pts/week. If you want Egbuka, <a href="#counter">counter</a> for more.</p>
+  </div>
+</div>
+
+<div class="grid g3">
+  <div class="card kpi"><div class="label">ROS value (FantasyPros W4)</div><div class="val down">−7.6</div><div class="sub">25.9 received vs 33.5 given (−23%)</div></div>
+  <div class="card kpi"><div class="label">WR2 slot proj / wk</div><div class="val down">−4.8</div><div class="sub">ESPN ROS 16.2 → 11.4 (once Collins is healthy)</div></div>
+  <div class="card kpi"><div class="label">Roster spots</div><div class="val flat">0</div><div class="sub">1-for-1</div></div>
+</div>
+</section>
+
+<section id="deal">
+<h2>The deal</h2>
+<div class="grid g2">
+  <div class="card side give">
+    <div class="side-h"><span class="who">You give</span><span class="tot">FP value 33.5</span></div>
+    <div class="player">
+      <div class="pos WR">WR</div>
+      <div><div class="name">Nico Collins <span class="tag q">Q</span></div><div class="info">HOU · bye 8 · consensus WR11 ROS · hamstring</div></div>
+      <div class="nums"><b>21.2</b>avg pts (1 gm)</div>
+    </div>
+  </div>
+  <div class="card side get">
+    <div class="side-h"><span class="who">You get</span><span class="tot">FP value 25.9</span></div>
+    <div class="player">
+      <div class="pos WR">WR</div>
+      <div><div class="name">Emeka Egbuka <span class="tag ok">ACTIVE</span></div><div class="info">TB · bye 10 · RSJ WR28 · 2nd-year</div></div>
+      <div class="nums"><b>10.9</b>avg pts</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Value balance</h3>
+  <div class="meter">
+    <div class="row"><span>You give</span><div class="track"><div class="fill give" style="width:100%"></div></div><span class="v">33.5</span></div>
+    <div class="row"><span>You get</span><div class="track"><div class="fill get" style="width:77%"></div></div><span class="v">25.9</span></div>
+  </div>
+  <p style="color:var(--mute);font-size:13px;margin-top:8px">Source: FantasyPros Week 4 trade-value chart. A second chart points the same way with a bigger gap: Roto Street Journal W4 has Collins at 1199 (WR15) and Egbuka at 643 (WR28), so Egbuka is worth about 54% of Collins there.</p>
+</div>
+</section>
+
+<section id="players">
+<h2>Player by player</h2>
+<div class="tw"><table>
+<thead><tr><th>Player</th><th>Status</th><th class="n">Avg</th><th class="n">ROS proj</th><th>Expert consensus</th><th>Our read</th></tr></thead>
+<tbody>
+<tr><td><b>Nico Collins</b><br><span style="color:var(--mute);font-size:13px">WR · HOU · age 27</span></td><td><span class="tag q">Q</span> hamstring (Gr. 1)</td><td class="n">21.2</td><td class="n">16.2</td><td>FP ROS WR11. Trade value 33.5 (FP) and 1199 (RSJ). Ryans is "hopeful" for W4 vs DAL. Schefter gives a "decent chance."</td><td><span class="tag ok">AGREE</span> When healthy he played like a WR1: 10 targets and 7-75-1 in W1. He hasn't practiced since 09-16, so W4 is uncertain. A grade-1 strain is a short-term absence, not a season-long concern. Selling now means selling at his lowest price.</td></tr>
+<tr><td><b>Emeka Egbuka</b><br><span style="color:var(--mute);font-size:13px">WR · TB · 2nd-year</span></td><td><span class="tag ok">ACTIVE</span></td><td class="n">10.9</td><td class="n">11.4</td><td>RSJ WR28 and FP value 25.9. CBS calls him a possible W4 sit with rookie Jalon Daniels at QB. Yahoo calls him a "buy-low" but says the season "doesn't inspire confidence."</td><td><span class="tag ok">AGREE</span> His volume is steady: 6, 5 and 9 targets, and 11.3 / 10.3 / 11.2 pts. His ceiling isn't there yet (long of 63 yds in a game). With Mayfield out (thumb, W7–8 earliest), expect WR3 production for 3–4 weeks. McMillan's injury (PCL, 6–8 wks) should add targets, but they come from an undrafted rookie QB.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="fit">
+<h2>Roster fit</h2>
+<div class="tw"><table>
+<thead><tr><th>Slot</th><th>Before</th><th>After</th><th class="n">Δ proj/wk</th></tr></thead>
+<tbody>
+<tr><td>WR1</td><td>Chris Olave</td><td>Chris Olave</td><td class="n flat">—</td></tr>
+<tr class="chg"><td>WR2</td><td>Nico Collins (16.2)</td><td>Emeka Egbuka (11.4)</td><td class="n down">−4.8</td></tr>
+<tr><td>FLEX ×2</td><td>Tuten / Kittle</td><td>Tuten / Kittle</td><td class="n flat">—</td></tr>
+<tr><td>WR bench</td><td>J. Williams, Pittman, M. Washington</td><td>unchanged</td><td class="n flat">—</td></tr>
+</tbody></table></div>
+<p style="color:var(--mute);font-size:13px">Projections are ESPN rest-of-season averages per game. If Collins misses W4, Egbuka (≈11) would outscore Jameson Williams (7.6/gm) this week only. That short-term edge disappears once Collins returns.</p>
+<div class="grid g2">
+  <div class="card"><h3>Why it helps</h3><ul class="clean pro">
+    <li><b>W8 bye relief:</b> HOU is off in W8 along with Olave, Kamara (NO) and Kittle (SF), in the game against Lamar n Order (3-0). Egbuka's bye is W10.</li>
+    <li>Removes the hamstring risk, which tends to linger or recur.</li>
+    <li>Egbuka is a 2nd-year player, so he adds a small amount of keeper value.</li>
+  </ul></div>
+  <div class="card"><h3>What it costs</h3><ul class="clean con">
+    <li>About 4–5 pts/week in the WR2 slot for the rest of the season, including the playoffs.</li>
+    <li>The W10 bye adds Egbuka to Saquon, Harvey and the Eagles D/ST (PHI/DEN), so it creates a new collision.</li>
+    <li>Strategy says WR starters should be "volume over ceiling." Egbuka's volume (6.7 tgt/gm) is weaker than Collins' (10 in his only full game).</li>
+  </ul></div>
+</div>
+</section>
+
+<section id="partner">
+<h2>Why ALI would say yes</h2>
+<div class="card">
+<p>ALI is 1-2, 6th, the bubble seed. They beat us in W3. Their WR group is Egbuka / D. Smith / Nabers (7.2/gm) / Odunze / Wicks / A. Mitchell (IR). That's plenty of bodies with no WR1. They're also an active trader: they already moved Flowers + Concepcion to Steel Giants for Nabers + Wicks + Mitchell, buying a name WR on a dip.</p>
+<div class="note warn">This deal is a clear win for ALI. They get a WR1 at a discount and an easy yes, and it strengthens a team we could meet in the playoffs. There's also a pending pitch to them (Stafford → Hubbard/Henderson from the 09-30 team review). Don't send both at the same time; decide which one you actually want.</div>
+</div>
+</section>
+
+<section id="risks">
+<h2>Risks &amp; exposure</h2>
+<div class="card"><ul class="clean risk">
+<li><b>Collins injury:</b> Q, DNP for two weeks. Wednesday's (09-30) Texans report isn't out yet. A limited session Wed–Fri would support holding. A third DNP week would weaken our position, but a grade-1 strain still means weeks, not months.</li>
+<li><b>Egbuka QB:</b> Mayfield out at least 3 weeks (earliest W7, possibly W8). Daniels went 0-for-3 with an INT in relief.</li>
+<li><b>Byes:</b> Keeping Collins means a heavy W8 (4 starters out). Plan for it with Stafford/Kittle trades already in motion (London's bye is W11), not by selling Collins cheaply.</li>
+<li><b>Keeper value:</b> Egbuka (2nd-year) has some. Collins (27) would be a reasonable keeper too under the flat-cost rule. This is roughly a wash.</li>
+</ul></div>
+</section>
+
+<section id="counter">
+<h2>Counter-offer</h2>
+<div class="card">
+<p><b>Collins → Egbuka + TreVeyon Henderson</b> (RB NE, 2nd-year, ACTIVE, 8.75/gm, Stevenson backup).</p>
+<ul class="clean pro">
+  <li>Covers most of the value gap and follows strategy rule #1 (buy RB depth). Henderson also adds keeper optionality.</li>
+  <li>ALI can spare Henderson: he's their RB5 behind Gibbs, Jeanty and Hubbard.</li>
+  <li>If they refuse, <b>hold Collins</b>. Fallback: Egbuka + Wicks is not enough; don't take it.</li>
+</ul>
+<p style="color:var(--mute);font-size:13px">Judgment call: I didn't find a same-source trade value for Henderson, so "covers most of the gap" is an estimate. Only one ALI deal should be live at a time, so this replaces the Stafford → Henderson fallback.</p>
+</div>
+</section>
+
+<section id="next">
+<h2>Next steps</h2>
+<div class="card"><ul class="clean step">
+<li><b>Default:</b> hold Collins. Watch the Wed/Thu/Fri Texans practice reports. If he's still DNP Friday, start Jameson Williams in W4.</li>
+<li><b>If you want to deal with ALI:</b> send the Egbuka + Henderson counter, <i>or</i> the Stafford → Hubbard pitch, not both.</li>
+<li><b>Revisit after two healthy Collins games</b> (the 09-19 rule). Then he's a sell-high chip if the W8 bye still worries you.</li>
+</ul></div>
+</section>
+
+<details>
+<summary>Glossary</summary>
+<dl class="gloss">
+<dt>ROS</dt><dd>Rest of season: value from now through the fantasy playoffs, not points already scored.</dd>
+<dt>Trade value</dt><dd>A chart number (FantasyPros, Roto Street Journal) that puts every player on one scale so a trade's two sides can be added up and compared.</dd>
+<dt>Targets / gm</dt><dd>Passes thrown at a receiver per game. It's the best early predictor of PPR scoring, because catches are worth a point each here.</dd>
+<dt>Grade-1 strain</dt><dd>The mildest muscle strain category, usually 1–3 weeks out. Hamstrings are known to re-aggravate.</dd>
+<dt>Keeper value</dt><dd>Worth to next year's team. Here the cost is a flat round-skip, so a young breakout player is cheap to keep.</dd>
+</dl>
+</details>
+
+<footer>Sources: ESPN Fantasy API (rosters, projections, designations, sync 09-30) ·
+<a href="https://www.fantasypros.com/2026/09/fantasy-football-trade-value-chart-week-4-2026/">FantasyPros W4 trade value chart</a> ·
+<a href="https://www.rotostreetjournal.com/2026/09/29/2026-fantasy-football-week-4-trade-value-chart-wide-receivers/">Roto Street Journal W4 WR chart</a> ·
+<a href="https://www.cbssports.com/fantasy/football/news/fantasy-football-2026-week-4-wr-preview/">CBS W4 WR preview</a> ·
+<a href="https://sports.yahoo.com/articles/updated-emeka-egbuka-fantasy-outlook-114648342.html">Yahoo Egbuka outlook</a> ·
+<a href="https://www.nbcsports.com/fantasy/football/player-news/2026-09-27/decent-chance-nico-collins-returns-for-week-4">NBC: Collins "decent chance" W4</a> ·
+<a href="https://www.cbssports.com/fantasy/football/news/texans-nico-collins-may-return-in-week-4/">CBS: Collins may return W4</a> ·
+<a href="https://www.espn.com/nfl/story/_/id/50052996/buccaneers-mayfield-thumb-least-three-weeks-bowles-says">ESPN: Mayfield out 3+ wks</a> ·
+<a href="https://www.nfl.com/news/buccaneers-qb-baker-mayfield-thumb-out-at-least-three-weeks-jalon-daniels">NFL.com: Daniels to start</a> ·
+<a href="https://www.buccaneers.com/news/nfl-schedule-2026-bucs-information-regular-season-opponents-preseason">Buccaneers 2026 schedule (bye W10)</a>.
+Both players checked for injury/legal status: Collins Q (hamstring), Egbuka active with no injury or off-field issues found. Henderson is ACTIVE on ESPN (no separate news check).</footer>
+</main></body></html>

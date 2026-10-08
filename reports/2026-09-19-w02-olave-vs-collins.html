@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Olave vs Collins</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#E9EAEC; --card:#FFFFFF; --ink:#15181D; --ink-2:#3A4049; --muted:#6B727D;
+  --rule:#C7CAD0; --rule-hard:#15181D; --navy:#173A5C; --navy-soft:#E2E8EF;
+  --up:#0E7A5F; --up-soft:#DCEDE7; --down:#B23A33; --down-soft:#F3E0DE;
+  --flag:#B87814; --flag-soft:#F6E9D2; --chip:#DFE1E5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+    --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+    --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+    --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111318; --card:#191C22; --ink:#E9EBEF; --ink-2:#C2C7D0; --muted:#8C94A1;
+  --rule:#2C313A; --rule-hard:#454C58; --navy:#7FB0E2; --navy-soft:#1B2733;
+  --up:#3FBE96; --up-soft:#12251F; --down:#E87C73; --down-soft:#2A1918;
+  --flag:#E7AE4E; --flag-soft:#2A2114; --chip:#262B33;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:"Barlow","Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.5;margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px 56px}
+a{color:var(--navy)}
+
+.mast{background:#0B0D11;color:#E9EBEF;padding:26px 16px 22px;border-bottom:4px solid var(--flag)}
+.mast-inner{max-width:928px;margin:0 auto;display:flex;flex-wrap:wrap;gap:14px 28px;align-items:flex-end;justify-content:space-between}
+.mast h1{font-family:"Oswald",Impact,sans-serif;font-weight:700;font-size:clamp(32px,6.6vw,52px);line-height:.94;margin:0;text-transform:uppercase}
+.mast h1 em{font-style:normal;color:var(--flag);display:block}
+.mast-meta{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:#9AA3B0;line-height:1.9}
+
+h2{font-family:"Oswald",sans-serif;font-weight:600;font-size:22px;letter-spacing:.02em;text-transform:uppercase;margin:40px 0 14px;padding-bottom:6px;border-bottom:2px solid var(--rule-hard)}
+h3{font-family:"Oswald",sans-serif;font-weight:500;font-size:19px;margin:0 0 6px}
+p{margin:0 0 12px;color:var(--ink-2)}
+strong{color:var(--ink)}
+
+.frame{margin-top:26px;background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:18px 22px}
+.frame h3{margin-bottom:8px}
+.frame p{font-size:15px;margin-bottom:6px}
+.frame ul{margin:6px 0 0;padding-left:20px;color:var(--ink-2);font-size:15px}
+.frame li{margin-bottom:4px}
+
+.lede{margin-top:18px;display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:680px){.lede{grid-template-columns:1fr 1fr}}
+.pick{background:var(--card);border:1px solid var(--rule);border-left:6px solid var(--up);border-radius:8px;padding:18px 20px}
+.pick.alt{border-left-color:var(--flag)}
+.pick .slot{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.pick .name{font-family:"Oswald",sans-serif;font-size:28px;font-weight:600;line-height:1.05;margin:0}
+.pick .tag{color:var(--muted);font-size:14px;margin-bottom:10px}
+.pick p{font-size:15px;margin-bottom:6px}
+.status{background:var(--navy-soft);border-radius:8px;padding:14px 18px;margin-top:14px;font-size:15px}
+.status b{color:var(--navy)}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+.chip{font-family:"IBM Plex Mono",monospace;font-size:11.5px;padding:3px 9px;border-radius:999px;background:var(--chip);color:var(--ink-2)}
+.chip.up{background:var(--up-soft);color:var(--up)}
+.chip.down{background:var(--down-soft);color:var(--down)}
+.chip.flag{background:var(--flag-soft);color:var(--flag)}
+
+.why{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:20px 22px;margin-bottom:14px}
+.def{border-left:3px solid var(--flag);background:var(--flag-soft);padding:8px 14px;border-radius:0 6px 6px 0;font-size:14.5px;margin:10px 0 14px}
+.def b{color:var(--flag)}
+
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--rule);border-radius:8px;overflow:hidden;font-size:15px}
+th{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-align:left;color:var(--muted);padding:10px 14px;border-bottom:2px solid var(--rule-hard);background:var(--navy-soft)}
+td{padding:11px 14px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+td.who{white-space:nowrap;color:var(--ink);font-weight:600}
+td.who span{display:block;font-weight:400;font-size:12.5px;color:var(--muted)}
+.verdict{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.verdict.pass{color:var(--down)}.verdict.taken{color:var(--muted)}.verdict.maybe{color:var(--flag)}.verdict.next{color:var(--up)}
+@media(max-width:640px){table,thead,tbody,tr,th,td{display:block}thead{display:none}tr{border-bottom:2px solid var(--rule)}td{border:0;padding:4px 14px}td.who{padding-top:12px}tr td:last-child{padding-bottom:12px}}
+
+.notes{display:grid;gap:12px}
+.note{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px 18px;display:flex;gap:14px;align-items:flex-start}
+.note .n{font-family:"Oswald",sans-serif;font-size:26px;font-weight:700;color:var(--flag);line-height:1}
+.note p{margin:0;font-size:15px}
+
+.sources{font-size:13.5px;color:var(--muted);columns:1}
+@media(min-width:680px){.sources{columns:2}}
+.sources li{margin-bottom:4px;break-inside:avoid}
+.foot{margin-top:40px;padding-top:14px;border-top:1px solid var(--rule);font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);letter-spacing:.04em}
+.cmp{display:grid;gap:14px;grid-template-columns:1fr;margin-top:18px}
+@media(min-width:680px){.cmp{grid-template-columns:1fr 1fr}}
+.cmp .pick .name small{display:block;font-family:"Barlow",sans-serif;font-size:14px;font-weight:400;color:var(--muted);margin-top:2px}
+td.num{font-family:"IBM Plex Mono",monospace;white-space:nowrap}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-inner">
+    <h1>Olave vs Collins<em>Two WR1s · Same Value, Different Shape</em></h1>
+    <div class="mast-meta">
+      The Man Wolf · D League (394766)<br>
+      Sat 2026-09-19 · sync 21:04 · Week 2 in progress
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="grid" style="margin-top:26px">
+    <div class="stat"><div class="k">ESPN rest-of-season</div><div class="v">14.7 vs 14.65</div><div class="s">Points per game, Olave vs Collins. Identical within rounding.</div></div>
+    <div class="stat"><div class="k">Trade market (FantasyPros W2)</div><div class="v">40.4 vs 39.1</div><div class="s">Trade-value units. The market sees the same asset.</div></div>
+    <div class="stat"><div class="k">Available this week</div><div class="v">Olave only</div><div class="s">Collins OUT (grade-1 hamstring), ~2 games. Olave Q, precautionary.</div></div>
+  </section>
+
+  <section class="frame">
+    <h3>The short version</h3>
+    <p>On paper these are the same player: same projection, same trade value, drafted a round apart. The difference is <strong>how</strong> each gets to ~14.7 a game. Olave earns it on <strong>volume</strong> — a high-floor, catch-heavy profile that full PPR rewards. Collins earns it on <strong>efficiency and touchdowns</strong> — a higher single-week ceiling with a slightly lower floor. Right now Olave is more valuable to this roster purely because he is playing; once Collins has two clean games back, the comparison is a coin flip that tilts toward Collins on ceiling.</p>
+  </section>
+
+  <h2>1 · Side by side</h2>
+  <table>
+    <thead><tr><th></th><th>Chris Olave · NO</th><th>Nico Collins · HOU</th></tr></thead>
+    <tbody>
+      <tr><td class="who">Draft cost</td><td>Round 4, pick 32</td><td>Round 3, pick 22</td></tr>
+      <tr><td class="who">Week 1 line</td><td class="num">13 tgt · 10 rec · 182 yds · 0 TD → <strong>28.2</strong></td><td class="num">10 tgt · 7 rec · 75 yds · 1 TD → <strong>21.2</strong></td></tr>
+      <tr><td class="who">Week 1 vs projection</td><td class="num">28.2 vs 14.8 (+13.4)</td><td class="num">21.2 vs 15.6 (+5.6)</td></tr>
+      <tr><td class="who">ESPN ROS projection</td><td class="num">249.8 total · 14.69 / gm</td><td class="num">249.1 total · 14.65 / gm</td></tr>
+      <tr><td class="who">In-season position rank</td><td>WR5</td><td>WR9</td></tr>
+      <tr><td class="who">FantasyPros trade value (W2)</td><td class="num">40.4</td><td class="num">39.1</td></tr>
+      <tr><td class="who">Status today</td><td><span class="verdict maybe">Questionable</span> — hamstring, added Thu, limited Thu/Fri; beat reporting calls it precautionary, expected to play Sun at BAL</td><td><span class="verdict pass">Out W2</span> — grade-1 hamstring strain in practice; "week to week", ~2 games expected, timeline "fluid"</td></tr>
+      <tr><td class="who">Injury history</td><td>Multiple concussions (2024 season-ender). Low-frequency, high-severity.</td><td>Hamstring: 5 games missed in 2024, now a second strain. Soft-tissue recurrence risk.</td></tr>
+      <tr><td class="who">Age / keeper</td><td>26 · flat round-skip cost</td><td>27 · flat round-skip cost</td></tr>
+    </tbody>
+  </table>
+
+  <h2>2 · Two ways to score 14.7</h2>
+  <div class="cmp">
+    <div class="pick">
+      <div class="slot">Profile A · volume</div>
+      <p class="name">Chris Olave<small>The target hog</small></p>
+      <p>13 targets in Week 1 on top of a 2025 run with Tyler Shough of 48 catches, 660 yards and 6 TD in 8 games — about six catches and 82 yards per game. The Saints trail a lot, and trailing teams throw, which quietly feeds a WR1's target count.</p>
+      <p><strong>Floor:</strong> high. A 60-yard, no-TD day is still 13–14 points because of the receptions.</p>
+      <p><strong>Ceiling:</strong> comes from yardage, not scores. He has never been the Saints' red-zone target.</p>
+    </div>
+    <div class="pick alt">
+      <div class="slot">Profile B · efficiency + touchdowns</div>
+      <p class="name">Nico Collins<small>The big-play, red-zone target</small></p>
+      <p>Fewer catches, more yards per catch, and he <em>is</em> Houston's red-zone target. Week 1 was a textbook Collins line — 7 catches, modest yards, a touchdown. Stroud's offense is the better environment of the two.</p>
+      <p><strong>Floor:</strong> a little lower. A 5-catch, no-TD day is ~10 points where Olave's equivalent is ~14.</p>
+      <p><strong>Ceiling:</strong> higher. Top-5 WR per-game production in 2024 when healthy.</p>
+    </div>
+  </div>
+
+  <div class="def"><b>Target share</b> — the fraction of a team's pass attempts thrown to one player. In PPR it is the stickiest predictor of value because every catch is a point regardless of yardage. Olave's is elite; Collins' is high but he converts it into fewer, longer catches.</div>
+  <div class="def"><b>Grade-1 hamstring strain</b> — the mildest tier (micro-tears, no major fibre damage). Typical return is 1–3 weeks, but hamstrings re-strain easily when a player comes back early, which is why beat writers hedge with "fluid".</div>
+
+  <h2>3 · What it means for this roster</h2>
+  <div class="notes">
+    <div class="note"><div class="n">1</div><p><strong>Olave is the more valuable player to you right now</strong>, on availability alone. He is the only healthy WR1 while Collins and Pittman occupy both IR slots. The comparison only flips once Collins is back and the hamstring has held for two games.</p></div>
+    <div class="note"><div class="n">2</div><p><strong>They are complementary, not redundant.</strong> In a 2 WR + 2 FLEX lineup you want both: Olave as the safe weekly start, Collins as the ceiling play. Do not treat "which one" as a real question unless a trade forces it.</p></div>
+    <div class="note"><div class="n">3</div><p><strong>Collins' return forces a cut around Week 4.</strong> Both IR slots are full, so activating him means dropping someone. Decide the weakest bench hold now (Bigsby / Allgeier per the Week 2 roster review) rather than on the Tuesday he's cleared.</p></div>
+    <div class="note"><div class="n">4</div><p><strong>Keeper math is a wash.</strong> Both are prime-age veterans at a flat round-skip cost; either is a legitimate keeper if they finish top-12. Neither is the "nearly free" late-round breakout the strategy doc prizes.</p></div>
+    <div class="note"><div class="n">5</div><p><strong>If one ever has to go:</strong> sell Collins only <em>after</em> two healthy games (his price is depressed while he sits), or sell Olave now if a WR1-for-WR1 swap is on offer. Never either of them for a depth package — three roster spots of value is not one roster spot of value when you can only start seven skill players.</p></div>
+  </div>
+
+  <div class="status"><b>Consensus check:</b> industry has both as WR1s in the 8–12 range rest-of-season, with Olave slightly ahead this week only because he is playing. This report agrees.</div>
+
+  <h2>Sources</h2>
+  <ul class="sources">
+    <li><a href="https://www.fantasypros.com/2026/09/fantasy-football-trade-value-chart-week-2-2026/">FantasyPros — Trade Value Chart, Week 2 (2026)</a></li>
+    <li><a href="https://www.fantasypros.com/nfl/news/608868/chris-olave-hamstring-listed-questionable-week-2.php">FantasyPros — Olave (hamstring) questionable, Week 2</a></li>
+    <li><a href="https://athlonsports.com/nfl/new-orleans-saints/saints-chris-olave-chase-young-injury-ravens">Athlon — Saints injury updates heading into Week 2</a></li>
+    <li><a href="https://www.nbcsports.com/fantasy/football/news/2026-new-orleans-saints-fantasy-preview-tyler-shough-and-chris-olave-lead-the-offense">NBC Sports — 2026 Saints fantasy preview (Shough–Olave)</a></li>
+    <li><a href="https://www.neworleanssaints.com/news/quarterback-tyler-shough-receiver-chris-olave-growing-as-offensive-force-for-new-orleans-saints">Saints.com — Shough and Olave growing as an offensive force</a></li>
+    <li><a href="https://www.houstonchronicle.com/sports/texans/article/nico-collins-injury-hamstring-fantasy-22435567.php">Houston Chronicle — Collins hamstring injury</a></li>
+    <li><a href="https://bleacherreport.com/articles/25500826-nico-collins-injury-update-latest-rumors-texans-wrs-timeline-return-hamstring-issue">Bleacher Report — Collins timeline to return</a></li>
+    <li><a href="https://www.profootballnetwork.com/what-happened-nico-collins-latest-update-texans-week-2-2026-bengals/">PFN — Collins out Week 2 vs Bengals</a></li>
+    <li><a href="https://www.draftsharks.com/fantasy/injury-history/nico-collins/10796">Draft Sharks — Collins injury history</a></li>
+  </ul>
+
+  <div class="foot">Fantasy Professor · data: data/teams.json, data/week_stats.json, data/draft_results.json (sync 2026-09-19 21:04) · Week 2 stats are a snapshot, not final.</div>
+</main>
+</body>
+</html>
