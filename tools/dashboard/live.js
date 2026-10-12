@@ -217,7 +217,7 @@
         <span class="tag ${cls}">${cls === "mw" ? "Man Wolf" : cls === "op" ? esc(shortName(S.opp)) : esc(abbrev(p.fantasy_team_id))}</span>
         <span class="lc-st small"><span class="fstat ${fs.replace(/d$/, "")}"><i aria-hidden="true">${icon}</i>${lab}</span>${lp ? '<span class="lastp" title="Named in the last play">★ Last play</span>' : ""}
         <span>${p.position === "D/ST" ? "team defense" : esc(statText(p.stats || {}))}</span></span>
-        <span class="lc-pts">${f1(p.points)}</span></li>`;
+        <span class="lc-pts">${f1(p.points)}</span>${breakdown(p)}</li>`;
     }).join("");
   }
   function renderLiveCards() {
@@ -267,7 +267,7 @@
         <div class="lc-prob">${d.win_probability ? `<div class="lc-wprow">${wpRing(d.win_probability, g)}</div>${spark(d.win_probability, g)}` : '<span class="muted small">Win probability loading…</span>'}</div>
       </div>
       <div class="lc-players">
-        ${ours.length || others.length ? `<p class="fkey muted"><span class="fstat on"><i>●</i>On field</span><span class="fstat rz"><i>◎</i>Red zone</span><span class="fstat off"><i>○</i>Sideline</span><span>from possession, not individual snaps · ★ = named in the last play</span></p>` : ""}
+        ${ours.length || others.length ? `<p class="fkey muted"><span class="fstat on"><i>●</i>On field</span><span class="fstat rz"><i>◎</i>Red zone</span><span class="fstat off"><i>○</i>Sideline</span><span>from possession, not individual snaps · ★ = named in the last play</span></p>${PBK_KEY}` : ""}
         ${ours.length ? `<h4>${esc(shortName(S.me))} vs ${esc(shortName(S.opp))}</h4><ul>${playerRows(ours, s)}</ul>` : ""}
         ${others.length ? `<h4>Other starters in this game</h4><ul class="others">${playerRows(others, s)}</ul>` : ""}
         ${!ours.length && !others.length ? '<p class="muted small">No league starters in this game.</p>' : ""}

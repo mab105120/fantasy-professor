@@ -88,7 +88,7 @@ section.is-live .gres{display:none}
 .lc-players{margin-top:12px;border-top:1px solid var(--border);padding-top:8px}
 .lc-players h4{margin:6px 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-2)}
 .lc-players ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:4px 16px}
-.lc-players li{display:grid;grid-template-columns:minmax(0,1fr) auto 44px;grid-template-areas:"pn tag pts" "st st pts";gap:0 8px;align-items:center;padding:5px 8px;border-radius:8px;background:var(--surface)}
+.lc-players li{display:grid;grid-template-columns:minmax(0,1fr) auto 44px;grid-template-areas:"pn tag pts" "st st pts" "bk bk pts";gap:0 8px;align-items:center;padding:5px 8px;border-radius:8px;background:var(--surface)}
 .lc-players li.mw{box-shadow:inset 3px 0 0 var(--s1)} .lc-players li.op{box-shadow:inset 3px 0 0 var(--s2)}
 .lc-pn{grid-area:pn;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lc-players .tag{grid-area:tag} .lc-st{grid-area:st;color:var(--text-2);font-variant-numeric:tabular-nums}
@@ -132,3 +132,9 @@ section.is-live .gres{display:none}
 .pbk-txt .prov{font-style:normal;font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.04em}
 .pbk-key{display:flex;flex-wrap:wrap;gap:4px 12px;margin:8px 0 2px}
 .pbk-key span{display:inline-flex;align-items:center;gap:4px} .pbk-key .pk{display:inline-block;width:12px;height:8px;border-radius:2px}
+
+/* points breakdown inside live game card rows */
+.lc-players li .pbk{grid-area:bk;margin-top:4px}
+.lc-players li .pbar-bk{max-width:none}
+.lc-players li .pbk-txt{font-size:11px}
+.lcard .pbk-key{margin:2px 0 4px;font-size:11px}
