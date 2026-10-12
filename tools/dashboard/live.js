@@ -49,7 +49,7 @@
     S.me = L.matchup?.my_team_id; S.opp = L.matchup?.opponent_id;
     renderScore(L.matchup);
     renderGames();
-    renderSituations();
+    renderLiveCards();
     loadGameDetails();
     renderSidebar();
     renderCards();
@@ -136,7 +136,8 @@
     });
   }
 
-  // ---------- 2b. live field strip: ball spot, line to gain, possession, red zone, timeouts, last play
+  // ---------- 2b. live game card (in-progress games only): score + clock, situation + field,
+  // win probability ring + sparkline, fantasy stat lines, collapsible drive/scoring/team detail.
   // Field runs left = away end zone (0) to right = home end zone (100).
   function ballSpot(g, s) {
     const m = (s.possession_text || "").match(/^([A-Z]{2,3})?\s*(\d{1,2})$/);
@@ -148,17 +149,74 @@
     const togo = goal ? (dir > 0 ? 100 : 0) : Math.min(100, Math.max(0, x + dir * (s.distance || 0)));
     return { x, togo, dir };
   }
-  function renderSituations() {
+  const QTR = 900;
+  function clockRing(g) {
+    const per = g.period || 1, left = g.clock_s ?? QTR;
+    const frac = Math.min(1, ((Math.min(per, 4) - 1) * QTR + (QTR - left)) / (4 * QTR));
+    const r = 15, c = 2 * Math.PI * r;
+    const lab = per > 4 ? "OT" : `Q${per}`;
+    return `<span class="lc-clock" tabindex="0" data-v="${lab} ${esc(g.display_clock || "")}" data-l="${Math.round(frac * 100)}% of regulation played">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="${r}" class="ring-track"/><circle cx="20" cy="20" r="${r}" class="ring-clock" stroke-dasharray="${(frac * c).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 20 20)"/></svg>
+      <span><b>${lab}</b><small>${esc(g.display_clock || "")}</small></span></span>`;
+  }
+  function wpRing(wp, g) {
+    const home = wp.home_pct, away = 100 - home, lead = home >= away ? [g.home, home, "s2"] : [g.away, away, "s1"];
+    const r = 24, c = 2 * Math.PI * r, gap = 2;
+    const arc = (pct, off, cls) => `<circle cx="30" cy="30" r="${r}" class="ring-${cls}" stroke-dasharray="${Math.max(0, (pct / 100) * c - gap).toFixed(1)} ${c.toFixed(1)}" stroke-dashoffset="${(-off / 100 * c).toFixed(1)}" transform="rotate(-90 30 30)"/>`;
+    const d = wp.last_play_delta || 0, dTeam = d >= 0 ? g.home : g.away;
+    return `<div class="lc-wp" tabindex="0" data-v="${esc(g.away)} ${f1(away)}% · ${esc(g.home)} ${f1(home)}%" data-l="ESPN win probability">
+      <svg viewBox="0 0 60 60" role="img" aria-label="${esc(lead[0])} ${f1(lead[1])}% to win">${arc(away, 0, "s1")}${arc(home, away, "s2")}</svg>
+      <span class="lc-wpc"><b>${Math.round(lead[1])}%</b><small>${esc(lead[0])}</small></span></div>
+      ${Math.abs(d) >= 0.1 ? `<span class="lc-delta muted small">${d >= 0 ? "▲" : "▼"} ${esc(dTeam)} ${f1(Math.abs(d))} last play</span>` : ""}`;
+  }
+  function spark(wp, g) {
+    const pts = wp.series, n = pts.length;
+    if (n < 2) return "";
+    const W = 150, H = 48, x = (i) => (i / (n - 1)) * W, y = (v) => H - (v / 100) * H;
+    const hits = pts.map((v, i) => `<rect x="${(x(i) - W / n / 2).toFixed(1)}" y="0" width="${(W / n).toFixed(1)}" height="${H}" fill="transparent" data-v="${esc(g.home)} ${f1(v)}%" data-l="Home win probability through the game"></rect>`).join("");
+    // y: top = home certain, middle = 50/50, bottom = away certain; x: kickoff -> now
+    return `<div class="lc-spark"><div class="lc-sparkrow"><span class="lc-sparky muted"><span>${esc(g.home)}</span><span>${esc(g.away)}</span></span>
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${esc(g.home)} win probability from kickoff to now">
+      <line x1="0" x2="${W}" y1="${H / 2}" y2="${H / 2}" class="wpmid"/><polyline points="${pts.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ")}" class="wpline"/>${hits}</svg></div>
+      <span class="lc-sparkax muted"><span>kickoff</span><span>50/50 line</span><span>now</span></span></div>`;
+  }
+  // "12 car 57 yds · 2-15 (3 tgt)", "14/22 187 yds 1 TD 1 INT"
+  function statText(st) {
+    const out = [], td = (n) => (n ? ` ${n} TD` : "");
+    if (st.passingAttempts) out.push(`${st.passingCompletions || 0}/${st.passingAttempts} ${st.passingYards || 0} yds${td(st.passingTouchdowns)}${st.passingInterceptions ? ` ${st.passingInterceptions} INT` : ""}`);
+    if (st.rushingAttempts) out.push(`${st.rushingAttempts} car ${st.rushingYards || 0} yds${td(st.rushingTouchdowns)}`);
+    if (st.receivingTargets || st.receivingReceptions) out.push(`${st.receivingReceptions || 0}-${st.receivingYards || 0}${td(st.receivingTouchdowns)} (${st.receivingTargets || 0} tgt)`);
+    if (st.lostFumbles) out.push(`${st.lostFumbles} fum lost`);
+    return out.join(" · ") || "no stats yet";
+  }
+  function playerRows(ps) {
+    const abbrev = (id) => S.rosters?.data?.teams.find((t) => t.team_id === id)?.abbrev || "";
+    return ps.map((p) => {
+      const cls = p.fantasy_team_id === S.me ? "mw" : p.fantasy_team_id === S.opp ? "op" : "";
+      return `<li class="${cls}"><span class="lc-pn">${esc(p.name)} <span class="muted small">${esc(p.position)} · ${esc(p.pro_team)}</span></span>
+        <span class="tag ${cls}">${cls === "mw" ? "Man Wolf" : cls === "op" ? esc(shortName(S.opp)) : esc(abbrev(p.fantasy_team_id))}</span>
+        <span class="lc-st small">${p.position === "D/ST" ? "team defense" : esc(statText(p.stats || {}))}</span>
+        <span class="lc-pts">${f1(p.points)}</span></li>`;
+    }).join("");
+  }
+  function renderLiveCards() {
     document.querySelectorAll("section.game[id^='g-']").forEach((sec) => {
       const g = S.game.get(sectionTeams(sec)[0]);
-      const s = g?.state === "in" ? g.situation : null;
-      let el = sec.querySelector(".gsit");
-      if (!s) return el?.remove();
-      if (!el) { sec.querySelector(".gres")?.insertAdjacentHTML("afterend", '<div class="gsit"></div>'); el = sec.querySelector(".gsit"); }
-      if (!el) return;
-      const spot = ballSpot(g, s);
+      let el = sec.querySelector(".lcard");
+      if (g?.state !== "in") { el?.remove(); sec.classList.remove("is-live"); return; }
+      if (!el) {
+        sec.querySelector(".ghead").insertAdjacentHTML("afterend", `<div class="lcard" data-id="${g.id}"></div>`);
+        el = sec.querySelector(".lcard");
+      }
+      sec.classList.add("is-live");
+      const open = new Set([...el.querySelectorAll("details[open]")].map((d) => d.dataset.k)); // keep expanded sections open across refreshes
+      const s = g.situation || {}, d = S.detail[g.id] || {}, cd = d.current_drive;
       const pcls = team(s.possession) === team(g.away) ? "s1" : "s2";
-      const to = (n) => (n == null ? "" : "●".repeat(Math.max(0, n)) + "○".repeat(Math.max(0, 3 - n)));
+      const pips = (n) => `<span class="pips" aria-label="${n ?? 0} timeouts">${[0, 1, 2].map((i) => `<i class="${i < (n ?? 0) ? "on" : ""}"></i>`).join("")}</span>`;
+      const teamRow = (ab, sc, q, to, cls) => `<div class="lc-team"><i class="key ${cls}"></i><b>${esc(ab)}</b>
+        ${team(s.possession) === team(ab) ? '<span class="lc-ball" title="Has the ball">◀</span>' : '<span class="lc-ball"></span>'}
+        <span class="lc-sc" tabindex="0" data-v="${sc}" data-l="By quarter: ${q.join(" · ") || "—"}">${sc}</span>${pips(to)}</div>`;
+      const spot = ballSpot(g, s);
       const field = spot ? `<div class="field" role="img" aria-label="${esc(s.possession || "")} ball, ${esc(s.down_distance_text || "")}">
           <span class="fez l">${esc(g.away)}</span><span class="fez r">${esc(g.home)}</span>
           <span class="frz ${spot.dir > 0 ? "r" : "l"}${s.is_red_zone ? " on" : ""}"></span>
@@ -166,68 +224,52 @@
           <i class="flos" style="left:${spot.x}%" tabindex="0" data-v="Line of scrimmage" data-l="${esc(s.possession_text)}"></i>
           <i class="ftogo" style="left:${spot.togo}%" tabindex="0" data-v="Line to gain" data-l="${esc(s.short_text || "")}"></i>
           <i class="fball ${pcls}" style="left:${spot.x}%"></i></div>` : "";
-      el.innerHTML = `<div class="sitrow"><span class="poss ${pcls}">${esc(s.possession || "—")} ball</span>
-          <b>${esc(s.down_distance_text || s.short_text || "")}</b>${s.is_red_zone ? '<span class="rz">Red zone</span>' : ""}
-          <span class="tos muted small" title="Timeouts left">TO ${esc(g.away)} ${to(s.away_timeouts)} · ${esc(g.home)} ${to(s.home_timeouts)}</span></div>
-        ${field}
-        ${s.last_play?.text ? `<p class="lastplay small"><b>Last play:</b> ${esc(s.last_play.text)}</p>` : ""}`;
+      const finished = cd?.result && s.possession && team(cd.team) !== team(s.possession);
+      const driveStats = cd ? `<div class="lc-drive small"><span class="muted">${finished ? `Last drive (${esc(cd.team)}): ${esc(cd.result)}` : `${esc(cd.team)} drive`}</span>
+          <span title="Plays">⟳ ${cd.plays ?? 0} plays</span><span title="Yards">↗ ${cd.yards ?? 0} yds</span>${cd.time_elapsed ? `<span title="Time of possession">⏱ ${esc(cd.time_elapsed)}</span>` : ""}${cd.start ? `<span class="muted">from ${esc(cd.start)}</span>` : ""}</div>` : "";
+      // fantasy starters in this game (bench ignored): Man Wolf + opponent first, then other teams'
+      const inGame = S.live.data.players.filter((p) => [team(g.away), team(g.home)].includes(p.pro_team) && p.starter)
+        .sort((a, b) => b.points - a.points);
+      const ours = inGame.filter((p) => p.fantasy_team_id === S.me || p.fantasy_team_id === S.opp)
+        .sort((a, b) => (a.fantasy_team_id !== S.me) - (b.fantasy_team_id !== S.me) || b.points - a.points);
+      const others = inGame.filter((p) => p.fantasy_team_id !== S.me && p.fantasy_team_id !== S.opp);
+      const ts = d.team_stats || {}, TS = [["totalYards", "Total yards"], ["yardsPerPlay", "Yards / play"], ["netPassingYards", "Pass yards"], ["rushingYards", "Rush yards"],
+        ["thirdDownEff", "3rd down"], ["turnovers", "Turnovers"], ["possessionTime", "Possession"]].filter(([k]) => ts[g.away]?.[k] != null || ts[g.home]?.[k] != null);
+      const det = (k, title, body) => (body ? `<details data-k="${k}"${open.has(k) ? " open" : ""}><summary>${title}</summary>${body}</details>` : "");
+      el.innerHTML = `<div class="lc-top">
+        <div class="lc-score">${teamRow(g.away, g.away_score, g.away_by_quarter || [], s.away_timeouts, "s1")}${teamRow(g.home, g.home_score, g.home_by_quarter || [], s.home_timeouts, "s2")}${clockRing(g)}</div>
+        <div class="lc-sit">
+          <div class="lc-chips">${s.possession ? `<span class="poss ${pcls}">${esc(s.possession)} ball</span>` : ""}${s.short_text ? `<span class="chip"><b>${esc(s.short_text)}</b></span>` : ""}${s.possession_text ? `<span class="chip">at ${esc(s.possession_text)}</span>` : ""}${s.is_red_zone ? '<span class="rz">Red zone</span>' : ""}</div>
+          ${field}${driveStats}
+          ${s.last_play?.text ? `<p class="lastplay small"><b>Last play:</b> ${esc(s.last_play.text)}</p>` : ""}
+        </div>
+        <div class="lc-prob">${d.win_probability ? `<div class="lc-wprow">${wpRing(d.win_probability, g)}</div>${spark(d.win_probability, g)}` : '<span class="muted small">Win probability loading…</span>'}</div>
+      </div>
+      <div class="lc-players">
+        ${ours.length ? `<h4>${esc(shortName(S.me))} vs ${esc(shortName(S.opp))}</h4><ul>${playerRows(ours)}</ul>` : ""}
+        ${others.length ? `<h4>Other starters in this game</h4><ul class="others">${playerRows(others)}</ul>` : ""}
+        ${!ours.length && !others.length ? '<p class="muted small">No league starters in this game.</p>' : ""}
+      </div>
+      <div class="lc-more">
+        ${det("plays", `Plays this drive${cd?.recent_plays?.length ? ` (${cd.recent_plays.length})` : ""}`, cd?.recent_plays?.length ? `<ol class="plays">${cd.recent_plays.map((p) => `<li${p.scoring ? ' class="score"' : ""}><span class="pdd muted">${esc(p.down_distance_text || p.type || "")}</span>${esc(p.text || "")}</li>`).join("")}</ol>` : "")}
+        ${det("drives", "Previous drives", (d.previous_drives || []).length ? `<ul class="plain">${d.previous_drives.map((x) => `<li><b>${esc(x.team || "")}</b> ${esc(x.result || "")} <span class="muted">${esc(x.description || "")}</span></li>`).join("")}</ul>` : "")}
+        ${det("scoring", `Scoring plays (${(d.scoring_plays || []).length})`, (d.scoring_plays || []).length ? `<ul class="plain">${d.scoring_plays.map((x) => `<li><span class="muted">Q${x.period} ${esc(x.clock || "")}</span> <b>${esc(x.team || "")}</b> ${esc(x.text || "")} <span class="muted">(${x.away_score}–${x.home_score})</span></li>`).join("")}</ul>` : "")}
+        ${det("teamstats", "Team stats", TS.length ? `<table class="lc-ts"><thead><tr><th></th><th>${esc(g.away)}</th><th>${esc(g.home)}</th></tr></thead><tbody>${TS.map(([k, lab]) => `<tr><td>${lab}</td><td>${esc(ts[g.away]?.[k] ?? "—")}</td><td>${esc(ts[g.home]?.[k] ?? "—")}</td></tr>`).join("")}</tbody></table>` : "")}
+      </div>`;
     });
   }
 
-  // ---------- 2c. drive panel: current drive, recent plays, win probability, scoring plays
   S.detail = {};
   async function loadGameDetails() {
     const live = S.live.data.games.filter((g) => g.state === "in");
-    document.querySelectorAll(".gdrive").forEach((el) => {
-      if (!live.some((g) => el.dataset.id === g.id)) el.remove();
-    });
     await Promise.all(live.map(async (g) => {
       try {
         const r = await fetch(`/api/game/${g.id}`, { cache: "no-store" });
         const res = await r.json();
         if (res.data) S.detail[g.id] = res.data;
       } catch {}
-      renderDrive(g);
     }));
-  }
-  function wpChart(wp, g) {
-    const pts = wp.series, n = pts.length;
-    if (n < 2) return "";
-    const W = 240, H = 56, x = (i) => (i / (n - 1)) * W, y = (v) => H - (v / 100) * H;
-    const line = pts.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
-    const hits = pts.map((v, i) => `<rect x="${(x(i) - W / n / 2).toFixed(1)}" y="0" width="${(W / n).toFixed(1)}" height="${H}" fill="transparent" tabindex="-1" data-v="${esc(g.home)} ${f1(v)}%" data-l="Home win probability, sample ${i + 1} of ${n}"></rect>`).join("");
-    return `<svg class="wpsvg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${esc(g.home)} win probability over the game, now ${f1(wp.home_pct)}%">
-        <line x1="0" x2="${W}" y1="${H / 2}" y2="${H / 2}" class="wpmid"></line>
-        <polyline points="${line}" class="wpline"></polyline>${hits}</svg>`;
-  }
-  function renderDrive(g) {
-    const sec = document.getElementById(`g-${g.away}-${g.home}`.toLowerCase());
-    const d = S.detail[g.id];
-    if (!sec || !d) return;
-    let el = sec.querySelector(".gdrive");
-    if (!el) {
-      (sec.querySelector(".stake") || sec.querySelector(".ghead")).insertAdjacentHTML("afterend", `<div class="gdrive" data-id="${g.id}"></div>`);
-      el = sec.querySelector(".gdrive");
-    }
-    const cd = d.current_drive;
-    const plays = (cd?.recent_plays || []).map((p) => `<li${p.scoring ? ' class="score"' : ""}><span class="pdd muted">${esc(p.down_distance_text || p.type || "")}</span>${esc(p.text || "")}</li>`).join("");
-    const wp = d.win_probability;
-    const away = wp ? 100 - wp.home_pct : null;
-    const scoring = (d.scoring_plays || []).map((s) => `<li><span class="muted">Q${s.period} ${esc(s.clock || "")}</span> <b>${esc(s.team || "")}</b> ${esc(s.text || "")} <span class="muted">(${s.away_score}–${s.home_score})</span></li>`).join("");
-    const prev = (d.previous_drives || []).slice(0, 4).map((x) => `<li><b>${esc(x.team || "")}</b> ${esc(x.result || "")} <span class="muted">${esc(x.description || "")}</span></li>`).join("");
-    el.innerHTML = `<div class="gdcol">
-        <h4>${!cd ? "Between drives" : cd.result && g.situation?.possession && team(cd.team) !== team(g.situation.possession)
-          ? `Last drive: ${esc(cd.team || "")} — ${esc(cd.result)} <span class="muted small">${esc(cd.description || "")}</span>`
-          : `${esc(cd.team || "")} drive <span class="muted small">${esc(cd.description || "")}</span>`}</h4>
-        ${plays ? `<ol class="plays">${plays}</ol>` : '<p class="muted small">No plays yet on this drive.</p>'}
-        ${prev ? `<details class="small"><summary>Previous drives</summary><ul class="plain">${prev}</ul></details>` : ""}
-      </div>
-      <div class="gdcol">
-        ${wp ? `<h4>Win probability</h4><div class="wpnum"><span><b>${esc(g.away)}</b> ${f1(away)}%</span><span><b>${esc(g.home)}</b> ${f1(wp.home_pct)}%</span></div>
-          <div class="wpbar" role="img" aria-label="${esc(g.away)} ${f1(away)}%, ${esc(g.home)} ${f1(wp.home_pct)}%"><span class="s1" style="width:${away}%"></span><span class="s2" style="width:${wp.home_pct}%"></span></div>
-          ${wpChart(wp, g)}<div class="wpax muted"><span>start</span><span>${esc(g.home)} win % · 50% line</span><span>now</span></div>` : ""}
-        ${scoring ? `<details class="small"><summary>Scoring plays (${d.scoring_plays.length})</summary><ul class="plain">${scoring}</ul></details>` : ""}
-      </div>`;
+    if (live.length) renderLiveCards();
   }
 
   // ---------- 3. sidebar: scores + one dot per Man Wolf / opponent player

@@ -134,6 +134,11 @@ class Dashboard:
                 "home_score": int(side["home"].get("score") or 0),
                 "state": st["state"],            # pre | in | post
                 "detail": st["shortDetail"],     # "Final", "1:56 - 4th", "10/11 - 8:20 PM EDT"
+                "period": e["status"].get("period"),
+                "clock_s": e["status"].get("clock"),          # seconds left in the period
+                "display_clock": e["status"].get("displayClock"),
+                "away_by_quarter": [int(q.get("value") or 0) for q in side["away"].get("linescores") or []],
+                "home_by_quarter": [int(q.get("value") or 0) for q in side["home"].get("linescores") or []],
                 "kickoff": e["date"],
                 "line": odds.get("details"),
                 "over_under": odds.get("overUnder"),
@@ -165,6 +170,7 @@ class Dashboard:
                         "projected": round(bp.projected_points or 0, 2),
                         "injury_status": ec.injury_status(bp),
                         "on_bye": bool(bp.on_bye_week),
+                        "stats": stat_line(bp.breakdown),
                         "game_state": state.get(pro, "bye"),
                     })
             if m.away_team and self.my_id in (m.home_team.team_id, m.away_team.team_id):
@@ -273,7 +279,9 @@ def game_detail(summary: dict) -> dict:
     cur = drives.get("current") or {}
     team = lambda d: ((d.get("team") or {}).get("abbreviation"))
     drive = lambda d: {"team": team(d), "description": d.get("description"), "result": d.get("displayResult") or d.get("result"),
-                       "yards": d.get("yards"), "plays": d.get("offensivePlays")}
+                       "yards": d.get("yards"), "plays": d.get("offensivePlays"),
+                       "time_elapsed": (d.get("timeElapsed") or {}).get("displayValue"),
+                       "start": (d.get("start") or {}).get("text")}
     comp = ((summary.get("header") or {}).get("competitions") or [{}])[0]
     home = next((x["team"]["abbreviation"] for x in comp.get("competitors", []) if x.get("homeAway") == "home"), None)
     wp = summary.get("winprobability") or []
@@ -287,9 +295,39 @@ def game_detail(summary: dict) -> dict:
             "period": (s.get("period") or {}).get("number"), "clock": (s.get("clock") or {}).get("displayValue"),
             "away_score": s.get("awayScore"), "home_score": s.get("homeScore"),
         } for s in summary.get("scoringPlays") or []][::-1],
-        "win_probability": {"home": home, "home_pct": round(wp[-1].get("homeWinPercentage", 0) * 100, 1),
-                            "series": [round(w.get("homeWinPercentage", 0) * 100, 1) for w in wp[:: max(1, len(wp) // 60)]]} if wp else None,
+        "win_probability": win_prob(wp, home) if wp else None,
+        "team_stats": {
+            (t.get("team") or {}).get("abbreviation"): {s["name"]: s.get("displayValue") for s in t.get("statistics", [])
+                                                         if s.get("name") in TEAM_STATS}
+            for t in (summary.get("boxscore") or {}).get("teams", [])
+        },
     }
+
+
+TEAM_STATS = {"totalYards", "yardsPerPlay", "netPassingYards", "rushingYards", "thirdDownEff",
+              "fourthDownEff", "turnovers", "firstDowns", "possessionTime", "sacksYardsLost", "redZoneAttempts"}
+
+
+def win_prob(wp: list, home: str | None) -> dict:
+    """Home win % now, its change on the last play, and a ≤60-point series that always ends on the latest value."""
+    pct = [round(w.get("homeWinPercentage", 0) * 100, 1) for w in wp]
+    step = max(1, len(pct) // 60)
+    series = pct[::step]
+    if (len(pct) - 1) % step:  # last sample isn't the latest value
+        series.append(pct[-1])
+    return {"home": home, "home_pct": pct[-1], "last_play_delta": round(pct[-1] - pct[-2], 1) if len(pct) > 1 else 0,
+            "series": series}
+
+
+STAT_KEYS = ("passingCompletions", "passingAttempts", "passingYards", "passingTouchdowns", "passingInterceptions",
+             "rushingAttempts", "rushingYards", "rushingTouchdowns",
+             "receivingReceptions", "receivingTargets", "receivingYards", "receivingTouchdowns", "lostFumbles")
+
+
+def stat_line(breakdown) -> dict:
+    """Live real-stat counts that make up a player's stat line (nonzero only)."""
+    named = ec.named_stats(breakdown or {})
+    return {k: int(named[k]) for k in STAT_KEYS if named.get(k)}
 
 
 IDLE_LIVE_INTERVAL = 300   # live refresh when no game is in progress or starting soon
