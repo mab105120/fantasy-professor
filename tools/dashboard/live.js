@@ -221,12 +221,28 @@
     const st = !lead ? '<span class="mu-st">tied</span>' : `<span class="mu-st ${lead === "mine" ? "up" : "down"}">${lead === "mine" ? "▲ leads" : "▼ trails"} by ${f1(Math.abs(diff))}</span>`;
     return `<span class="lc-mu small" aria-label="Fantasy matchup">${side(m.mine, "mine")}<span class="muted">vs</span>${side(m.other, "other")}${st}</span>`;
   }
+  // last play seen per game (id, else text): a row flashes only when a NEW play names him,
+  // never on a plain refresh and never on page load
+  S.seenPlay = {};
+  function newPlay(g) {
+    const lp = g.situation?.last_play, key = lp ? lp.id || lp.text : null, prev = S.seenPlay[g.id];
+    S.seenPlay[g.id] = key;
+    return prev !== undefined && key != null && key !== prev;
+  }
+  // flash start time per player id, so a re-render mid-flash continues the animation instead of cutting it
+  S.flashStart = {};
+  const FLASH_MS = 1500;
+  function flashAttr(p) {
+    const age = Date.now() - (S.flashStart[p.player_id] || 0);
+    return age < FLASH_MS ? { cls: " flash", style: ` style="animation-delay:-${age}ms"` } : { cls: "", style: "" };
+  }
   function playerRows(ps, s) {
     const abbrev = (id) => S.rosters?.data?.teams.find((t) => t.team_id === id)?.abbrev || "";
     return ps.map((p) => {
       const cls = p.fantasy_team_id === S.me ? "mw" : p.fantasy_team_id === S.opp ? "op" : "";
       const fs = fieldState(p, s), [icon, lab] = FSTATE[fs], lp = onLastPlay(p, s?.last_play?.text);
-      return `<li class="${cls}" data-fs="${fs.replace(/d$/, "")}"><span class="lc-pn">${esc(p.name)} <span class="muted small">${esc(p.position)} · ${esc(p.pro_team)}</span></span>
+      const fl = flashAttr(p);
+      return `<li class="${cls}${fl.cls}"${fl.style} data-fs="${fs.replace(/d$/, "")}"><span class="lc-pn">${esc(p.name)} <span class="muted small">${esc(p.position)} · ${esc(p.pro_team)}</span></span>
         <span class="tag ${cls}">${cls === "mw" ? "Man Wolf" : cls === "op" ? esc(shortName(S.opp)) : esc(abbrev(p.fantasy_team_id))}</span>
         <span class="lc-st small"><span class="fstat ${fs.replace(/d$/, "")}"><i aria-hidden="true">${icon}</i>${lab}</span>${lp ? '<span class="lastp" title="Named in the last play">★ Last play</span>' : ""}
         <span>${p.position === "D/ST" ? "team defense" : esc(statText(p.stats || {}))}</span></span>
@@ -245,6 +261,8 @@
       sec.classList.add("is-live");
       const open = new Set([...el.querySelectorAll("details[open]")].map((d) => d.dataset.k)); // keep expanded sections open across refreshes
       const s = g.situation || {}, d = S.detail[g.id] || {}, cd = d.current_drive;
+      if (newPlay(g)) S.live.data.players.filter((p) => onLastPlay(p, s.last_play?.text) && [team(g.away), team(g.home)].includes(p.pro_team))
+        .forEach((p) => { S.flashStart[p.player_id] = Date.now(); });
       const pcls = team(s.possession) === team(g.away) ? "s1" : "s2";
       const pips = (n) => `<span class="pips" aria-label="${n ?? 0} timeouts">${[0, 1, 2].map((i) => `<i class="${i < (n ?? 0) ? "on" : ""}"></i>`).join("")}</span>`;
       const teamRow = (ab, sc, q, to, cls) => `<div class="lc-team"><i class="key ${cls}"></i><b>${esc(ab)}</b>

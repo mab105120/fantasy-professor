@@ -145,3 +145,8 @@ section.is-live .gres{display:none}
 .mu-t.lead .mu-n,.mu-t.lead b{color:var(--text);font-weight:800}
 .mu-n{max-width:140px;display:inline-block;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom}
 .mu-st{margin-left:auto;font-weight:700;white-space:nowrap} .mu-st.up{color:var(--good)} .mu-st.down{color:var(--bad)}
+
+/* flash a live-card row when a new play names the player */
+@keyframes lc-flash{0%,50%,100%{box-shadow:0 0 0 0 transparent;background:var(--surface)}25%,75%{box-shadow:0 0 0 2px var(--text);background:color-mix(in srgb,var(--warn) 28%,var(--surface))}}
+.lc-players li.flash{animation:lc-flash 1.5s ease-in-out 1}
+@media (prefers-reduced-motion: reduce){.lc-players li.flash{animation:none;outline:2px solid var(--text);outline-offset:-2px}}

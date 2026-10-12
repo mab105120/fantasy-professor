@@ -269,7 +269,7 @@ def situation(s: dict | None, ab_by_id: dict) -> dict | None:
         "is_red_zone": bool(s.get("isRedZone")),
         "home_timeouts": s.get("homeTimeouts"),
         "away_timeouts": s.get("awayTimeouts"),
-        "last_play": {"text": lp.get("text"), "type": (lp.get("type") or {}).get("text")} if lp else None,
+        "last_play": {"id": lp.get("id"), "text": lp.get("text"), "type": (lp.get("type") or {}).get("text")} if lp else None,
     }
 
 
