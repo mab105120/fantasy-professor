@@ -47,6 +47,9 @@
     S.game = new Map();
     L.games.forEach((x) => { S.game.set(team(x.away), x); S.game.set(team(x.home), x); });
     S.me = L.matchup?.my_team_id; S.opp = L.matchup?.opponent_id;
+    // fantasy matchup by team id: { mine: {team_id, score, projected}, other: {...} }
+    S.mu = new Map();
+    (L.matchups || []).forEach((m) => { S.mu.set(m.home.team_id, { mine: m.home, other: m.away }); S.mu.set(m.away.team_id, { mine: m.away, other: m.home }); });
     renderScore(L.matchup);
     renderGames();
     renderLiveCards();
@@ -208,6 +211,16 @@
     const last = parts.slice(1).join(" ").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     return new RegExp(`\\b${parts[0][0]}\\.\\s?${last}\\b`).test(text);
   }
+  // the player's fantasy matchup this week: his team first, ESPN live score -> live projection
+  function fantasyMatchup(id) {
+    const m = S.mu?.get(id);
+    if (!m) return "";
+    const nm = (t) => (t.team_id === S.me ? "Man Wolf" : t.team_id === S.opp ? shortName(S.opp) : teamName(t.team_id));
+    const diff = m.mine.score - m.other.score, lead = diff > 0 ? "mine" : diff < 0 ? "other" : null;
+    const side = (t, k) => `<span class="mu-t${lead === k ? " lead" : ""}" title="${esc(teamName(t.team_id))}"><span class="mu-n">${esc(nm(t))}</span> <b>${f1(t.score)}</b> <small>→ ${f1(t.projected)}</small></span>`;
+    const st = !lead ? '<span class="mu-st">tied</span>' : `<span class="mu-st ${lead === "mine" ? "up" : "down"}">${lead === "mine" ? "▲ leads" : "▼ trails"} by ${f1(Math.abs(diff))}</span>`;
+    return `<span class="lc-mu small" aria-label="Fantasy matchup">${side(m.mine, "mine")}<span class="muted">vs</span>${side(m.other, "other")}${st}</span>`;
+  }
   function playerRows(ps, s) {
     const abbrev = (id) => S.rosters?.data?.teams.find((t) => t.team_id === id)?.abbrev || "";
     return ps.map((p) => {
@@ -217,7 +230,7 @@
         <span class="tag ${cls}">${cls === "mw" ? "Man Wolf" : cls === "op" ? esc(shortName(S.opp)) : esc(abbrev(p.fantasy_team_id))}</span>
         <span class="lc-st small"><span class="fstat ${fs.replace(/d$/, "")}"><i aria-hidden="true">${icon}</i>${lab}</span>${lp ? '<span class="lastp" title="Named in the last play">★ Last play</span>' : ""}
         <span>${p.position === "D/ST" ? "team defense" : esc(statText(p.stats || {}))}</span></span>
-        <span class="lc-pts">${f1(p.points)}</span>${breakdown(p)}</li>`;
+        <span class="lc-pts">${f1(p.points)}</span>${breakdown(p)}${fantasyMatchup(p.fantasy_team_id)}</li>`;
     }).join("");
   }
   function renderLiveCards() {

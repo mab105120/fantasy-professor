@@ -153,7 +153,7 @@ class Dashboard:
             state[g["away"]] = state[g["home"]] = g["state"]
         with self.league_lock:
             boxes = self.league.box_scores(week=self.week)
-        players, matchup = [], None
+        players, matchup, matchups = [], None, []
         for m in boxes:
             sides = [(m.home_team, m.home_lineup)] + ([(m.away_team, m.away_lineup)] if m.away_team else [])
             for team, lineup in sides:
@@ -175,13 +175,24 @@ class Dashboard:
                         "points_breakdown": points_items(bp.points_breakdown, bp.breakdown, state.get(pro) == "in"),
                         "game_state": state.get(pro, "bye"),
                     })
+            if m.away_team:  # every league matchup: ESPN's live score and live-adjusted projection
+                matchups.append({side: {"team_id": t.team_id, "score": round(sc or 0, 2), "projected": round(pj or 0, 2)}
+                                 for side, t, sc, pj in (("home", m.home_team, m.home_score, m.home_projected),
+                                                         ("away", m.away_team, m.away_score, m.away_projected))})
             if m.away_team and self.my_id in (m.home_team.team_id, m.away_team.team_id):
                 opp = m.away_team if m.home_team.team_id == self.my_id else m.home_team
                 matchup = {"my_team_id": self.my_id, "opponent_id": opp.team_id}
+        espn = {side["team_id"]: side for mu in matchups for side in mu.values()}
         if matchup:
             for key, tid in (("me", matchup["my_team_id"]), ("opponent", matchup["opponent_id"])):
-                matchup[key] = tally([p for p in players if p["fantasy_team_id"] == tid])
-        return {"week": self.week, "games": games, "players": players, "matchup": matchup}
+                t = tally([p for p in players if p["fantasy_team_id"] == tid])
+                # ESPN's live projection also covers the rest of in-progress games, which our
+                # tally can't (it counts a playing player at his current points)
+                if tid in espn and espn[tid]["projected"] > 0:
+                    t["projected_final"] = espn[tid]["projected"]
+                    t["remaining_projection"] = round(max(0, t["projected_final"] - t["score"]), 2)
+                matchup[key] = t
+        return {"week": self.week, "games": games, "players": players, "matchup": matchup, "matchups": matchups}
 
     # ---------- per-game detail (drive, plays, win probability), cached on the live interval
     def game(self, event_id: str, force: bool = False) -> dict:
