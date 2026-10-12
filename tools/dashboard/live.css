@@ -1,0 +1,40 @@
+/* Live layer for the weekly-matchup report (tools/dashboard_server.py). Uses the report's own colour tokens. */
+
+/* results overlay: live score panel, actual-points chips, game results, sidebar scores */
+.livebox{background:var(--surface-2);border-radius:10px;padding:10px 14px;margin:6px 0 14px}
+.livebox h3{margin:2px 0 8px} h3.pregame{margin:10px 0 4px;font-size:14px;color:var(--text-2)}
+.sseg.live{background-image:repeating-linear-gradient(135deg,transparent 0 4px,color-mix(in srgb,var(--surface) 45%,transparent) 4px 7px)}
+.sseg.s1.live{background-color:var(--s1)} .sseg.s2.live{background-color:var(--s2)}
+  .sseg.s2.solid{background:var(--s2)} .livebox .sseg.s2.soft{background:var(--s2soft)}
+.key.live{background:repeating-linear-gradient(135deg,var(--s1) 0 3px,var(--s1soft) 3px 5px)}
+.sbtot small{font-weight:500;color:var(--text-3)}
+.actp{display:inline-flex;align-items:baseline;gap:4px;font-weight:700;font-size:13px;font-variant-numeric:tabular-nums;padding:1px 8px;border-radius:999px;background:var(--neubg);color:var(--text);white-space:nowrap}
+.actp small{font-size:11px;font-weight:600}
+.actp.good{background:var(--favbg)} .actp.good small{color:var(--good)} .actp.bad{background:var(--toughbg)} .actp.bad small{color:var(--bad)}
+.actp.live small{color:var(--warn)} .actp.neu{color:var(--text-3);font-weight:600}
+.gres{margin-top:4px;font-size:14px;font-variant-numeric:tabular-nums;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.gres .gst{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:1px 7px;border-radius:999px;background:var(--neubg);color:var(--text-2)}
+.gres.in .gst{background:var(--warn);color:#111} .gres.pre .gst{background:var(--favbg)}
+.gside a.sbg.wsc{flex-direction:column;align-items:flex-start;gap:0}
+.gside .sbgn{display:flex;align-items:center;gap:5px}
+.gside .sbsc{font-size:10px;font-weight:500;color:var(--text-3)} .gside .sbsc.live{color:var(--warn);font-weight:700}
+
+/* status pill + settings panel */
+.dash{position:fixed;top:12px;right:16px;z-index:40;display:flex;flex-direction:column;align-items:flex-end;gap:6px;font-size:13px}
+.dash-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgb(0 0 0 / .08);font-variant-numeric:tabular-nums}
+.dash-pill:focus-visible,.dash-panel button:focus-visible,.dash-panel input:focus-visible{outline:2px solid var(--text);outline-offset:2px}
+.dash-dot{width:8px;height:8px;border-radius:50%;background:var(--text-3)}
+.dash[data-state="ok"] .dash-dot{background:var(--good);animation:dash-pulse 2s ease-in-out infinite}
+.dash[data-state="stale"] .dash-dot{background:var(--warn)} .dash[data-state="paused"] .dash-dot{background:var(--text-3)}
+@keyframes dash-pulse{50%{opacity:.35}}
+@media (prefers-reduced-motion: reduce){.dash[data-state="ok"] .dash-dot{animation:none}}
+.dash-panel{width:260px;padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);box-shadow:0 6px 24px rgb(0 0 0 / .12)}
+.dash-panel label{display:grid;grid-template-columns:1fr auto;gap:0 8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)}
+.dash-panel label small{grid-column:1 / -1;color:var(--text-3);font-size:11px}
+.dash-in{white-space:nowrap;color:var(--text-2)}
+.dash-panel input{width:64px;padding:3px 6px;border:1px solid var(--border);border-radius:6px;background:var(--surface-2);color:var(--text);font:inherit;text-align:right}
+.dash-btns{display:flex;gap:6px;margin-top:8px}
+.dash-btns button{flex:1;padding:5px 8px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font:inherit;font-weight:600;cursor:pointer}
+.dash-btns button:hover{background:var(--border)}
+.dash-err{margin:8px 0 0;font-size:11px;color:var(--bad)}
+@media (max-width:760px){.dash{top:auto;bottom:112px;right:12px}.gside a.sbg.wsc{flex-direction:row;gap:4px;align-items:center}}

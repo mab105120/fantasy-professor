@@ -247,6 +247,34 @@ python3 tools/espn_client.py week-stats --week 3              # backfill/refresh
 python3 tools/projection_accuracy.py                          # how well ESPN projections have predicted actual points this season (read-only)
 ```
 
+### Live dashboard (game days)
+
+```
+python3 tools/dashboard_server.py                          # http://127.0.0.1:8765, newest weekly-matchup report
+python3 tools/dashboard_server.py --live 5 --rosters 120   # per-group refresh intervals, seconds
+```
+
+Serves the newest `reports/weekly-matchup/*-visual.html` with a live layer
+(`tools/dashboard/live.js` + `live.css`) that redraws the live score panel,
+game results, sidebar scores/dots, player-card points, lens Actual columns
+and pre-game injury badges; the preview analysis stays as written. Data is
+cached per group so ESPN is hit at most once per interval:
+
+- `live` (default 7 s, 5–60): NFL scoreboard + ESPN box scores (every
+  rostered player's points/slot/projection) and the Man Wolf matchup tally.
+- `rosters` (default 300 s, 60–3600): standings/records + NFL injury reports
+  for games not yet final.
+- `static` (default 60 s, 10–3600): report file check; the page reloads
+  itself when a new report is written.
+
+Intervals can be changed from the page's ⚙ panel or `POST /api/config`.
+**The agent can read live state directly** while the server runs:
+`curl -s localhost:8765/api/live` (or `/api/rosters`, `/api/all`;
+`?force=1` bypasses the cache) — prefer this over re-syncing during games.
+Game state comes from the scoreboard, never `game_played` (it reads 100
+while a game is still live). Binds to 127.0.0.1 only; ESPN cookies stay
+server-side.
+
 ESPN projections are noisy here (through Week 3: ~6-pt typical miss per
 player, ~59% right on close calls, worse than a coin flip for D/ST, ~30-pt
 miss on matchup margins). Treat them as tiers, not tie-breakers; run
