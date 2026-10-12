@@ -189,13 +189,39 @@
     if (st.lostFumbles) out.push(`${st.lostFumbles} fum lost`);
     return out.join(" · ") || "no stats yet";
   }
-  function playerRows(ps) {
+  // ESPN play-by-play names players "D.Henry", "Bi.Robinson", "A.St. Brown"
+  function playPattern(name) {
+    const parts = name.replace(/\s+(Jr\.|Sr\.|II|III|IV|V)$/, "").split(" ");
+    if (parts.length < 2) return null;
+    const last = parts.slice(1).join(" ").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return new RegExp(`\\b${parts[0][0]}[A-Za-z]{0,2}\\.\\s?${last}\\b`);
+  }
+  // On-field state is inferred from possession: ESPN publishes no per-snap personnel.
+  function fieldState(p, s) {
+    if (!s.possession) return null;
+    const hasBall = team(s.possession) === team(p.pro_team);
+    const onField = p.position === "D/ST" ? !hasBall : hasBall;
+    const unit = p.position === "D/ST" ? "defense" : "offense";
+    if (onField && s.is_red_zone) return ["rz", "⚑", "Red zone", p.position === "D/ST"
+      ? `Defending inside its own 20 (${s.possession_text})` : `${p.pro_team} has the ball inside the 20 (${s.possession_text})`];
+    if (onField) return ["on", "●", "On field", `${p.pro_team} ${unit} is on the field. Likely, not certain: ESPN doesn't publish who plays each snap.`];
+    return ["off", "○", "Off field", `${p.pro_team} ${unit} is off the field`];
+  }
+  function playerRows(ps, g, s, cd, fresh) {
     const abbrev = (id) => S.rosters?.data?.teams.find((t) => t.team_id === id)?.abbrev || "";
+    const plays = (cd?.play_log || []).map((x) => x.text || "");
+    const last = s.last_play?.text || "";
     return ps.map((p) => {
       const cls = p.fantasy_team_id === S.me ? "mw" : p.fantasy_team_id === S.opp ? "op" : "";
-      return `<li class="${cls}"><span class="lc-pn">${esc(p.name)} <span class="muted small">${esc(p.position)} · ${esc(p.pro_team)}</span></span>
+      const st = fieldState(p, s);
+      const re = p.position === "D/ST" ? null : playPattern(p.name);
+      const touches = re && cd && team(cd.team) === team(p.pro_team) ? plays.filter((t) => re.test(t)).length : 0;
+      const inLast = re && re.test(last);
+      return `<li class="${cls}${st ? " st-" + st[0] : ""}${inLast && fresh ? " justplayed" : ""}"><span class="lc-pn">${esc(p.name)} <span class="muted small">${esc(p.position)} · ${esc(p.pro_team)}</span></span>
         <span class="tag ${cls}">${cls === "mw" ? "Man Wolf" : cls === "op" ? esc(shortName(S.opp)) : esc(abbrev(p.fantasy_team_id))}</span>
         <span class="lc-st small">${p.position === "D/ST" ? "team defense" : esc(statText(p.stats || {}))}</span>
+        <span class="lc-state">${st ? `<span class="pstate ${st[0]}" tabindex="0" data-v="${st[2]}" data-l="${esc(st[3])}"><i aria-hidden="true">${st[1]}</i>${st[2]}</span>` : ""}${
+          touches ? `<span class="ptouch" tabindex="0" data-v="${touches} touch${touches > 1 ? "es" : ""} this drive" data-l="Plays naming him on the current drive${inLast ? ", including the last play" : ""}">▶ ${touches}${inLast ? " · last play" : ""}</span>` : ""}</span>
         <span class="lc-pts">${f1(p.points)}</span></li>`;
     }).join("");
   }
@@ -212,6 +238,11 @@
       const open = new Set([...el.querySelectorAll("details[open]")].map((d) => d.dataset.k)); // keep expanded sections open across refreshes
       const s = g.situation || {}, d = S.detail[g.id] || {}, cd = d.current_drive;
       const pcls = team(s.possession) === team(g.away) ? "s1" : "s2";
+      // a new last play highlights its players for 10 s (survives the several redraws per refresh)
+      S.seenPlay = S.seenPlay || {};
+      const seen = S.seenPlay[g.id];
+      if (s.last_play?.text && seen?.text !== s.last_play.text) S.seenPlay[g.id] = { text: s.last_play.text, at: seen ? Date.now() : 0 };
+      const fresh = Date.now() - (S.seenPlay[g.id]?.at || 0) < 10000;
       const pips = (n) => `<span class="pips" aria-label="${n ?? 0} timeouts">${[0, 1, 2].map((i) => `<i class="${i < (n ?? 0) ? "on" : ""}"></i>`).join("")}</span>`;
       const teamRow = (ab, sc, q, to, cls) => `<div class="lc-team"><i class="key ${cls}"></i><b>${esc(ab)}</b>
         ${team(s.possession) === team(ab) ? '<span class="lc-ball" title="Has the ball">◀</span>' : '<span class="lc-ball"></span>'}
@@ -246,12 +277,13 @@
         <div class="lc-prob">${d.win_probability ? `<div class="lc-wprow">${wpRing(d.win_probability, g)}</div>${spark(d.win_probability, g)}` : '<span class="muted small">Win probability loading…</span>'}</div>
       </div>
       <div class="lc-players">
-        ${ours.length ? `<h4>${esc(shortName(S.me))} vs ${esc(shortName(S.opp))}</h4><ul>${playerRows(ours)}</ul>` : ""}
-        ${others.length ? `<h4>Other starters in this game</h4><ul class="others">${playerRows(others)}</ul>` : ""}
+        ${ours.length || others.length ? `<p class="lc-key muted small"><span class="pstate rz"><i>⚑</i>Red zone</span><span class="pstate on"><i>●</i>On field</span><span class="pstate off"><i>○</i>Off field</span><span class="ptouch">▶ touches this drive</span><span>On/off field is inferred from possession.</span></p>` : ""}
+        ${ours.length ? `<h4>${esc(shortName(S.me))} vs ${esc(shortName(S.opp))}</h4><ul>${playerRows(ours, g, s, cd, fresh)}</ul>` : ""}
+        ${others.length ? `<h4>Other starters in this game</h4><ul class="others">${playerRows(others, g, s, cd, fresh)}</ul>` : ""}
         ${!ours.length && !others.length ? '<p class="muted small">No league starters in this game.</p>' : ""}
       </div>
       <div class="lc-more">
-        ${det("plays", `Plays this drive${cd?.recent_plays?.length ? ` (${cd.recent_plays.length})` : ""}`, cd?.recent_plays?.length ? `<ol class="plays">${cd.recent_plays.map((p) => `<li${p.scoring ? ' class="score"' : ""}><span class="pdd muted">${esc(p.down_distance_text || p.type || "")}</span>${esc(p.text || "")}</li>`).join("")}</ol>` : "")}
+        ${det("plays", `Plays this drive${cd?.play_log?.length ? ` (${cd.play_log.length})` : ""}`, cd?.play_log?.length ? `<ol class="plays">${cd.play_log.slice(0, 6).map((p) => `<li${p.scoring ? ' class="score"' : ""}><span class="pdd muted">${esc(p.down_distance_text || p.type || "")}</span>${esc(p.text || "")}</li>`).join("")}</ol>` : "")}
         ${det("drives", "Previous drives", (d.previous_drives || []).length ? `<ul class="plain">${d.previous_drives.map((x) => `<li><b>${esc(x.team || "")}</b> ${esc(x.result || "")} <span class="muted">${esc(x.description || "")}</span></li>`).join("")}</ul>` : "")}
         ${det("scoring", `Scoring plays (${(d.scoring_plays || []).length})`, (d.scoring_plays || []).length ? `<ul class="plain">${d.scoring_plays.map((x) => `<li><span class="muted">Q${x.period} ${esc(x.clock || "")}</span> <b>${esc(x.team || "")}</b> ${esc(x.text || "")} <span class="muted">(${x.away_score}–${x.home_score})</span></li>`).join("")}</ul>` : "")}
         ${det("teamstats", "Team stats", TS.length ? `<table class="lc-ts"><thead><tr><th></th><th>${esc(g.away)}</th><th>${esc(g.home)}</th></tr></thead><tbody>${TS.map(([k, lab]) => `<tr><td>${lab}</td><td>${esc(ts[g.away]?.[k] ?? "—")}</td><td>${esc(ts[g.home]?.[k] ?? "—")}</td></tr>`).join("")}</tbody></table>` : "")}

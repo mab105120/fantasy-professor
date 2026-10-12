@@ -102,3 +102,18 @@ section.is-live .gres{display:none}
 .gside .sbdd{font-size:10px;color:var(--text-2);font-weight:600} .gside .sbdd.rz{color:var(--bad)}
 @media (max-width:900px){.lc-top{grid-template-columns:1fr 1fr}.lc-sit{grid-column:1 / -1;grid-row:2}}
 @media (max-width:560px){.lc-top{grid-template-columns:1fr}.lc-prob{justify-content:flex-start}.lc-players ul{grid-template-columns:1fr}}
+/* player field state (inferred from possession) and drive touches */
+.lc-players li{grid-template-columns:minmax(0,1fr) auto 44px;grid-template-areas:"pn tag pts" "st st pts" "fs fs pts"}
+.lc-state{grid-area:fs;display:flex;flex-wrap:wrap;gap:6px;margin-top:3px;min-height:0}
+.lc-state:empty{display:none}
+.pstate,.ptouch{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:0 7px;border-radius:999px;line-height:18px;white-space:nowrap}
+.pstate i{font-style:normal;font-size:10px}
+.pstate.on{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--text)} .pstate.on i{color:var(--good)}
+.pstate.rz{background:var(--toughbg);color:var(--text)} .pstate.rz i{color:var(--bad)}
+.pstate.off{background:transparent;color:var(--text-3);box-shadow:inset 0 0 0 1px var(--border)}
+.ptouch{background:var(--surface-2);color:var(--text-2)}
+.lc-players li.st-rz{background:color-mix(in srgb,var(--toughbg) 55%,var(--surface))}
+.lc-players li.st-rz .pstate.rz i{animation:dash-pulse 1.6s ease-in-out infinite}
+.lc-players li.justplayed{outline:2px solid var(--warn);outline-offset:-2px}
+.lc-key{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin:8px 0 2px}
+@media (prefers-reduced-motion: reduce){.lc-players li.st-rz .pstate.rz i{animation:none}}

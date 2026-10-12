@@ -286,7 +286,8 @@ def game_detail(summary: dict) -> dict:
     home = next((x["team"]["abbreviation"] for x in comp.get("competitors", []) if x.get("homeAway") == "home"), None)
     wp = summary.get("winprobability") or []
     return {
-        "current_drive": (drive(cur) | {"recent_plays": [play_row(p) for p in (cur.get("plays") or [])[-6:]][::-1]}) if cur else None,
+        # every play of the current drive, newest first (the page shows 6 and counts touches over all)
+        "current_drive": (drive(cur) | {"play_log": [play_row(p) for p in (cur.get("plays") or [])][::-1]}) if cur else None,
         # ESPN keeps the just-finished drive as "current" between possessions and also lists it in "previous"
         "previous_drives": [drive(d) for d in (drives.get("previous") or []) if not cur or d.get("id") != cur.get("id")][-6:][::-1],
         "scoring_plays": [{
