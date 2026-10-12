@@ -331,6 +331,9 @@
         sum.querySelector(".actp")?.remove();
         const c = chip(p);
         if (c) sum.querySelector(".pj")?.insertAdjacentHTML("beforebegin", c);
+        sum.querySelector(".pbk")?.remove();
+        const bk = breakdown(p);
+        if (bk) sum.insertAdjacentHTML("beforeend", bk);
         // slot label "POS · SLOT"
         const lab = sum.querySelector(".muted.small");
         const m = lab?.textContent.match(/^(.*) · (.+)$/);
@@ -342,7 +345,30 @@
         if (p.game_state === "pre") statusBadge(sum, p);
       });
       if (moved) recount(sec);
+      if (!sec.querySelector(".pbk-key") && sec.querySelector(".pbk")) sec.querySelector("h4.grp")?.insertAdjacentHTML("beforebegin", PBK_KEY);
     });
+  }
+
+  // ---------- 4b. points breakdown: how a player's points were earned (ESPN's per-category points)
+  const PBK_ORDER = ["yards", "td", "rec", "dst", "other"];
+  const PBK_MAX = 40; // shared scale across cards so bars are comparable
+  const PBK_KEY = `<p class="pbk-key muted small">Points from: ${[["yards", "yards"], ["td", "TDs"], ["rec", "receptions"], ["dst", "D/ST"], ["other", "other"]]
+    .map(([g, l]) => `<span><i class="pk g-${g}"></i>${l}</span>`).join("")}<span><i class="pk g-neg"></i>points lost</span></p>`;
+  const num = (n) => (n < 0 ? "−" : "") + f1(Math.abs(n));
+  function breakdown(p) {
+    if (!p || p.game_state === "pre" || p.game_state === "bye" || p.slot === "IR") return "";
+    const items = p.points_breakdown || [];
+    if (!items.length) return '<span class="pbk"><span class="pbk-txt muted">No points yet</span></span>';
+    const pos = items.filter((i) => i.points > 0).sort((a, b) => PBK_ORDER.indexOf(a.group) - PBK_ORDER.indexOf(b.group) || b.points - a.points);
+    const lost = -items.filter((i) => i.points < 0).reduce((t, i) => t + i.points, 0);
+    const gross = pos.reduce((t, i) => t + i.points, 0);
+    const w = (v) => (Math.min(v, PBK_MAX) / PBK_MAX) * 100;
+    const tip = (i) => `data-v="${esc(i.label)} · ${num(i.points)} pts" data-l="${i.stat != null ? esc(i.stat) + " → " : ""}${num(i.points)} fantasy points${i.provisional ? " (provisional: tier can change before the final whistle)" : ""}"`;
+    const segs = pos.map((i) => `<span class="pseg pk g-${i.group}" style="width:${w(i.points)}%" tabindex="0" ${tip(i)}></span>`).join("");
+    const negs = items.filter((i) => i.points < 0);
+    const over = lost ? `<span class="pseg-neg" style="left:${w(Math.max(0, gross - lost))}%;width:${w(Math.min(lost, gross || lost))}%" tabindex="0" data-v="Points lost · −${f1(lost)}" data-l="${esc(negs.map((i) => `${i.stat ?? ""} ${i.short} ${num(i.points)}`.trim()).join(", "))}"></span>` : "";
+    const txt = [...pos, ...items.filter((i) => i.points < 0)].map((i) => `<span class="${i.points < 0 ? "neg" : ""}">${i.stat != null ? esc(i.stat) + " " : ""}${esc(i.short)} <b>${num(i.points)}</b>${i.provisional ? ' <em class="prov">provisional</em>' : ""}</span>`).join(" · ");
+    return `<span class="pbk"><span class="pbar-bk" role="img" aria-label="${esc(p.name)}: ${esc(items.map((i) => `${i.label} ${num(i.points)}`).join(", "))}">${segs}${over}</span><span class="pbk-txt">${txt}</span></span>`;
   }
   function moveCard(sec, card, toBench) {
     let grp = sec.querySelector("details.benchgrp");

@@ -116,3 +116,19 @@ section.is-live .gres{display:none}
 .lc-st{display:flex;flex-wrap:wrap;align-items:center;row-gap:2px}
 .fkey{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin:4px 0 2px;font-size:11px}
 .fkey .fstat{margin-right:0}
+
+/* points breakdown on player cards: stacked bar (shared 0-40 scale) + itemised text */
+:root{--pk-yards:#1baf7a;--pk-td:#6250d6;--pk-rec:#eda100;--pk-dst:#e87ba4;--pk-other:#008300;--pk-neg:#d03b3b}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pk-yards:#199e70;--pk-td:#9085e9;--pk-rec:#c98500;--pk-dst:#d55181;--pk-other:#008300}}
+:root[data-theme="dark"]{--pk-yards:#199e70;--pk-td:#9085e9;--pk-rec:#c98500;--pk-dst:#d55181;--pk-other:#008300}
+.pk.g-yards{background:var(--pk-yards)} .pk.g-td{background:var(--pk-td)} .pk.g-rec{background:var(--pk-rec)} .pk.g-dst{background:var(--pk-dst)} .pk.g-other{background:var(--pk-other)}
+.pk.g-neg{background:repeating-linear-gradient(135deg,var(--pk-neg) 0 2px,transparent 2px 4px);box-shadow:inset 0 0 0 1px var(--pk-neg)}
+.pbk{flex-basis:100%;display:flex;flex-direction:column;gap:3px;margin-top:2px}
+.pbar-bk{position:relative;display:flex;gap:2px;height:8px;max-width:520px}
+.pseg{display:block;height:100%;min-width:3px} .pseg:first-child{border-radius:4px 0 0 4px} .pseg:last-of-type{border-radius:0 4px 4px 0} .pseg:only-of-type{border-radius:4px}
+.pseg-neg{position:absolute;top:-2px;bottom:-2px;border-radius:0 4px 4px 0;background:repeating-linear-gradient(135deg,var(--pk-neg) 0 2px,color-mix(in srgb,var(--surface) 70%,transparent) 2px 4px);box-shadow:inset 0 0 0 1px var(--pk-neg)}
+.pbk-txt{font-size:12px;color:var(--text-2);font-variant-numeric:tabular-nums;line-height:1.4}
+.pbk-txt b{color:var(--text);font-weight:700} .pbk-txt .neg b{color:var(--bad)}
+.pbk-txt .prov{font-style:normal;font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.04em}
+.pbk-key{display:flex;flex-wrap:wrap;gap:4px 12px;margin:8px 0 2px}
+.pbk-key span{display:inline-flex;align-items:center;gap:4px} .pbk-key .pk{display:inline-block;width:12px;height:8px;border-radius:2px}

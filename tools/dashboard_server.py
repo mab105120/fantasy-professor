@@ -31,6 +31,7 @@ API (all GET return JSON; intervals are seconds):
 """
 import argparse
 import json
+import re
 import sys
 import threading
 import time
@@ -171,6 +172,7 @@ class Dashboard:
                         "injury_status": ec.injury_status(bp),
                         "on_bye": bool(bp.on_bye_week),
                         "stats": stat_line(bp.breakdown),
+                        "points_breakdown": points_items(bp.points_breakdown, bp.breakdown, state.get(pro) == "in"),
                         "game_state": state.get(pro, "bye"),
                     })
             if m.away_team and self.my_id in (m.home_team.team_id, m.away_team.team_id):
@@ -286,8 +288,7 @@ def game_detail(summary: dict) -> dict:
     home = next((x["team"]["abbreviation"] for x in comp.get("competitors", []) if x.get("homeAway") == "home"), None)
     wp = summary.get("winprobability") or []
     return {
-        # every play of the current drive, newest first (the page shows 6 and counts touches over all)
-        "current_drive": (drive(cur) | {"play_log": [play_row(p) for p in (cur.get("plays") or [])][::-1]}) if cur else None,
+        "current_drive": (drive(cur) | {"recent_plays": [play_row(p) for p in (cur.get("plays") or [])[-6:]][::-1]}) if cur else None,
         # ESPN keeps the just-finished drive as "current" between possessions and also lists it in "previous"
         "previous_drives": [drive(d) for d in (drives.get("previous") or []) if not cur or d.get("id") != cur.get("id")][-6:][::-1],
         "scoring_plays": [{
@@ -323,6 +324,63 @@ def win_prob(wp: list, home: str | None) -> dict:
 STAT_KEYS = ("passingCompletions", "passingAttempts", "passingYards", "passingTouchdowns", "passingInterceptions",
              "rushingAttempts", "rushingYards", "rushingTouchdowns",
              "receivingReceptions", "receivingTargets", "receivingYards", "receivingTouchdowns", "lostFumbles")
+
+
+# ESPN points-breakdown key -> (label, short label for the text line, group). The count shown
+# is the same-named key in the real-stat breakdown. Groups drive the bar's segment colours.
+POINT_CATS = {
+    "passingYards": ("Passing yards", "pass yds", "yards"),
+    "rushingYards": ("Rushing yards", "rush yds", "yards"),
+    "receivingYards": ("Receiving yards", "rec yds", "yards"),
+    "passingTouchdowns": ("Passing TD", "pass TD", "td"),
+    "rushingTouchdowns": ("Rushing TD", "rush TD", "td"),
+    "receivingTouchdowns": ("Receiving TD", "rec TD", "td"),
+    "interceptionReturnTouchdowns": ("Interception return TD", "INT return TD", "td"),
+    "fumbleReturnTouchdowns": ("Fumble return TD", "fumble return TD", "td"),
+    "puntReturnTouchdowns": ("Punt return TD", "punt return TD", "td"),
+    "kickoffReturnTouchdowns": ("Kickoff return TD", "kick return TD", "td"),
+    "blockedKickForTouchdowns": ("Blocked kick return TD", "blocked kick TD", "td"),
+    "receivingReceptions": ("Receptions", "rec", "rec"),
+    "defensiveSacks": ("Sacks", "sacks", "dst"),
+    "defensiveInterceptions": ("Interceptions", "INT", "dst"),
+    "defensiveFumbles": ("Fumbles recovered", "fum rec", "dst"),
+    "defensiveBlockedKicks": ("Blocked kicks", "blocked kicks", "dst"),
+    "defensiveSafeties": ("Safeties", "safeties", "dst"),
+    "passing2PtConversions": ("2-pt conversion (pass)", "2-pt pass", "other"),
+    "rushing2PtConversions": ("2-pt conversion (rush)", "2-pt rush", "other"),
+    "receiving2PtConversions": ("2-pt conversion (catch)", "2-pt rec", "other"),
+    "passingInterceptions": ("Interceptions thrown", "INT", "neg"),
+    "lostFumbles": ("Fumbles lost", "fum lost", "neg"),
+}
+TIER = re.compile(r"^defensive(?:(\d+)To(\d+)|(\d+)Plus|LessThan(\d+)|(0))(Points|Yards)Allowed$")
+
+
+def points_items(points_breakdown: dict | None, breakdown: dict | None, live: bool) -> list:
+    """ESPN's per-category fantasy points (this league's scoring) as readable items that sum to the
+    player's total: [{key, label, short, stat, points, group, provisional}], largest first, negatives last."""
+    stats = ec.named_stats(breakdown or {})
+    items = []
+    for key, pts in (points_breakdown or {}).items():
+        if not pts:
+            continue
+        tier = TIER.match(key)
+        if tier:
+            lo, hi, plus, below, zero, what = tier.groups()
+            rng = f"{lo}–{hi}" if lo else f"{plus}+" if plus else f"<{below}" if below else "0"
+            label = f"{rng} {'pts' if what == 'Points' else 'yds'} allowed"
+            short, group, stat = label, "dst", None
+        else:
+            label, short, group = POINT_CATS.get(key) or (re.sub(r"(?<!^)(?=[A-Z])", " ", key).capitalize(), None, "other")
+            short = short or label.lower()
+            stat = stats.get(key)
+        items.append({
+            "key": key, "label": label, "short": short,
+            "stat": int(stat) if stat is not None and float(stat).is_integer() else stat,
+            "points": round(pts, 2),
+            "group": "neg" if pts < 0 else ("other" if group == "neg" else group),
+            "provisional": bool(tier) and live,
+        })
+    return sorted(items, key=lambda i: (i["points"] < 0, -abs(i["points"])))
 
 
 def stat_line(breakdown) -> dict:
