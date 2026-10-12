@@ -23,6 +23,8 @@ Usage:
 API (all GET return JSON; intervals are seconds):
     GET  /api/live      GET /api/rosters      GET /api/static
     GET  /api/all       everything above in one payload (handy for the agent)
+    GET  /api/game/<id> live drive, recent plays, scoring plays, win probability for one
+                        game (ESPN event id from /api/live); cached on the live interval
     GET  /api/config    current intervals and their allowed ranges
     POST /api/config    {"live": 7, "rosters": 300, "static": 60} - any subset
     GET  /api/<group>?force=1   bypass the cache once
@@ -104,6 +106,7 @@ class Dashboard:
         self.report = report or latest_report()
         self.my_id = next(t.team_id for t in self.league.teams if ec.is_my_team(t, cfg))
         self.http = requests.Session()
+        self.games, self.games_lock = {}, threading.Lock()
         self.groups = {
             "live": Group("live", self.fetch_live, intervals["live"]),
             "rosters": Group("rosters", self.fetch_rosters, intervals["rosters"]),
@@ -121,7 +124,9 @@ class Dashboard:
             side = {x["homeAway"]: x for x in c["competitors"]}
             odds = (c.get("odds") or [{}])[0]
             st = e["status"]["type"]
+            ab_by_id = {x["team"]["id"]: x["team"]["abbreviation"] for x in c["competitors"]}
             games.append({
+                "situation": situation(c.get("situation"), ab_by_id) if st["state"] == "in" else None,
                 "id": e["id"],
                 "away": side["away"]["team"]["abbreviation"],
                 "home": side["home"]["team"]["abbreviation"],
@@ -170,6 +175,18 @@ class Dashboard:
                 matchup[key] = tally([p for p in players if p["fantasy_team_id"] == tid])
         return {"week": self.week, "games": games, "players": players, "matchup": matchup}
 
+    # ---------- per-game detail (drive, plays, win probability), cached on the live interval
+    def game(self, event_id: str, force: bool = False) -> dict:
+        with self.games_lock:
+            g = self.games.get(event_id)
+            if g is None:
+                def fetch():
+                    r = self.http.get(f"{SITE_API}/summary", params={"event": event_id}, timeout=10)
+                    r.raise_for_status()
+                    return game_detail(r.json()) | {"event_id": event_id}
+                g = self.games[event_id] = Group(f"game:{event_id}", fetch, self.groups["live"].interval)
+        return g.get(force)
+
     # ---------- rosters
     def fetch_rosters(self) -> dict:
         with self.league_lock:
@@ -207,12 +224,97 @@ class Dashboard:
             if k in self.groups:
                 lo, hi = LIMITS[k]
                 self.groups[k].interval = int(min(hi, max(lo, float(v))))
+        for g in self.games.values():
+            g.interval = self.groups["live"].interval
         return self.config()
 
     def config(self) -> dict:
         return {"intervals": {k: g.interval for k, g in self.groups.items()},
                 "limits": LIMITS, "week": self.week, "my_team_id": self.my_id,
                 "report": str(self.report.relative_to(ROOT))}
+
+
+def situation(s: dict | None, ab_by_id: dict) -> dict | None:
+    """Down/distance/ball spot for a live game from the scoreboard's `situation` block."""
+    if not s:
+        return None
+    lp = s.get("lastPlay") or {}
+    return {
+        "down": s.get("down"),
+        "distance": s.get("distance"),
+        "yard_line": s.get("yardLine"),
+        "down_distance_text": s.get("downDistanceText"),     # "3rd & 4 at ATL 32"
+        "short_text": s.get("shortDownDistanceText"),         # "3rd & 4"
+        "possession_text": s.get("possessionText"),           # "ATL 32"
+        "possession": ab_by_id.get(s.get("possession")),      # team abbreviation with the ball
+        "is_red_zone": bool(s.get("isRedZone")),
+        "home_timeouts": s.get("homeTimeouts"),
+        "away_timeouts": s.get("awayTimeouts"),
+        "last_play": {"text": lp.get("text"), "type": (lp.get("type") or {}).get("text")} if lp else None,
+    }
+
+
+def play_row(p: dict) -> dict:
+    start = p.get("start") or {}
+    return {
+        "text": p.get("text"),
+        "type": (p.get("type") or {}).get("text"),
+        "down_distance_text": start.get("downDistanceText"),
+        "period": (p.get("period") or {}).get("number"),
+        "clock": (p.get("clock") or {}).get("displayValue"),
+        "yards": p.get("statYardage"),
+        "scoring": bool(p.get("scoringPlay")),
+    }
+
+
+def game_detail(summary: dict) -> dict:
+    """Live drive, recent drives, scoring plays and win probability from an ESPN game summary."""
+    drives = summary.get("drives") or {}
+    cur = drives.get("current") or {}
+    team = lambda d: ((d.get("team") or {}).get("abbreviation"))
+    drive = lambda d: {"team": team(d), "description": d.get("description"), "result": d.get("displayResult") or d.get("result"),
+                       "yards": d.get("yards"), "plays": d.get("offensivePlays")}
+    comp = ((summary.get("header") or {}).get("competitions") or [{}])[0]
+    home = next((x["team"]["abbreviation"] for x in comp.get("competitors", []) if x.get("homeAway") == "home"), None)
+    wp = summary.get("winprobability") or []
+    return {
+        "current_drive": (drive(cur) | {"recent_plays": [play_row(p) for p in (cur.get("plays") or [])[-6:]][::-1]}) if cur else None,
+        # ESPN keeps the just-finished drive as "current" between possessions and also lists it in "previous"
+        "previous_drives": [drive(d) for d in (drives.get("previous") or []) if not cur or d.get("id") != cur.get("id")][-6:][::-1],
+        "scoring_plays": [{
+            "team": (s.get("team") or {}).get("abbreviation"), "text": s.get("text"),
+            "type": (s.get("scoringType") or {}).get("displayName"),
+            "period": (s.get("period") or {}).get("number"), "clock": (s.get("clock") or {}).get("displayValue"),
+            "away_score": s.get("awayScore"), "home_score": s.get("homeScore"),
+        } for s in summary.get("scoringPlays") or []][::-1],
+        "win_probability": {"home": home, "home_pct": round(wp[-1].get("homeWinPercentage", 0) * 100, 1),
+                            "series": [round(w.get("homeWinPercentage", 0) * 100, 1) for w in wp[:: max(1, len(wp) // 60)]]} if wp else None,
+    }
+
+
+IDLE_LIVE_INTERVAL = 300   # live refresh when no game is in progress or starting soon
+SOON_S = 30 * 60           # "starting soon" window before kickoff
+
+
+def poll_forever(dash: "Dashboard") -> None:
+    """Background poller: keeps every group (and each in-progress game's detail)
+    fresh on its interval even when no client is connected, so /api/* is always
+    warm. Between game windows the live group slows to IDLE_LIVE_INTERVAL."""
+    while True:
+        live = dash.groups["live"]
+        games = (live.data or {}).get("games", [])
+        now = time.time()
+        soon = any(g["state"] == "in" or (g["state"] == "pre" and
+                   0 <= datetime.fromisoformat(g["kickoff"].replace("Z", "+00:00")).timestamp() - now <= SOON_S)
+                   for g in games)
+        if live.data is None or soon or now - live.fetched_at >= IDLE_LIVE_INTERVAL:
+            live.get()
+        dash.groups["rosters"].get()
+        dash.groups["static"].get()
+        for g in (live.data or {}).get("games", []):
+            if g["state"] == "in":
+                dash.game(g["id"])
+        time.sleep(1)
 
 
 def tally(rows: list) -> dict:
@@ -268,6 +370,11 @@ def make_handler(dash: Dashboard):
                 return self.json(dash.config())
             if path == "/api/all":
                 return self.json({k: g.get(force) for k, g in dash.groups.items()} | {"config": dash.config()})
+            if path.startswith("/api/game/"):
+                event_id = path[len("/api/game/"):]
+                if not event_id.isdigit():
+                    return self.json({"error": "event id must be numeric"}, 400)
+                return self.json(dash.game(event_id, force))
             group = path[len("/api/"):] if path.startswith("/api/") else None
             if group in dash.groups:
                 return self.json(dash.groups[group].get(force))
@@ -307,13 +414,17 @@ def main():
     p.add_argument("--report", type=Path, help="report HTML to serve (default: newest weekly-matchup report)")
     for k, (lo, hi) in LIMITS.items():
         p.add_argument(f"--{k}", type=int, default=DEFAULTS[k], help=f"{k} refresh interval, s ({lo}-{hi})")
+    p.add_argument("--no-poll", action="store_true", help="only refresh when a client asks (no background polling)")
     a = p.parse_args()
     intervals = {k: min(LIMITS[k][1], max(LIMITS[k][0], getattr(a, k))) for k in LIMITS}
     report = (ROOT / a.report).resolve() if a.report and not a.report.is_absolute() else a.report
     dash = Dashboard(ec.load_config(), a.week, report, intervals)
     srv = ThreadingHTTPServer(("127.0.0.1", a.port), make_handler(dash))
+    if not a.no_poll:
+        threading.Thread(target=poll_forever, args=(dash,), daemon=True, name="poller").start()
     print(f"Week {dash.week} dashboard on http://127.0.0.1:{a.port}  "
-          f"(report: {dash.report.relative_to(ROOT)}; intervals {intervals})", flush=True)
+          f"(report: {dash.report.relative_to(ROOT)}; intervals {intervals}; "
+          f"background polling {'off' if a.no_poll else 'on'})", flush=True)
     try:
         srv.serve_forever()
     except KeyboardInterrupt:

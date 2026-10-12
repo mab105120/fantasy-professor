@@ -250,9 +250,15 @@ python3 tools/projection_accuracy.py                          # how well ESPN pr
 ### Live dashboard (game days)
 
 ```
-python3 tools/dashboard_server.py                          # http://127.0.0.1:8765, newest weekly-matchup report
-python3 tools/dashboard_server.py --live 5 --rosters 120   # per-group refresh intervals, seconds
+tools/dashboard.sh start                     # background server + live polling, opens the browser
+tools/dashboard.sh start --no-open --live 5  # extra flags pass through to the server
+tools/dashboard.sh status | stop | restart | logs
+python3 tools/dashboard_server.py            # same server in the foreground (--no-poll: refresh only on request)
 ```
+
+The server polls ESPN in a background thread even with no browser open
+(live slows to every 5 min when no game is in progress or starting within
+30 min); PID/log are in `.run/` (gitignored).
 
 Serves the newest `reports/weekly-matchup/*-visual.html` with a live layer
 (`tools/dashboard/live.js` + `live.css`) that redraws the live score panel,
@@ -261,7 +267,11 @@ and pre-game injury badges; the preview analysis stays as written. Data is
 cached per group so ESPN is hit at most once per interval:
 
 - `live` (default 7 s, 5–60): NFL scoreboard + ESPN box scores (every
-  rostered player's points/slot/projection) and the Man Wolf matchup tally.
+  rostered player's points/slot/projection) and the Man Wolf matchup tally;
+  each in-progress game also carries `situation` (down, distance, ball
+  spot, possession, red zone, timeouts, last play). `GET /api/game/<id>`
+  adds the current drive, recent plays/drives, scoring plays and win
+  probability for one game (cached on the live interval).
 - `rosters` (default 300 s, 60–3600): standings/records + NFL injury reports
   for games not yet final.
 - `static` (default 60 s, 10–3600): report file check; the page reloads

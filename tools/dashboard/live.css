@@ -38,3 +38,35 @@
 .dash-btns button:hover{background:var(--border)}
 .dash-err{margin:8px 0 0;font-size:11px;color:var(--bad)}
 @media (max-width:760px){.dash{top:auto;bottom:112px;right:12px}.gside a.sbg.wsc{flex-direction:row;gap:4px;align-items:center}}
+
+/* live game situation: field strip, drive panel, win probability */
+.gsit{margin-top:8px;max-width:560px}
+.sitrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px}
+.poss{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:1px 8px;border-radius:999px;color:var(--text);box-shadow:inset 0 0 0 1.5px currentColor}
+.poss.s1{color:var(--s1)} .poss.s2{color:var(--s2)}
+.rz{font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;background:var(--toughbg);color:var(--text)}
+.tos{margin-left:auto;letter-spacing:.02em}
+.field{position:relative;height:30px;margin:8px 0 4px;border-radius:6px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--border);margin-inline:28px}
+.fez{position:absolute;top:0;bottom:0;width:26px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--text-2);background:var(--neubg);border-radius:6px}
+.fez.l{left:-28px} .fez.r{right:-28px}
+.frz{position:absolute;top:0;bottom:0;width:20%;opacity:0} .frz.l{left:0} .frz.r{right:0} .frz.on{opacity:1;background:var(--toughbg)}
+.fyl{position:absolute;top:0;bottom:0;width:1px;background:var(--border)}
+.fyl b{position:absolute;bottom:1px;left:3px;font-size:8px;font-weight:600;color:var(--text-3)}
+.flos{position:absolute;top:-3px;bottom:-3px;width:2px;margin-left:-1px;background:var(--text)}
+.ftogo{position:absolute;top:-3px;bottom:-3px;width:0;margin-left:-1px;border-left:2px dashed var(--text-2)}
+.fball{position:absolute;top:50%;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;box-shadow:0 0 0 2px var(--surface)}
+.fball.s1{background:var(--s1)} .fball.s2{background:var(--s2)}
+.lastplay{margin:4px 0 0;color:var(--text-2)}
+.gdrive{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin:10px 0;padding:10px 14px;border-radius:10px;background:var(--surface-2)}
+.gdrive h4{margin:2px 0 6px;font-size:13px}
+.gdrive .plays{margin:0;padding-left:18px;font-size:13px} .gdrive .plays li{margin:3px 0} .gdrive .plays li.score{font-weight:700}
+.gdrive .pdd{display:block;font-size:11px}
+.gdrive ul.plain{list-style:none;padding:0;margin:6px 0 0} .gdrive ul.plain li{margin:3px 0}
+.wpnum{display:flex;justify-content:space-between;font-size:13px;font-variant-numeric:tabular-nums}
+.wpbar{display:flex;gap:2px;height:8px;margin:4px 0 8px} .wpbar span{display:block;border-radius:2px} .wpbar .s1{background:var(--s1)} .wpbar .s2{background:var(--s2)}
+.wpsvg{display:block;width:100%;height:56px;overflow:visible}
+.wpmid{stroke:var(--axis);stroke-width:1;stroke-dasharray:3 3;vector-effect:non-scaling-stroke}
+.wpline{fill:none;stroke:var(--s2);stroke-width:2;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.wpax{display:flex;justify-content:space-between;font-size:10px;margin-top:2px}
+.gside .sbdd{font-size:10px;color:var(--text-2);font-weight:600} .gside .sbdd.rz{color:var(--bad)}
+@media (max-width:760px){.gdrive{grid-template-columns:1fr}.tos{margin-left:0}}

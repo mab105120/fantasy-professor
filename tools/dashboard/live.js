@@ -49,6 +49,8 @@
     S.me = L.matchup?.my_team_id; S.opp = L.matchup?.opponent_id;
     renderScore(L.matchup);
     renderGames();
+    renderSituations();
+    loadGameDetails();
     renderSidebar();
     renderCards();
     renderLens();
@@ -134,6 +136,100 @@
     });
   }
 
+  // ---------- 2b. live field strip: ball spot, line to gain, possession, red zone, timeouts, last play
+  // Field runs left = away end zone (0) to right = home end zone (100).
+  function ballSpot(g, s) {
+    const m = (s.possession_text || "").match(/^([A-Z]{2,3})?\s*(\d{1,2})$/);
+    if (!m) return null;
+    const yd = +m[2];
+    const x = yd === 50 || !m[1] ? 50 : team(m[1]) === team(g.away) ? yd : 100 - yd;
+    const dir = team(s.possession) === team(g.away) ? 1 : -1; // away drives toward the home end zone
+    const goal = /goal/i.test(s.down_distance_text || s.short_text || "");
+    const togo = goal ? (dir > 0 ? 100 : 0) : Math.min(100, Math.max(0, x + dir * (s.distance || 0)));
+    return { x, togo, dir };
+  }
+  function renderSituations() {
+    document.querySelectorAll("section.game[id^='g-']").forEach((sec) => {
+      const g = S.game.get(sectionTeams(sec)[0]);
+      const s = g?.state === "in" ? g.situation : null;
+      let el = sec.querySelector(".gsit");
+      if (!s) return el?.remove();
+      if (!el) { sec.querySelector(".gres")?.insertAdjacentHTML("afterend", '<div class="gsit"></div>'); el = sec.querySelector(".gsit"); }
+      if (!el) return;
+      const spot = ballSpot(g, s);
+      const pcls = team(s.possession) === team(g.away) ? "s1" : "s2";
+      const to = (n) => (n == null ? "" : "●".repeat(Math.max(0, n)) + "○".repeat(Math.max(0, 3 - n)));
+      const field = spot ? `<div class="field" role="img" aria-label="${esc(s.possession || "")} ball, ${esc(s.down_distance_text || "")}">
+          <span class="fez l">${esc(g.away)}</span><span class="fez r">${esc(g.home)}</span>
+          <span class="frz ${spot.dir > 0 ? "r" : "l"}${s.is_red_zone ? " on" : ""}"></span>
+          ${[10, 20, 30, 40, 50, 60, 70, 80, 90].map((y) => `<i class="fyl" style="left:${y}%"><b>${y > 50 ? 100 - y : y}</b></i>`).join("")}
+          <i class="flos" style="left:${spot.x}%" tabindex="0" data-v="Line of scrimmage" data-l="${esc(s.possession_text)}"></i>
+          <i class="ftogo" style="left:${spot.togo}%" tabindex="0" data-v="Line to gain" data-l="${esc(s.short_text || "")}"></i>
+          <i class="fball ${pcls}" style="left:${spot.x}%"></i></div>` : "";
+      el.innerHTML = `<div class="sitrow"><span class="poss ${pcls}">${esc(s.possession || "—")} ball</span>
+          <b>${esc(s.down_distance_text || s.short_text || "")}</b>${s.is_red_zone ? '<span class="rz">Red zone</span>' : ""}
+          <span class="tos muted small" title="Timeouts left">TO ${esc(g.away)} ${to(s.away_timeouts)} · ${esc(g.home)} ${to(s.home_timeouts)}</span></div>
+        ${field}
+        ${s.last_play?.text ? `<p class="lastplay small"><b>Last play:</b> ${esc(s.last_play.text)}</p>` : ""}`;
+    });
+  }
+
+  // ---------- 2c. drive panel: current drive, recent plays, win probability, scoring plays
+  S.detail = {};
+  async function loadGameDetails() {
+    const live = S.live.data.games.filter((g) => g.state === "in");
+    document.querySelectorAll(".gdrive").forEach((el) => {
+      if (!live.some((g) => el.dataset.id === g.id)) el.remove();
+    });
+    await Promise.all(live.map(async (g) => {
+      try {
+        const r = await fetch(`/api/game/${g.id}`, { cache: "no-store" });
+        const res = await r.json();
+        if (res.data) S.detail[g.id] = res.data;
+      } catch {}
+      renderDrive(g);
+    }));
+  }
+  function wpChart(wp, g) {
+    const pts = wp.series, n = pts.length;
+    if (n < 2) return "";
+    const W = 240, H = 56, x = (i) => (i / (n - 1)) * W, y = (v) => H - (v / 100) * H;
+    const line = pts.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
+    const hits = pts.map((v, i) => `<rect x="${(x(i) - W / n / 2).toFixed(1)}" y="0" width="${(W / n).toFixed(1)}" height="${H}" fill="transparent" tabindex="-1" data-v="${esc(g.home)} ${f1(v)}%" data-l="Home win probability, sample ${i + 1} of ${n}"></rect>`).join("");
+    return `<svg class="wpsvg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${esc(g.home)} win probability over the game, now ${f1(wp.home_pct)}%">
+        <line x1="0" x2="${W}" y1="${H / 2}" y2="${H / 2}" class="wpmid"></line>
+        <polyline points="${line}" class="wpline"></polyline>${hits}</svg>`;
+  }
+  function renderDrive(g) {
+    const sec = document.getElementById(`g-${g.away}-${g.home}`.toLowerCase());
+    const d = S.detail[g.id];
+    if (!sec || !d) return;
+    let el = sec.querySelector(".gdrive");
+    if (!el) {
+      (sec.querySelector(".stake") || sec.querySelector(".ghead")).insertAdjacentHTML("afterend", `<div class="gdrive" data-id="${g.id}"></div>`);
+      el = sec.querySelector(".gdrive");
+    }
+    const cd = d.current_drive;
+    const plays = (cd?.recent_plays || []).map((p) => `<li${p.scoring ? ' class="score"' : ""}><span class="pdd muted">${esc(p.down_distance_text || p.type || "")}</span>${esc(p.text || "")}</li>`).join("");
+    const wp = d.win_probability;
+    const away = wp ? 100 - wp.home_pct : null;
+    const scoring = (d.scoring_plays || []).map((s) => `<li><span class="muted">Q${s.period} ${esc(s.clock || "")}</span> <b>${esc(s.team || "")}</b> ${esc(s.text || "")} <span class="muted">(${s.away_score}–${s.home_score})</span></li>`).join("");
+    const prev = (d.previous_drives || []).slice(0, 4).map((x) => `<li><b>${esc(x.team || "")}</b> ${esc(x.result || "")} <span class="muted">${esc(x.description || "")}</span></li>`).join("");
+    el.innerHTML = `<div class="gdcol">
+        <h4>${!cd ? "Between drives" : cd.result && g.situation?.possession && team(cd.team) !== team(g.situation.possession)
+          ? `Last drive: ${esc(cd.team || "")} — ${esc(cd.result)} <span class="muted small">${esc(cd.description || "")}</span>`
+          : `${esc(cd.team || "")} drive <span class="muted small">${esc(cd.description || "")}</span>`}</h4>
+        ${plays ? `<ol class="plays">${plays}</ol>` : '<p class="muted small">No plays yet on this drive.</p>'}
+        ${prev ? `<details class="small"><summary>Previous drives</summary><ul class="plain">${prev}</ul></details>` : ""}
+      </div>
+      <div class="gdcol">
+        ${wp ? `<h4>Win probability</h4><div class="wpnum"><span><b>${esc(g.away)}</b> ${f1(away)}%</span><span><b>${esc(g.home)}</b> ${f1(wp.home_pct)}%</span></div>
+          <div class="wpbar" role="img" aria-label="${esc(g.away)} ${f1(away)}%, ${esc(g.home)} ${f1(wp.home_pct)}%"><span class="s1" style="width:${away}%"></span><span class="s2" style="width:${wp.home_pct}%"></span></div>
+          ${wpChart(wp, g)}<div class="wpax muted"><span>start</span><span>${esc(g.home)} win % · 50% line</span><span>now</span></div>` : ""}
+        ${scoring ? `<details class="small"><summary>Scoring plays (${d.scoring_plays.length})</summary><ul class="plain">${scoring}</ul></details>` : ""}
+      </div>`;
+  }
+
   // ---------- 3. sidebar: scores + one dot per Man Wolf / opponent player
   function renderSidebar() {
     document.querySelectorAll(".gside a.sbg[href^='#g-']").forEach((a) => {
@@ -153,6 +249,9 @@
         a.classList.add("wsc");
         a.insertAdjacentHTML("beforeend", `<small class="sbsc${g.state === "in" ? " live" : ""}">${g.state === "in" ? "● " : ""}${g.away} ${g.away_score}–${g.home_score} ${g.home}${/OT/.test(g.detail) ? " OT" : ""}</small>`);
       }
+      a.querySelector(".sbdd")?.remove();
+      const s = g?.state === "in" ? g.situation : null;
+      if (s?.short_text) a.insertAdjacentHTML("beforeend", `<small class="sbdd${s.is_red_zone ? " rz" : ""}">${esc(s.possession || "")} · ${esc(s.short_text)}${s.possession_text ? " · " + esc(s.possession_text) : ""}</small>`);
     });
   }
 
