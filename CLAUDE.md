@@ -101,7 +101,8 @@ explanation to a line or two; teach in the write-up afterwards.
   with `fp memory propose` and show them; apply only what Mo confirms
   (`fp memory apply <ids>`). Details in `.claude/shared/protocols.md` §9.
 - `reports/history.md` is the **frozen** pre-redesign ledger (last entry
-  2026-10-17; its live items were migrated into season memory). Read it for
+  2026-10-17; Mo chose not to carry any of its decisions into season memory,
+  which started empty on 2026-10-27). Read it for
   history if needed, but **don't append to it** — this overrides any skill
   that still says to; propose memory items instead.
 - Report files are each skill's responsibility until that skill is rebuilt
@@ -125,7 +126,9 @@ explanation to a line or two; teach in the write-up afterwards.
 - `tools/sync_job.py` — scheduled sync (`light` every 4h, `nightly` 03:00,
   `finalize` Tue 06:00) run by launchd (`tools/launchd/install.sh`); takes a
   lock on `data/.sync.lock` and records each run's result in
-  `data/sync_meta.json` under `_job`.
+  `data/sync_meta.json` under `_job`. The launchd jobs were tested and then
+  uninstalled (Mo, 2026-10-27), so nothing syncs in the background — don't
+  assume a recent scheduled run, and don't install them unless Mo asks.
 - `tools/espn_client.py` — connector to the ESPN Fantasy API (via the
   `espn_api` Python package). `sync` pulls league settings, all teams'
   rosters, and the free-agent/player pool into `data/*.json`.
