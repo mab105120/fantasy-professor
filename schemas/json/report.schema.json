@@ -1,0 +1,289 @@
+{
+  "$defs": {
+    "GlossaryEntry": {
+      "additionalProperties": false,
+      "description": "Plain-language definition of a stat or term used in the report.",
+      "properties": {
+        "term": {
+          "minLength": 1,
+          "title": "Term",
+          "type": "string"
+        },
+        "definition": {
+          "minLength": 1,
+          "title": "Definition",
+          "type": "string"
+        }
+      },
+      "required": [
+        "term",
+        "definition"
+      ],
+      "title": "GlossaryEntry",
+      "type": "object"
+    },
+    "ManWolf": {
+      "additionalProperties": false,
+      "properties": {
+        "record": {
+          "title": "Record",
+          "type": "string"
+        },
+        "standing": {
+          "title": "Standing",
+          "type": "integer"
+        },
+        "opponent_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Opponent Id"
+        }
+      },
+      "required": [
+        "record",
+        "standing"
+      ],
+      "title": "ManWolf",
+      "type": "object"
+    },
+    "PlayerRef": {
+      "additionalProperties": false,
+      "description": "A player mention. `player_id` (ESPN id, same in fantasy and site APIs)\nis the join key; `name` is display-only.",
+      "properties": {
+        "player_id": {
+          "title": "Player Id",
+          "type": "integer"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "pro_team": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pro Team"
+        },
+        "position": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Position"
+        }
+      },
+      "required": [
+        "player_id",
+        "name"
+      ],
+      "title": "PlayerRef",
+      "type": "object"
+    },
+    "Source": {
+      "additionalProperties": false,
+      "description": "A cited source: what it is, where, and what it was used for.",
+      "properties": {
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        },
+        "used_for": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Used For"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "title": "Source",
+      "type": "object"
+    },
+    "Subject": {
+      "additionalProperties": false,
+      "description": "What a lab report is about (trade partner/players, evaluated players).",
+      "properties": {
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "players": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/PlayerRef"
+          },
+          "title": "Players",
+          "type": "array"
+        },
+        "team_ids": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Team Ids",
+          "type": "array"
+        }
+      },
+      "title": "Subject",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "enum": [
+        "review",
+        "waivers",
+        "lineup",
+        "preview",
+        "trade",
+        "player-eval"
+      ],
+      "title": "Type",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "status": {
+      "default": "final",
+      "enum": [
+        "draft",
+        "final"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "week": {
+      "maximum": 18,
+      "minimum": 1,
+      "title": "Week",
+      "type": "integer"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "data_freshness": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "format": "date-time",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "default": {},
+      "title": "Data Freshness",
+      "type": "object"
+    },
+    "man_wolf": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ManWolf"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "subject": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Subject"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "headline": {
+      "default": "",
+      "title": "Headline",
+      "type": "string"
+    },
+    "sections": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Sections",
+      "type": "object"
+    },
+    "glossary": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/GlossaryEntry"
+      },
+      "title": "Glossary",
+      "type": "array"
+    },
+    "sources": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Source"
+      },
+      "title": "Sources",
+      "type": "array"
+    }
+  },
+  "required": [
+    "type",
+    "week",
+    "created_at"
+  ],
+  "title": "Report",
+  "type": "object"
+}

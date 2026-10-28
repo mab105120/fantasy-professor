@@ -762,3 +762,163 @@ File: `weekly-lineup/week5/lineup-report-1.html`. Synced Wed 10-07 (W1–4 final
 
 OUTCOME: resolved 2026-10-07 (Mo) — swap made; ESPN confirms J. Williams + Harvey in FLEX,
 Fannin on bench. Re-check Collins (Fri practice) and Barkley before Sunday locks.
+
+## 2026-10-10 — Week 5 weekly-matchup report (14 remaining NFL games, league lens)
+
+File: `weekly-matchup/2026-10-10-w05-weekly-matchup.html` (+ `…-visual.html`, 10-11: same data,
+re-rendered with rank strips, matchup cells, form/usage/consensus mini-charts). Built Sat 10-10 from the 17:54 sync
+(+ transactions, W4/W5 week-stats). Generated as a review draft — Mo plans to redesign the
+`/weekly-matchup` output format based on it. Team profiles + fantasy-points-allowed by position in
+D League scoring from ESPN box scores of all 65 completed games (W1–4 + TNF), scratchpad only.
+
+- **Roster changes found in sync (not previously logged):** 10-08 trade — RJ Harvey → Steel Giants
+  for Will Shipley + Ollie Gordon II. Eagles D/ST no longer rostered. Imad traded Chase Brown +
+  Skattebo → Bower Outage for Kyren Williams + A.J. Brown (IR) on 10-08, added BTJ 10-10.
+- **Matchup vs Imad:** ESPN 117.8 (Dak 12.64 locked, TB 24–16) vs 122.5 → toss-up. Imad's
+  Kyren Williams (FP RB4) plays MNF vs BUF; our MNF exposure is bench only (Stafford, Coleman).
+- **Man Wolf flags:** Favourable — J. Williams @ARI (most net Y/A allowed, O/U 54.5), Browns D/ST
+  @NYJ (rain, Hall/Mitchell OUT). Tough — Henry @ATL (2.7 YPC allowed, Lamar OUT → Huntley).
+  Second FLEX Washington (WR25) ≈ Fannin (TE8) ≈ Shipley (RB25, PHI lead back) — coin flip,
+  pointed to `/weekly-lineup`.
+- **Status (live):** Barkley OUT (hamstring, week-to-week). Kamara Q (back, LP Thu/Fri, "should
+  play") — benched, MIN allows fewest RB pts. Olave cleared (foot, FP Fri). Collins, Kittle,
+  Henry, Tuten no designation. Imad's starters all clear; Evans cleared (ribs).
+- **Waiver watch (no claim; we pick #10):** Dontayvion Wicks (PHI, Smith + Brown OUT), Tre'
+  Harris (LAC, 2nd-yr, Johnston/Thompson OUT, McConkey GTD), Kalif Raymond, Bears D/ST.
+- **Sources that worked:** same ESPN site-API + FantasyPros `ecrData` curl pattern as W3; ESPN
+  team `/roster` endpoint for positions; Rotowire Friday injury report + team-site final reports
+  (Vikings.com) for designations. ESPN game-summary `injuries` omitted Barkley/Kamara — cross-check
+  against team reports.
+
+OUTCOME: pending — second FLEX (Washington vs Fannin vs Shipley) before Sunday lock; Mo's
+feedback on report format for the skill redesign.
+Format feedback 1 (10-11, applied): player cards per game split into **Starters** and a
+collapsed **Bench & IR** panel (Mo doesn't want to read other teams' bench players). Visual
+report regrouped in place (same content); rule added to `/weekly-matchup` SKILL.md step 5.
+Format feedback 2 (10-11, applied): fixed left game sidebar (`MIN-NO` style links, kickoff
+order TNF→MNF, played games dimmed with score) replaces the navbar's games row; instant
+jump on click (no smooth scroll); one dot per Man Wolf/Imad player (filled = starter, ring =
+bench/IR). SKILL.md step 5 item 3 updated.
+Results overlay (Sun 10-11 ~7:40 PM ET, Mo asked for "fresh data"; preview text kept as-is):
+live score panel, Actual column in lens tables, final/live score on each game + sidebar,
+actual-pts chip on cards. Score then: **Man Wolf 92.6 (Henry SNF to play) vs Imad 110.5
+(London SNF, Kyren MNF)** → projected 109.4–144.3 (−34.9, just inside ±36 band). Imad driven
+by Watson 32.3 / Evans 26.3 (SF-SEA still live). FLEX call: Washington 12.1 vs Fannin 1.4
+(+10.7). Bench: Ollie Gordon II 14.8. Monday: BUF DJ Moore Q, Palmer OUT (Coleman, our bench).
+NYG-WSH ended 27–27 (OT tie).
+FLEX: `/weekly-lineup` quick call 10-11 = keep Washington (Douglas + TE Joly OUT, MIA +7
+script; CLE@NYJ 38.5 total, rain) — not yet confirmed by Mo.
+
+## 2026-10-13 — Week 6 waiver wire
+
+File: `waiver-wire/2026-10-13-w06-waivers.html`. Synced Tue 10-13 20:19 (600-player pool, transactions —
+0 new; W5 week-stats complete). Man Wolf 4-1 (3rd; lost W5 113.6 to Imad). Roster 16/16, IR 0/2.
+Opponents W6 Chaseing (1-4), W7 Get Hooked, W8 Lamar n Order.
+
+- **Waiver priority #8** (= inverse standings, consistent with weekly reset).
+- **News found:** Achane torn ACL → our Ollie Gordon II is MIA lead back (55/50/53% carry share
+  W3–5) — now not cuttable. Shipley partial plantar-fascia tear, multi-week (ESPN DOUBTFUL — not yet
+  IR-eligible). Barkley "hopeful" W6 (Q). Kamara played W5 hurt (back): 3 car vs Kendre Miller 10.
+- **Call (2 claims, both USE #8, independent drops):** (1) Bears D/ST (@ATL, W7 vs NE) → drop Browns
+  D/ST (vs BAL); fallback Colts D/ST (vs TEN) FA Wed. (2) Germie Bernard WR PIT (rookie, 30% tgt share
+  W5 9-6-80; Pittman IR, R. Wilson hand; PIT bye W9 → covers W8 crunch) → drop Kamara; expect to lose
+  to Redemption #5 (WR-desperate) / Bower #1; fallback Kendrick Bourne (ARI WR2) FA Wed.
+  (3) Not a claim: Shipley → IR once ESPN lists OUT/IR; use the freed spot for Dameon Pierce only if
+  Barkley is ruled out Friday, else hold open / Jonah Coleman IR stash.
+- **D/ST:** Bears > Colts > Giants (vs NO, 2.2 TO/g). W7 lean: keep Bears; alt Panthers vs TB, Browns @TEN.
+- **QB:** no action; Stafford kept this week (W6 vs ARI live option while Dak @GB).
+- **Stashes:** Jonah Coleman (DEN, IR, eligible W7, IR-slot stash), Jaylen Wright (Gordon cuff), Pierce.
+- **Cut order:** Kamara → Stafford → K. Coleman → Fannin (Shipley = IR, not cut; Barkley/Gordon
+  protected). Change: Kamara #6 → #1 (Gordon passed him; role slipping); Washington/JW now starters.
+- **Watch:** Pierce (Barkley OUT), K. Miller (≥12 car W6 with Kamara active), Wicks (Smith long-term),
+  Bourne (≥7 tgt W6), Tre Tucker (Bowers injury), Jonah Coleman (W7 return role), J. Wright (Gordon hurt).
+- **Sources:** ESPN site API scoreboard/summary via curl (all W1–5 box scores → opponent sacks/TO/pts);
+  FantasyPros waiver rankings / priority / add-stash-drop pages fetched fine; NBC W6 D/ST rankings
+  (truncated past tier 3); RotoBaller waiver page unreadable via fetch (nav-only). Kamara 2026 injury
+  search returned only 2025 items — status from FP article + ESPN ACTIVE. FP article mislabels Bernard
+  as CIN (he's PIT).
+
+OUTCOME: resolved 2026-10-14 (Mo) — no claims submitted. Processing (02:50 local): Bernard + Colts D/ST
+→ Bower (#1); Tre Tucker + Freiermuth → Chaseing; Keenan Allen + Strange → Steel Giants; Higbee → LnO.
+Bears D/ST went unclaimed (FA). Post-run FA: Pierce → Steel Giants; Giants D/ST → LnO; SG dropped Bucs D/ST
+(waivers). Follow-up 10-14: D/ST stream re-check in chat — Bears (FA) recommended over Browns vs BAL;
+OUTCOME of the stream: resolved (from transactions.json) — Mo added Saints D/ST 10-14 17:48 (dropped Browns),
+then re-added Browns D/ST 10-16 19:46 (W7 @TEN stream). Bears not added.
+
+## 2026-10-13 — Trade targets: Ollie Gordon II → Imad (team 15), Imad-initiated
+
+File: `trade-eval/2026-10-13-w06-gordon-to-imad-packages.html`. Proposal mode. Synced Tue 10-13 20:48.
+Man Wolf 4-1 (3rd); Imad 4-1 (2nd). Imad asked about Gordon; Imad is RB-thin (Walker, Kyren, Judkins —
+Judkins in a walking boot after W5, single report) and WR-deep (London, Watson, Evans, Rice, Vele,
+Wan'Dale, BTJ, A.J. Brown IR).
+
+- **Call: SELL Gordon only for a FLEX-starting WR.** Gordon = FP ROS RB24 (RSJ 1,081), our RB4–5,
+  0 targets W5; both FLEX slots are J. Williams (WR29) / M. Washington (WR45).
+- **Packages:** (1) Gordon + J. Williams → Drake London (FP WR8; RSJ 2,258 vs 2,064 — we overpay ~9%;
+  +4.7/wk FLEX; bye 11; keeper-age). (2) Gordon + M. Washington → Christian Watson (WR13; +4.9/wk;
+  TD-regression + injury-history caveat). (3) Gordon + Kamara → Evans (fallback only — W8 bye
+  collision, Mo's prior Evans injury concern; dead if Kamara dropped for Bernard).
+- **Avoid:** Rice (hamstring — Reid "tweak" vs NBC "several weeks"; Imad has refused Rice deals).
+- **Cost flagged:** cuts against strategy.md RB-depth rule while Barkley Q / Shipley out; boosts the #2 team.
+- **Status:** London, Watson, Evans ESPN ACTIVE, no 2026 designations found; Gordon/J. Williams/
+  Washington on W6 bye.
+
+OUTCOME: resolved 2026-10-13 (Mo) — all three packages sent, Imad REJECTED all immediately.
+Read: Imad won't move any of London/Watson/Evans for Gordon. Imad is now 0-for-6 on our offers
+(3 Kittle, 3 Gordon) — let Imad make the next offer rather than pitching again. Gordon held.
+
+## 2026-10-16 — Week 6 lineup (bye crunch)
+
+File: `weekly-lineup/week6/lineup-report-1.html`. Synced Fri 10-16 19:52 (600-player pool; W6 in progress, TNF done).
+Man Wolf 4-1 (3rd) vs Chaseing a win (1-4). Byes: J. Williams, M. Washington, O. Gordon. Waiver rank 4.
+
+- **Found:** second FLEX was EMPTY in ESPN. Fill with Kamara (Q back, limited all week; FP RB24/#75) — 1 PM
+  game, so pivot is possible at inactives.
+- **FA add (no drop, open roster spot 17/18):** Dontayvion Wicks (PHI, FP #73, own hamstring, Smith back, Hurts
+  OUT) as Kamara/Olave insurance; fallback Flournoy (#81) if Wicks is on waivers. Wicks = #1 cut next week.
+- Olave Q (illness; DNP-DNP-limited, leaning plays). Stafford (QB3) over Dak (QB6). Saints D/ST (DST12) kept —
+  Giants D/ST (DST11, FA) is a coin flip in the same game.
+- Projected 124.0 vs ~127.8 (opp Broncos D/ST already 11.0) — toss-up (band ±38). Accuracy W1–5: close calls 57%,
+  D/ST 54%, margin std 37.6.
+
+OUTCOME: superseded 10-16 by lineup-report-2 (FLEX call flipped Kamara → Wicks).
+
+## 2026-10-16 — Week 6 lineup deep dive (all options + next 2–3 weeks)
+
+File: `weekly-lineup/week6/lineup-report-2.html`. Same sync as report 1 + transactions merged (29 new) + live
+ESPN waiver-status query. Bench is full (Browns D/ST re-added 19:46); FLEX empty → 15/16 active.
+
+- **Call:** add Wicks (FA, no drop) and START him in FLEX over Kamara — flipped from report 1 on usage: Kamara
+  season-low 12 snaps/5 touches W5, limited all week (back), Miller leads; Wicks 5–6 tgt/g with Smith healthy,
+  no designation (full Fri). FP tie (#73 vs #75) — lean, not lock. Olave out → Wicks to WR, Kamara FLEX.
+- Stafford (QB3, LAR implied 32) > Dak; Saints D/ST = best startable (DST12; everything above rostered or Giants
+  on waivers same game). Opp sacks/TO table built from ESPN W1–5 box scores (TEN 11.6 pts/g → Browns W7 @TEN).
+- **Bye map:** W7 Tuten/K. Coleman; **W8 Collins, Olave, Kittle, Kamara, Saints D/ST** (vs LnO); W10 Wicks/PHI;
+  W11 Stafford/Fannin/Browns; W13 Henry; W14 Dak. Wicks is the W8 WR2.
+- **Cut order after Sunday:** Saints D/ST → Kamara (ROS RB37, Etienne back after NO W8 bye) → K. Coleman; 2nd QB
+  is a further lever (byes W11/W14). Tuesday watch: Godwin (FA, ROS WR53), Flournoy, Emmett Johnson.
+- Expected margin ~123.4 vs ~127.8 (Broncos D/ST 11.0 banked) — toss-up (±38).
+- **Data quirk (flag for spec):** ESPN waivers here are ~2 days after a drop (clears 02:00), not "until next
+  Wednesday" as `/weekly-lineup` step 5 says; players whose game has kicked off are held until Wed. Weekend
+  claims can still help the same week. waiver_rank read 4 mid-week (was #8 Tue) — looks like claimers drop
+  below us within the week; unconfirmed.
+- Barkley: hamstring, week-to-week, not on NFL IR (ruled out W6). Hurts OUT (blood clot) → Tanner McKee starts.
+
+OUTCOME: resolved 10-17 (from transactions.json) — Mo added Wicks 10-16 20:17 but benched him; on 10-17 12:59
+dropped Shipley + Keon Coleman and added Rachaad White into FLEX (Croskey-Merritt ruled out). See lineup-report-3.
+
+## 2026-10-17 — Week 6 lineup, Saturday final check
+
+File: `weekly-lineup/week6/lineup-report-3.html`. Synced Sat 10-17 21:27 CT; FP consensus Saturday update. Roster 16/16,
+IR 1/2 (Shipley dropped). Waiver rank 4.
+
+- **Verdict: no changes — Mo's lineup is the recommended one.** FLEX = Rachaad White (WSH, MNF) over Kamara/Wicks:
+  FP tie (#71 Kamara / #79 Wicks / #83 White; White's ECR stale — best rank RB22); decided on teammate injury →
+  usage: Croskey-Merritt OUT (groin) vacates ~13 car/g, Ekeler 3–4 car/g; White no designation (shoulder,
+  limited F/Sa). Caveat: SF allows 98 rush yds/g (10th-fewest), WSH +7.5. Kamara Q (12 snaps W5); Wicks capped (Smith
+  back, McKee QB).
+- Sunday 11:30 ET: Olave inactive → Wicks at WR. No Monday fallback for White/Kittle (bench all locked by MNF).
+- Opp ~127.9 (Broncos 11.0 banked; Freiermuth now Q) vs ~124.4 — toss-up (±38).
+- Open IR slot → Tuesday waiver report (stash candidates: Jonah Coleman clears Wed; Pittman/R. Wilson/T. Ferguson FA).
+
+OUTCOME: pending — W6 result; Sunday inactives (Olave, Kamara); White's actual share vs Ekeler (MNF).

@@ -1,0 +1,331 @@
+{
+  "$defs": {
+    "AddOp": {
+      "additionalProperties": false,
+      "description": "Add an item. `status: closed` records something already finished\n(e.g. a past trade offer and its answer); it must carry an outcome.",
+      "properties": {
+        "op": {
+          "const": "add",
+          "title": "Op",
+          "type": "string"
+        },
+        "item": {
+          "$ref": "#/$defs/ItemFields"
+        },
+        "status": {
+          "default": "open",
+          "enum": [
+            "open",
+            "closed"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "op",
+        "item"
+      ],
+      "title": "AddOp",
+      "type": "object"
+    },
+    "CloseOp": {
+      "additionalProperties": false,
+      "properties": {
+        "op": {
+          "const": "close",
+          "title": "Op",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "outcome": {
+          "minLength": 1,
+          "title": "Outcome",
+          "type": "string"
+        }
+      },
+      "required": [
+        "op",
+        "id",
+        "outcome"
+      ],
+      "title": "CloseOp",
+      "type": "object"
+    },
+    "ItemFields": {
+      "additionalProperties": false,
+      "description": "The content of an item, as a skill proposes it (no id/dates/status).",
+      "properties": {
+        "kind": {
+          "enum": [
+            "action",
+            "watch",
+            "position"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "week": {
+          "maximum": 18,
+          "minimum": 1,
+          "title": "Week",
+          "type": "integer"
+        },
+        "summary": {
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        },
+        "detail": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Detail"
+        },
+        "players": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/PlayerRef"
+          },
+          "title": "Players",
+          "type": "array"
+        },
+        "team_ids": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Team Ids",
+          "type": "array"
+        },
+        "outcome": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Outcome"
+        },
+        "trigger": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Trigger"
+        },
+        "revisit_week": {
+          "anyOf": [
+            {
+              "maximum": 18,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Revisit Week"
+        }
+      },
+      "required": [
+        "kind",
+        "week",
+        "summary"
+      ],
+      "title": "ItemFields",
+      "type": "object"
+    },
+    "PlayerRef": {
+      "additionalProperties": false,
+      "description": "A player mention. `player_id` (ESPN id, same in fantasy and site APIs)\nis the join key; `name` is display-only.",
+      "properties": {
+        "player_id": {
+          "title": "Player Id",
+          "type": "integer"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "pro_team": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pro Team"
+        },
+        "position": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Position"
+        }
+      },
+      "required": [
+        "player_id",
+        "name"
+      ],
+      "title": "PlayerRef",
+      "type": "object"
+    },
+    "Proposal": {
+      "additionalProperties": false,
+      "properties": {
+        "proposal_id": {
+          "pattern": "^p\\d{3,}$",
+          "title": "Proposal Id",
+          "type": "string"
+        },
+        "created": {
+          "format": "date-time",
+          "title": "Created",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "rationale": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rationale"
+        },
+        "op": {
+          "discriminator": {
+            "mapping": {
+              "add": "#/$defs/AddOp",
+              "close": "#/$defs/CloseOp",
+              "supersede": "#/$defs/SupersedeOp",
+              "update": "#/$defs/UpdateOp"
+            },
+            "propertyName": "op"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AddOp"
+            },
+            {
+              "$ref": "#/$defs/CloseOp"
+            },
+            {
+              "$ref": "#/$defs/UpdateOp"
+            },
+            {
+              "$ref": "#/$defs/SupersedeOp"
+            }
+          ],
+          "title": "Op"
+        }
+      },
+      "required": [
+        "proposal_id",
+        "created",
+        "source",
+        "op"
+      ],
+      "title": "Proposal",
+      "type": "object"
+    },
+    "SupersedeOp": {
+      "additionalProperties": false,
+      "description": "Replace a standing position (or any item) with a new one.",
+      "properties": {
+        "op": {
+          "const": "supersede",
+          "title": "Op",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "item": {
+          "$ref": "#/$defs/ItemFields"
+        }
+      },
+      "required": [
+        "op",
+        "id",
+        "item"
+      ],
+      "title": "SupersedeOp",
+      "type": "object"
+    },
+    "UpdateOp": {
+      "additionalProperties": false,
+      "properties": {
+        "op": {
+          "const": "update",
+          "title": "Op",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "set": {
+          "additionalProperties": true,
+          "title": "Set",
+          "type": "object"
+        }
+      },
+      "required": [
+        "op",
+        "id",
+        "set"
+      ],
+      "title": "UpdateOp",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "proposals": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Proposal"
+      },
+      "title": "Proposals",
+      "type": "array"
+    }
+  },
+  "title": "Proposals",
+  "type": "object"
+}

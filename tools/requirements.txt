@@ -1,1 +1,4 @@
 espn_api>=0.46.0
+requests>=2.31
+pydantic>=2.7,<3
+pytest>=8

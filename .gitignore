@@ -6,3 +6,6 @@ __pycache__/
 .DS_Store
 .claude/settings.local.json
 .run/
+.local
+reports/
+data/.sync.lock
