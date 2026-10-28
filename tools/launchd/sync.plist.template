@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Template for one scheduled sync job. tools/launchd/install.sh fills the
+     @PLACEHOLDERS@ with absolute paths (launchd expands neither ~ nor $VARS)
+     and the schedule for the mode. -->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.fantasyprofessor.sync.@MODE@</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>@PYTHON@</string>
+    <string>@ROOT@/tools/sync_job.py</string>
+    <string>@MODE@</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>@ROOT@</string>
+@SCHEDULE@
+  <key>StandardOutPath</key>
+  <string>@ROOT@/.run/sync.log</string>
+  <key>StandardErrorPath</key>
+  <string>@ROOT@/.run/sync.log</string>
+</dict>
+</plist>

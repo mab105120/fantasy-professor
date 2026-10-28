@@ -70,7 +70,7 @@ def refresh_team_names(rows: list, league: League, id_key: str, name_key: str) -
             r[name_key] = names[r[id_key]]
 
 
-def record_sync(league: League, filename: str, weeks: list | None = None) -> None:
+def record_sync(league: League, filename: str, weeks: list | None = None, **extra) -> None:
     """Stamp data/sync_meta.json with when `filename` was last written and
     what ESPN's current_week was at the time. The data files themselves are
     plain arrays (consumers depend on that), so freshness lives here.
@@ -79,12 +79,16 @@ def record_sync(league: League, filename: str, weeks: list | None = None) -> Non
     it was complete at sync time (`complete` = the week was already behind
     current_week, i.e. its Monday game had finished). A week with
     complete=false is an in-progress snapshot and must be re-pulled.
+
+    `extra` adds file-specific fields (e.g. the free-agent pool `size`).
+    Keys this function doesn't know (like the sync job's `_job` entry) are
+    preserved.
     """
     meta_path = DATA_DIR / "sync_meta.json"
     meta = json.loads(meta_path.read_text()) if meta_path.exists() else {}
     now = datetime.now().isoformat(timespec="seconds")
     entry = meta.get(filename, {})
-    entry.update({"synced_at": now, "current_week": league.current_week})
+    entry.update({"synced_at": now, "current_week": league.current_week, **extra})
     if weeks is not None:
         wk_meta = entry.setdefault("weeks", {})
         for wk in weeks:
@@ -217,8 +221,10 @@ def sync(cfg: dict, free_agents_size: int) -> None:
     free_agents = league.free_agents(size=free_agents_size)
     fa_out = [player_to_dict(p) for p in free_agents]
     (DATA_DIR / "free_agents.json").write_text(json.dumps(fa_out, indent=2))
-    for name in ("league.json", "teams.json", "free_agents.json"):
+    for name in ("league.json", "teams.json"):
         record_sync(league, name)
+    # pool size matters to the freshness guard: waivers needs the deep pool
+    record_sync(league, "free_agents.json", size=free_agents_size)
 
     my_team = next(
         (t for t in league.teams if is_my_team(t, cfg)),

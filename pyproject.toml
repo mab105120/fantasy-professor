@@ -1,0 +1,10 @@
+[project]
+name = "fantasy-professor"
+version = "0.1.0"
+description = "In-season fantasy football agent + local app for The Man Wolf (ESPN league 394766)"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "tools"]
+addopts = "-q"

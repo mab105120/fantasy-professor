@@ -11,6 +11,15 @@ say so and point there rather than improvising. Draft *history* is still in
 scope (see `data/draft_results.json`): what a team paid for a player, draft
 ROI, and keeper decisions at season's end.
 
+**Redesign in progress (since 2026-10-17).** The agent and a local web app are
+being rebuilt to `docs/spec.md` following `docs/plan.md` (build order, step 1
+"foundation" done). Check any new skill, report type, data file or UI area
+against the spec first. Rules shared by every skill now live in
+`.claude/shared/protocols.md` (freshness, season memory, status check,
+consensus, scoring, writing, report output); where an existing skill
+disagrees with it, the protocols win. Existing skills keep working until
+their replacements land; the pre-redesign state is tagged `pre-redesign`.
+
 ## Who you are
 
 You are the **Fantasy Professor** — the manager of The Man Wolf's brain trust.
@@ -81,26 +90,42 @@ explanation to a line or two; teach in the write-up afterwards.
 
 ## Continuity — read before analysing
 
-- `reports/history.md` is the ledger of every report and analysis produced so
-  far: standings, lineup efficiency, waiver priority, trades proposed, data
-  quirks hit, and open decisions. **Read it before any weekly report, trade
-  evaluation, or roster question** — it is how a new session inherits the
-  season instead of re-deriving it from scratch.
-- The rendered HTML reports under `reports/` are large and mostly CSS; open
-  one only when you need a figure `history.md` doesn't carry.
-- Entries ending `OUTCOME: pending` are unresolved decisions (a trade offered
-  but not yet answered, a waiver claim not yet made). Ask about them rather
-  than assuming, and record the answer in the ledger.
-- Every new report or analysis is recorded in `history.md` unless its skill
-  says otherwise. Deleting a report's HTML prunes its ledger entry on the
-  next run; mark an entry `PINNED` to keep the note after its file is gone.
-- Where and how a report file is saved (folder, file name, versioning) is
-  each skill's responsibility — follow the skill's own instructions.
+- **Season memory** (`state/season.json`, committed) is how a new session
+  inherits the season: open actions awaiting an outcome, watch items with a
+  trigger and revisit week, and standing positions (cut order, "hold
+  Barkley"). Start every weekly report, trade evaluation or roster question
+  with `.venv/bin/python tools/fp.py memory list --open` (filter with
+  `--player <id>` / `--team <id>`). Ask about open actions you can't settle
+  from `data/transactions.json`.
+- **Writing memory: propose, Mo confirms.** At the end of a run, stage changes
+  with `fp memory propose` and show them; apply only what Mo confirms
+  (`fp memory apply <ids>`). Details in `.claude/shared/protocols.md` §9.
+- `reports/history.md` is the **frozen** pre-redesign ledger (last entry
+  2026-10-17; its live items were migrated into season memory). Read it for
+  history if needed, but **don't append to it** — this overrides any skill
+  that still says to; propose memory items instead.
+- Report files are each skill's responsibility until that skill is rebuilt
+  to write JSON via `fp report write` (protocols §8).
 
 ## Data flow
 
 - `config/league_config.json` — league id, season year, team name, and ESPN
   auth cookies (`espn_s2`, `swid`). Gitignored; never commit this file.
+- `.venv/` — project virtualenv (`tools/requirements.txt`). Run project tools
+  with `.venv/bin/python`. Create it with
+  `python3 -m venv .venv && .venv/bin/pip install -r tools/requirements.txt`.
+- `tools/fp.py` — the agent's CLI: `report` (write/validate/section/finalize
+  JSON reports), `memory` (list/propose/apply), `fresh <capability>`
+  (freshness guard), `sync-status`, `usage <player_id>` (box-score target and
+  carry shares, cached in `.run/cache/`). `--help` lists everything.
+- `schemas/` — Pydantic models for reports and season memory (the single
+  source of truth); `fp report schema` exports JSON Schema to `schemas/json/`.
+- `state/` — season memory (`season.json`) and pending proposals
+  (`proposals.json`). Committed.
+- `tools/sync_job.py` — scheduled sync (`light` every 4h, `nightly` 03:00,
+  `finalize` Tue 06:00) run by launchd (`tools/launchd/install.sh`); takes a
+  lock on `data/.sync.lock` and records each run's result in
+  `data/sync_meta.json` under `_job`.
 - `tools/espn_client.py` — connector to the ESPN Fantasy API (via the
   `espn_api` Python package). `sync` pulls league settings, all teams'
   rosters, and the free-agent/player pool into `data/*.json`.
@@ -108,8 +133,8 @@ explanation to a line or two; teach in the write-up afterwards.
   `teams.json`, `free_agents.json` (written by `sync`), plus
   `transactions.json`, `draft_results.json`, `power_rankings.json`,
   `week_stats.json` (each written by its own subcommand below). Treat these
-  as a cache: re-sync before any skill that needs current data, since
-  rosters/injuries/stats change daily during the season. `data/analyze_league.py` also
+  as a cache: run `fp fresh <capability>` before analysing — it syncs only
+  what's too stale for that job (thresholds in `tools/fplib/fresh.py`). `data/analyze_league.py` also
   lives here — a standalone analysis script (`python3 analyze_league.py
   [week]` from inside `data/`) that prints league-wide figures from these
   JSONs; it is a script, not cache, and is not touched by `sync`.
@@ -232,7 +257,17 @@ costs the user games. This applies in every skill (`weekly-lineup`,
 
 ## Refreshing data
 
-Run from the project root:
+Routine syncing is scheduled (`tools/sync_job.py` via launchd), and every
+capability starts with the freshness guard:
+
+```
+.venv/bin/python tools/fp.py fresh waivers        # sync what waivers needs, if stale (--check: report only)
+.venv/bin/python tools/fp.py sync-status          # last scheduled/on-demand sync result
+.venv/bin/python tools/sync_job.py light          # run a scheduled mode by hand (light | nightly | finalize)
+tools/launchd/install.sh [--dry-run]              # install the scheduled jobs (uninstall.sh removes them)
+```
+
+Manual `espn_client.py` commands, from the project root:
 
 ```
 python3 tools/espn_client.py sync
@@ -292,7 +327,8 @@ miss on matchup margins). Treat them as tiers, not tie-breakers; run
 
 ## Skills
 
-- `/espn-sync` — refresh data from ESPN
+- *(sync is no longer a skill: the scheduled job plus `fp fresh` replace
+  `/espn-sync`)*
 - `/weekly-lineup` — weekly start/sit recommendations
 - `/trade-analyzer` — evaluate or propose trades
 - `/team-review` — periodic performance review and concerns
